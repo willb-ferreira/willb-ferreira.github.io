@@ -644,6 +644,15 @@ p {color:var(--muted)}
 .regression-guide .reading-reference-compact{scroll-margin-top:95px}
 @media(max-width:620px){.regression-guide .reading-related{grid-template-columns:1fr}}
 
+
+/* Causal Inference guide only: concise linked research pathways. */
+.causal-guide .reading-related{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;margin:25px 0 10px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.causal-guide .reading-related>strong{grid-column:1/-1;font-size:13px;color:var(--ink)}
+.causal-guide .reading-related>a{font-size:12px;line-height:1.7;color:var(--accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.causal-guide .reading-related>a:focus-visible,.causal-guide .reading-track-links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.causal-guide .reading-reference-compact{scroll-margin-top:95px}
+@media(max-width:620px){.causal-guide .reading-related{grid-template-columns:1fr}}
+
 /* 2026-09-29: more generous desktop canvas; retain readable text measures in research guides. */
 body{font-size:17px}
 .section-heading p,.research-card .card-content p,.project-card .card-content p,.topic-card p{font-size:15px}
