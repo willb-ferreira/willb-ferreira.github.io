@@ -63,7 +63,7 @@ with sync_playwright() as p:
             assert tab.locator('li.reading-reference').count()==23
             print('CONTENT eight bilingual research reading guides and 69 curated references: PASS')
         if page_name=='research':
-            assert tab.locator('article.research-card').count()==7
+            assert tab.locator('article.research-card').count()==8
             assert tab.locator('#project-results article').count()==4
             tab.locator('button[data-area="sar"]').click()
             assert tab.locator('#project-results article').count()==2
