@@ -219,10 +219,10 @@ with sync_playwright() as p:
             assert tab.locator('.reading-pagination .next').count()==0
             assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#causal'
             tab.go_back()
-            assert tab.evaluate('location.hash') == '#geometry'
+            tab.wait_for_function("location.hash === '#geometry' && !document.getElementById('geometry').hidden")
             assert tab.locator('#geometry').is_visible()
             tab.go_forward()
-            assert tab.evaluate('location.hash') == '#causal'
+            tab.wait_for_function("location.hash === '#causal' && !document.getElementById('causal').hidden")
             assert tab.locator('#causal').is_visible()
             tab.locator('.reading-index a[data-reading-guide="spatial-models"]').click()
             assert tab.locator('#spatial-models').is_visible()
@@ -387,6 +387,7 @@ with sync_playwright() as p:
     assert deep.locator('#geometry-ref-menendez-morales-pardo-salicru-1995').is_visible()
     deep.wait_for_function("() => { const e=document.getElementById('geometry-ref-menendez-morales-pardo-salicru-1995'); const r=e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 80; }")
     deep.evaluate("window.location.hash='#time-series'")
+    deep.wait_for_function("location.hash === '#time-series' && !document.getElementById('spatial-models').hidden")
     assert deep.locator('#spatial-models').is_visible()
     assert deep.locator('#geometry').is_hidden()
     assert deep.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#spatial-models'
