@@ -26,7 +26,7 @@
   );
   guide.entry=b(
     "Information geometry studies statistical models through metrics, divergences and affine connections. Three linked routes lead from the geometry of probability distributions to geodesic estimation and testing, then to geometric computation for structured models. These are study and research directions, not claims of completed original contributions.",
-    "A geometria da informação estuda modelos estatísticos por métricas, divergências e conexões afins. Três percursos articulados vão da geometria das distribuições à estimação e aos testes geodésicos e, depois, à computação geométrica para modelos estruturados. São percursos de estudo e pesquisa, não alegações de contribuições originais já concluídas."
+    "A geometria da informação estuda modelos estatísticos por métricas, divergências e conexões afins. Três percursos articulados vão da geometria das distribuições à estimação e aos testes por distâncias geodésicas e, depois, à computação geométrica para modelos estruturados. São percursos de estudo e pesquisa, não alegações de contribuições originais já concluídas."
   );
   guide.background=b(
     "Probability, likelihood, multivariable calculus and linear algebra; differential geometry for advanced reading.",
