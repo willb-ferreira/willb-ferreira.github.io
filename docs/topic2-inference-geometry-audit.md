@@ -1,5 +1,7 @@
 # Topic 2 and Information Geometry — concise editorial audit
 
+**Subsequent geometry-reading update (2026-09-29):** Menéndez, Morales, Pardo & Salicrú (1995) is now the central geodesic-test reading, followed by their 1997 (h,Φ)-metric paper. The public geometry selection has five readings, not the original four described below. See [`information-geometry-geodesic-reading-audit.md`](information-geometry-geodesic-reading-audit.md) for the corrected current source ledger; this earlier report is retained as its historical editorial checkpoint.
+
 Date: 2026-09-29. Scope: `assets/inference-library.js`, the Topic 2 presentation and its reciprocal connection to the already-existing Information Geometry guide. Topic 1, other research areas, personal publication data, students and courses are not changed.
 
 ## Scientific organization
