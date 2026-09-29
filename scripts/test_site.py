@@ -15,6 +15,7 @@ inference = (ROOT / 'assets/inference-library.js').read_text(encoding='utf-8')
 image_library = (ROOT / 'assets/image-library.js').read_text(encoding='utf-8')
 geometry_library = (ROOT / 'assets/geometry-library.js').read_text(encoding='utf-8')
 regression_library = (ROOT / 'assets/regression-library.js').read_text(encoding='utf-8')
+causal_library = (ROOT / 'assets/causal-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
@@ -37,6 +38,7 @@ def load(tab, page_name):
     tab.add_script_tag(content=image_library)
     tab.add_script_tag(content=geometry_library)
     tab.add_script_tag(content=regression_library)
+    tab.add_script_tag(content=causal_library)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
@@ -88,6 +90,26 @@ with sync_playwright() as p:
             assert tab.locator('#regression-track-hierarchical').count()==1
             assert tab.locator('#regression-track-distributional').count()==1
             assert tab.locator('#regression .reading-reference').count()==8
+            assert tab.locator('#causal h2').inner_text() == 'Causal inference'
+            assert tab.locator('#causal .reading-track').count()==3
+            assert tab.locator('#causal-track-identification').count()==1
+            assert tab.locator('#causal-track-estimation').count()==1
+            assert tab.locator('#causal-track-dependent').count()==1
+            assert tab.locator('#causal .reading-reference').count()==9
+            assert tab.locator('#causal .reading-related a').count()==4
+            assert tab.locator('#causal .reading-related a[href="#spatial-models"]').count()==1
+            assert tab.locator('#causal .reading-related a[href="#theory"]').count()==1
+            assert tab.locator('#causal .reading-related a[href="#regression"]').count()==1
+            assert tab.locator('#causal .reading-related a[href="#sar"]').count()==1
+            assert tab.locator('#causal-ref-bang-robins-2005').count()==1
+            assert tab.locator('#causal-ref-reich-2021').count()==1
+            assert tab.locator('#causal-ref-callaway-santanna-2021').count()==1
+            assert tab.locator('#causal-ref-hernan-robins-2020 a[href="https://miguelhernan.org/whatifbook"]').count()==1
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').tracks.every(t=>t.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').visibleReferences.includes(id)))")
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.length") == 12
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.some(r=>r.id==='athey-imbens-2016')")
+            tab.locator('#causal-track-dependent a[href="#causal-ref-reich-2021"]').click()
+            assert tab.evaluate('location.hash') == '#causal-ref-reich-2021'
             assert tab.locator('#regression .reading-related a').count()==4
             assert tab.locator('#regression .reading-related a[href="#spatial-models"]').count()==1
             assert tab.locator('#regression .reading-related a[href="#theory"]').count()==1
@@ -144,7 +166,7 @@ with sync_playwright() as p:
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').tracks.every(k=>k.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').references.some(r=>r.id===id)))")
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').visibleReferences.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').references.some(r=>r.id===id))")
 
-            assert tab.locator('li.reading-reference').count()==39
+            assert tab.locator('li.reading-reference').count()==45
             assert tab.locator('#learning').count()==0
             assert tab.locator('#causal').count()==1
             assert tab.locator('.reading-extra').count()==0
@@ -153,7 +175,7 @@ with sync_playwright() as p:
             ids=tab.evaluate('window.PORTFOLIO.readingGuides.map(g => g.id)')
             assert len(ids)==6 and len(set(ids))==6 and 'time-series' not in ids,ids
             assert len(tab.locator('#spatial-models').inner_text()) < 4700
-            assert len(tab.locator('main').inner_text()) < 29500
+            assert len(tab.locator('main').inner_text()) < 34500
             tab.locator('#inference-track-information a[href="#inference-ref-pardo-2006"]').click()
             assert tab.evaluate('location.hash') == '#inference-ref-pardo-2006'
             tab.locator('a[href="#intro-ref-tjostheim"]').first.click()
@@ -164,7 +186,7 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
-            assert tab.locator('li.reading-reference').count()==39
+            assert tab.locator('li.reading-reference').count()==45
             assert tab.locator('#sar h2').inner_text() == 'Processamento Estatístico de Imagens'
             assert 'Imagens de radar' in tab.locator('#imaging-track-radar').inner_text()
             assert 'Sensoriamento remoto óptico' in tab.locator('#imaging-track-optical').inner_text()
@@ -178,6 +200,13 @@ with sync_playwright() as p:
             assert 'testes por distâncias geodésicas' in tab.locator('#geometry').inner_text().lower()
             assert 'Séries Temporais e Estatística Espacial' in tab.locator('#geometry .reading-related').inner_text()
             assert 'Processamento Estatístico de Imagens' in tab.locator('#geometry .reading-related').inner_text()
+            assert tab.locator('#causal h2').inner_text() == 'Inferência causal'
+            assert 'Identificação causal e delineamento de estudos' in tab.locator('#causal-track-identification').inner_text()
+            assert 'Estimação semiparamétrica e aprendizado de máquina causal' in tab.locator('#causal-track-estimation').inner_text()
+            assert 'Inferência causal espacial e longitudinal' in tab.locator('#causal-track-dependent').inner_text()
+            assert 'Processamento Estatístico de Imagens' in tab.locator('#causal .reading-related').inner_text()
+            assert 'Inferência Estatística' in tab.locator('#causal .reading-related').inner_text()
+            assert len(tab.locator('#causal').inner_text()) < 8500
             assert tab.locator('#regression h2').inner_text() == 'Modelos de Regressão e Equações de Estimação'
             assert 'Modelos lineares generalizados e GEE' in tab.locator('#regression-track-gee').inner_text()
             assert 'Regressão com efeitos mistos e modelos hierárquicos' in tab.locator('#regression-track-hierarchical').inner_text()
@@ -190,9 +219,12 @@ with sync_playwright() as p:
             assert 'Computação geométrica e modelos estatísticos estruturados' in tab.locator('#geometry-track-computation').inner_text()
             assert 'distâncias estocásticas' in tab.locator('#geometry-track-computation').inner_text()
             assert len(tab.locator('#geometry').inner_text()) < 6800
-            print('CONTENT six concise bilingual guides, fifteen research tracks and 39 selected references: PASS')
+            print('CONTENT six concise bilingual guides, eighteen research tracks and 45 selected references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==6
+            assert tab.locator('article.research-card').nth(5).locator('h3').inner_text() == 'Causal inference'
+            assert 'spatial or longitudinal causal inference' in tab.locator('article.research-card').nth(5).inner_text()
+            assert tab.evaluate("window.PORTFOLIO.research.find(r=>r.id==='causal').status.en") == 'Developing research interest'
             assert tab.locator('article.research-card').nth(2).locator('h3').inner_text() == 'Statistical Image Processing'
             assert 'medical' in tab.locator('article.research-card').nth(2).inner_text().lower()
             assert tab.locator('article.research-card').nth(3).locator('h3').inner_text() == 'Regression Models and Estimating Equations'
@@ -243,7 +275,10 @@ with sync_playwright() as p:
     phone.close()
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(mobile_reading,'reading')
-    assert mobile_reading.locator('.reading-track').count()==15
+    assert mobile_reading.locator('.reading-track').count()==18
+    assert mobile_reading.locator('#causal-track-identification').count()==1
+    assert mobile_reading.locator('#causal-track-estimation').count()==1
+    assert mobile_reading.locator('#causal-track-dependent').count()==1
     assert mobile_reading.locator('#regression-track-gee').count()==1
     assert mobile_reading.locator('#regression-track-hierarchical').count()==1
     assert mobile_reading.locator('#regression-track-distributional').count()==1
@@ -261,6 +296,8 @@ with sync_playwright() as p:
     assert 'Processamento Estatístico de Imagens' in mobile_reading.locator('#sar h2').inner_text()
     assert 'Modelos de Regressão e Equações de Estimação' in mobile_reading.locator('#regression h2').inner_text()
     assert mobile_reading.locator('#regression .reading-related a').count()==4
+    assert mobile_reading.locator('#causal .reading-related a').count()==4
+    assert 'Inferência causal espacial e longitudinal' in mobile_reading.locator('#causal-track-dependent').inner_text()
     assert mobile_reading.locator('#sar .reading-related a').count()==4
     assert mobile_reading.locator('#geometry a[href*="0893-9659"]').count()==1
     assert mobile_reading.locator('#geometry a[href="#spatial-models"]').count()==1
