@@ -29,6 +29,16 @@ for slug in PAGE_SLUGS:
     assert og_urls == canonical, (path, og_urls)
     assert og_images == [SITE_URL + "/assets/portrait.webp"], (path, og_images)
     assert LEGACY_URL not in html, path
+    assert 'href="index.html"' not in html, path
+    assert html.count('class="brand" href="/"') == 2, path
+    if 'class="breadcrumb"' in html:
+        assert '<div class="breadcrumb"><a href="/">' in html, path
+    if slug == 'index':
+        assert '<a href="#main">↑ Back to top</a>' in html, path
+    else:
+        assert '<a href="/">↑ Back to home</a>' in html, path
+    if slug in ('about', 'contact'):
+        assert 'Lattes CV' in html and 'Currículo Lattes' not in html, path
     titles = re.findall(r'<title>(.*?)</title>', html, flags=re.S)
     descriptions = re.findall(r'<meta name="description" content="([^"]*)"\s*/>', html)
     og_titles = re.findall(r'<meta property="og:title" content="([^"]*)"\s*/>', html)

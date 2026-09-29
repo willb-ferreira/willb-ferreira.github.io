@@ -4,7 +4,9 @@
   if (!D) { document.getElementById("main").textContent = "Content could not be loaded."; return; }
   const page = document.body.dataset.page || "index";
   const routes = ["research", "publications", "supervision", "people", "teaching", "software", "about", "contact"];
-  const href = name => name === "index" ? "index.html" : `${name}.html`;
+  // Root-relative home links keep the public URL canonical; file:// previews stay navigable.
+  const homeHref = window.location.protocol === "file:" ? "index.html" : "/";
+  const href = name => name === "index" ? homeHref : `${name}.html`;
   const getPref = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
   const setPref = (key, value) => { try { localStorage.setItem(key, value); } catch { /* file:// privacy settings */ } };
   let lang = getPref("wb-lang", "en") === "pt" ? "pt" : "en";
@@ -94,7 +96,7 @@
       contactGuide:"Para uma mensagem produtiva",contactGuideDesc:"Inclua o assunto, uma breve apresentação, o objetivo do contato e, se necessário, links para currículo ou trabalho anterior.",
       openContact:"Abrir contato",footerText:"Pesquisa em estatística, inferência e dados espaciais.",navigate:"Navegação",follow:"Perfis",updated:"Última atualização do site",made:"Departamento de Estatística · UFPE",
       opportunityTitle:"Temas para orientação",opportunityDesc:"Temas de iniciação científica, mestrado e doutorado relacionados às minhas linhas de pesquisa.",opportunityBtn:"Explorar temas de pesquisa",
-      news:"Atualizações",newsDesc:"Marcos recentes da pesquisa e da vida acadêmica.",nothingNews:"Novidades serão publicadas aqui.",backHome:"Voltar ao início"
+      news:"Atualizações",newsDesc:"Marcos recentes da pesquisa e da vida acadêmica.",nothingNews:"Novidades serão publicadas aqui.",backHome:"Voltar ao início",backTop:"Voltar ao topo"
     },
     en: {
       reading:"Reading guides",
@@ -167,7 +169,7 @@
       contactGuide:"For a productive message",contactGuideDesc:"Include a subject line, a brief introduction, the purpose of your message, and links to your CV or prior work when relevant.",
       openContact:"Open contact",footerText:"Research in statistics, inference, and spatial data.",navigate:"Navigation",follow:"Profiles",updated:"Website last updated",made:"Department of Statistics · UFPE",
       opportunityTitle:"Supervision topics",opportunityDesc:"Undergraduate, master’s, and Ph.D. topics related to my research areas.",opportunityBtn:"Explore research topics",
-      news:"Updates",newsDesc:"Recent milestones in research and academic life.",nothingNews:"Updates will appear here.",backHome:"Back to home"
+      news:"Updates",newsDesc:"Recent milestones in research and academic life.",nothingNews:"Updates will appear here.",backHome:"Back to home",backTop:"Back to top"
     }
   };
   const tx = key => M[lang][key] || key;
@@ -203,10 +205,10 @@
     return `<a class="${klass}" href="${target}"${external ? ' target="_blank" rel="noopener noreferrer"' : ""}>${e(label)} ${icon("up",14)}</a>`;
   };
   const sectionTitle = (eyebrow, heading, desc="", tail="") => `<div class="section-heading"><div><span class="eyebrow">${e(eyebrow)}</span><h2>${e(heading)}</h2>${desc?`<p>${e(desc)}</p>`:""}</div>${tail}</div>`;
-  const pageHero = (eyebrow, title, lead) => `<section class="page-hero"><div class="shell"><div class="page-head reveal"><div class="breadcrumb"><a href="index.html">${tx("index")}</a><span class="sep">/</span><span>${e(eyebrow)}</span></div><span class="eyebrow">${e(eyebrow)}</span><h1>${e(title)}</h1><p class="lead">${e(lead)}</p></div></div></section>`;
+  const pageHero = (eyebrow, title, lead) => `<section class="page-hero"><div class="shell"><div class="page-head reveal"><div class="breadcrumb"><a href="${href("index")}">${tx("index")}</a><span class="sep">/</span><span>${e(eyebrow)}</span></div><span class="eyebrow">${e(eyebrow)}</span><h1>${e(title)}</h1><p class="lead">${e(lead)}</p></div></div></section>`;
   const empty = (symbol, title, message, action="") => `<div class="empty-state"><span class="empty-icon" aria-hidden="true">${symbol}</span><h3>${e(title)}</h3><p>${e(message)}</p>${action}</div>`;
   const profileLinks = () => {
-    const names = {orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Currículo Lattes",linkedin:"LinkedIn"};
+    const names = {orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:lang === "pt" ? "Currículo Lattes" : "Lattes CV",linkedin:"LinkedIn"};
     const publicProfiles = Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>link(u,names[k],"",true));
     if (safe(D.profile.cv)) publicProfiles.unshift(link(D.profile.cv,lang === "pt" ? "Currículo em PDF" : "CV (PDF)","",true));
     return publicProfiles.join("");
@@ -242,7 +244,7 @@
     updatePageMetadata();
     document.querySelector(".skip-link").textContent = tx("skip");
     const navHtml = routes.map(r=>`<a href="${href(r)}" ${r===page?'class="active" aria-current="page"':''}>${tx(r)}</a>`).join("");
-    document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="index.html" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
+    document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="${href("index")}" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
     document.getElementById("language-toggle").addEventListener("click",()=>{lang=lang==="pt"?"en":"pt";setPref("wb-lang",lang);render();});
     document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";setPref("wb-theme",theme);renderHeader();renderFooter();});
     const btn=document.getElementById("menu-toggle"), menu=document.getElementById("main-nav");
@@ -253,7 +255,7 @@
   const renderFooter = () => {
     const footerLinks=["research","publications","supervision","people","teaching","software"];
     const social=profileLinks();
-    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="index.html"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span></div><div class="footer-col"><h3>${tx("navigate")}</h3>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h3>${tx("follow")}</h3><a href="about.html">${tx("about")}</a><a href="contact.html">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="#main">↑ ${tx("backHome").replace(tx("index"),tx("index"))}</a></div></div></footer>`;
+    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="${href("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span></div><div class="footer-col"><h3>${tx("navigate")}</h3>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h3>${tx("follow")}</h3><a href="about.html">${tx("about")}</a><a href="contact.html">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="${page === "index" ? "#main" : href("index")}">↑ ${tx(page === "index" ? "backTop" : "backHome")}</a></div></div></footer>`;
   };
   const renderHome = () => {
     const featured=(D.projects||[]).slice(0,3), sortedPapers=[...(D.publications||[])].sort((a,b)=>Number(b.year||0)-Number(a.year||0)), recent=sortedPapers.filter(p=>p.featured).slice(0,3);
@@ -828,6 +830,11 @@
     document.getElementById("main").innerHTML=(pages[page]||renderHome)();
     attach();addStructuredData();
   };
+  // If an older link explicitly requested /index.html, clean the browser URL without
+  // another request. The canonical tag already identifies / as the index URL.
+  if(page === "index" && window.location.hostname === "willamsferreira.com" && window.location.pathname === "/index.html"){
+    window.history.replaceState(window.history.state,"","/"+window.location.search+window.location.hash);
+  }
   if(page==="reading")window.addEventListener("hashchange",()=>syncReadingSelection(true));
   render();
 })();
