@@ -17,8 +17,8 @@
   D.research = D.research.filter(r => r.id !== "time-series")
     .map((r, index) => ({...r, number: String(index + 1).padStart(2, "0")}));
 
-  const reference = (authors, title, year, url, en, pt, kind = "foundation") => ({
-    authors, title, year, url, kind, note: b(en, pt)
+  const reference = (id, authors, title, year, url, en, pt, kind = "foundation") => ({
+    id, authors, title, year, url, kind, note: b(en, pt)
   });
   const merged = {
     id: "spatial-models",
@@ -69,7 +69,7 @@
     ],
     references: [
       reference(
-        "Peter J. Brockwell; Richard A. Davis", "Introduction to Time Series and Forecasting, 3rd ed.", 2016,
+        "rue-held", "diggle-ribeiro", "tjostheim", "besag", "cressie", "brockwell-davis", "Peter J. Brockwell; Richard A. Davis", "Introduction to Time Series and Forecasting, 3rd ed.", 2016,
         "https://doi.org/10.1007/978-3-319-29854-2",
         "An accessible route into temporal dependence, ARMA and forecasting.",
         "Entrada acessível para dependência temporal, ARMA e previsão.", "entry"
