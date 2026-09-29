@@ -669,3 +669,47 @@ body{font-size:17px}
   .course-level{margin-bottom:32px}
   .course-level .directory-heading{margin-bottom:10px}
 }
+
+/* Fluid viewport layout: adapt to the space available, not a device model. */
+:root { --page-gutter:clamp(20px,3.5vw,52px) }
+.shell {width:min(var(--max),calc(100% - var(--page-gutter) - var(--page-gutter)))}
+body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
+.hero-copy,.page-head,.reading-layout>*,.reading-area,.reading-track,
+.publication-content,.card-content,.split-section>*,.course-entry>div {min-width:0}
+.reading-layout {grid-template-columns:minmax(190px,.22fr) minmax(0,1fr);gap:clamp(28px,3vw,52px)}
+.reading-track-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
+.cards-3 {grid-template-columns:repeat(auto-fit,minmax(min(100%,18rem),1fr))}
+.cards-2,.contact-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
+.step-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
+.reading-area p {max-width:min(100%,76ch)}
+.reading-reference h4 a,.reading-track-links a,.publication h3,.research-card h3,
+.project-card h3,.course-entry h3 {overflow-wrap:break-word}
+.reading-track p,.reading-reference-compact p {font-size:clamp(.875rem,calc(.82rem + .16vw),.94rem);line-height:1.7}
+@media (max-width:1180px) {
+  .reading-layout {grid-template-columns:minmax(0,1fr)}
+  .reading-index {position:static;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,13rem),1fr));gap:0 20px}
+  .reading-index .eyebrow {grid-column:1/-1}
+  .reading-index a {max-width:none;min-width:0;overflow-wrap:anywhere}
+}
+@media (max-width:1050px) {
+  .hero-layout,.split-section {grid-template-columns:minmax(0,1fr)}
+  .hero-layout {gap:clamp(24px,4vw,44px)}
+  .portrait-panel {max-width:min(100%,405px);margin-left:0}
+}
+@media (max-width:970px) {
+  .nav {top:100%;max-height:calc(100vh - 76px);max-height:calc(100dvh - 76px);overflow-y:auto;overscroll-behavior:contain}
+  .header-actions .icon-btn {min-width:44px;min-height:44px}
+  .nav a {min-height:44px;display:flex;align-items:center}
+}
+@media (max-width:760px) {
+  .cards-4 {grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:700px) {
+  .cards-2,.cards-3,.cards-4,.step-grid,.contact-grid {grid-template-columns:minmax(0,1fr)}
+  .reading-track-grid {grid-template-columns:minmax(0,1fr)}
+  .reading-index a,.filter-pill {min-height:44px}
+  .reading-area p,.reading-track p,.reading-reference p {max-width:100%}
+}
+@media print {
+  .shell {width:100%}
+}
