@@ -55,6 +55,7 @@ with sync_playwright() as p:
         if page_name=='reading':
             assert tab.locator('article.reading-area').count()==6
             assert tab.locator('.reading-index a').count()==6
+            assert tab.locator('#spatial-models h2').inner_text() == 'Time Series and Spatial Statistics'
             assert tab.locator('#spatial-models .reading-track').count()==3
             assert tab.locator('#intro-track-temporal').count()==1
             assert tab.locator('#spatial-track-a').count()==1
@@ -76,13 +77,15 @@ with sync_playwright() as p:
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
-            assert tab.locator('#spatial-models h2').inner_text() == 'Processos estocásticos e dados dependentes'
+            assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
             assert tab.locator('li.reading-reference').count()==21
             print('CONTENT six concise bilingual research guides, three linked tracks and 21 visible references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==6
+            assert tab.locator('article.research-card').first.locator('h3').inner_text() == 'Time Series and Spatial Statistics'
+            assert 'Statistical modeling and inference for dependent data' in tab.locator('article.research-card').first.inner_text()
             assert tab.locator('#project-results article').count()==4
             tab.locator('button[data-area="sar"]').click()
             assert tab.locator('#project-results article').count()==2
