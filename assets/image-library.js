@@ -51,8 +51,8 @@
       status:b("Developing research direction","Frente de pesquisa em desenvolvimento"),
       title:b("Optical remote sensing and environmental imaging","Sensoriamento remoto óptico e imagens ambientais"),
       description:b(
-        "Study multispectral and hyperspectral observations, radiometric correction, land cover, vegetation and environmental change. Optical satellite sensors differ from radar; SAR–optical fusion requires explicit registration and uncertainty checks.",
-        "Estude observações multiespectrais e hiperespectrais, correção radiométrica, cobertura da terra, vegetação e mudanças ambientais. Sensores ópticos diferem de radar; a fusão SAR–óptico exige registro e avaliação explícita da incerteza."
+        "Study multispectral and hyperspectral observations, radiometric correction, land cover, vegetation and environmental change. Passive optical satellite sensors differ from radar, while LiDAR uses active laser ranging; SAR–optical fusion requires explicit registration and uncertainty checks.",
+        "Estude observações multiespectrais e hiperespectrais, correção radiométrica, cobertura da terra, vegetação e mudanças ambientais. Sensores ópticos passivos diferem de radar, enquanto LiDAR utiliza medição ativa por laser; a fusão SAR–óptico exige registro e avaliação explícita da incerteza."
       ),
       refs:["richards-2022","zhu-2017"]
     },
@@ -80,7 +80,7 @@
       "Fundamentação transversal para formação de imagens, estimação, restauração, registro e reconhecimento.",
       "entry","Springer, 2nd ed."),
     ref("richards-2022","John A. Richards",
-      "Remote Sensing Digital Image Analysis: An Introduction, 6th ed.",2022,
+      "Remote Sensing Digital Image Analysis, 6th ed.",2022,
       "https://doi.org/10.1007/978-3-030-82327-6",
       "Introduces optical remote-sensing image acquisition, spectral features and statistical classification.",
       "Introduz aquisição de imagens ópticas de sensoriamento remoto, características espectrais e classificação estatística.",
