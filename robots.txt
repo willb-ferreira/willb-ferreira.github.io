@@ -1,3 +1,3 @@
 User-agent: *
 Allow: /
-Sitemap: https://willb-ferreira.github.io/sitemap.xml
+Sitemap: https://willamsferreira.com/sitemap.xml

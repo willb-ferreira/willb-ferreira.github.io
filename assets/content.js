@@ -7,6 +7,7 @@
 window.PORTFOLIO = {
   profile: {
     name: "Willams Batista",
+    citationName: "Willams B. F. da Silva", /* Published author name; display name is unchanged. */
     monogram: "WB",
     role: { pt: "Professor Assistente de Estatística", en: "Assistant Professor of Statistics" },
     headline: {

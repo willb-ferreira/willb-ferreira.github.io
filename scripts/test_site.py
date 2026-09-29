@@ -4,6 +4,7 @@ import os
 import re
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright
+from site_config import page_url
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
@@ -20,7 +21,7 @@ auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
 SITEMAP_URLS = [loc.text for loc in ET.parse(ROOT / 'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-EXPECTED_URLS = ['https://willb-ferreira.github.io/' if name == 'index' else 'https://willb-ferreira.github.io/' + name + '.html' for name in PAGES]
+EXPECTED_URLS = [page_url(name) for name in PAGES]
 assert len(SITEMAP_URLS) == len(EXPECTED_URLS) and set(SITEMAP_URLS) == set(EXPECTED_URLS), ('Sitemap must list each canonical URL exactly once', SITEMAP_URLS)
 print('SITEMAP all ten canonical URLs: PASS')
 
