@@ -225,10 +225,21 @@
     if (!photo) return researchVisual();
     return `<figure class="portrait-panel ${context === "about" ? "portrait-about-panel" : ""}"><img class="portrait-image" src="${photo}" alt="${e(lang === "pt" ? "Retrato de Willams Batista" : "Portrait of Willams Batista")}" loading="${context === "home" ? "eager" : "lazy"}" decoding="async" /><figcaption class="portrait-caption">${e(D.profile.name)} · ${e(t(D.profile.affiliation))}</figcaption></figure>`;
   };
+  // Both languages share one canonical URL; update metadata on language changes.
+  const updatePageMetadata = () => {
+    const info=D.seo?.[page];
+    if(!info){document.title=`${tx(page)} | ${D.profile.name}`;return;}
+    const title=t(info.title),description=t(info.description);
+    document.title=title;
+    const setMeta=(selector,value)=>document.querySelector(selector)?.setAttribute("content",value);
+    setMeta('meta[name="description"]',description);
+    setMeta('meta[property="og:title"]',title);
+    setMeta('meta[property="og:description"]',description);
+  };
   const renderHeader = () => {
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
     document.documentElement.dataset.theme = theme;
-    document.title = `${tx(page)} | ${D.profile.name}`;
+    updatePageMetadata();
     document.querySelector(".skip-link").textContent = tx("skip");
     const navHtml = routes.map(r=>`<a href="${href(r)}" ${r===page?'class="active" aria-current="page"':''}>${tx(r)}</a>`).join("");
     document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="index.html" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
@@ -796,6 +807,7 @@
   };
   const addStructuredData = () => {
     document.getElementById("person-jsonld")?.remove();
+    document.getElementById("website-jsonld")?.remove();
     const publicLinks=Object.values(D.profile.social).filter(safe);
     const person={"@context":"https://schema.org","@type":"Person",name:D.profile.name,jobTitle:t(D.profile.role),worksFor:{"@type":"CollegeOrUniversity",name:"Universidade Federal de Pernambuco",alternateName:"UFPE"},description:t(D.profile.introduction),knowsAbout:D.research.map(x=>t(x.title)),sameAs:publicLinks};
     if(D.profile.citationName)person.alternateName=D.profile.citationName;
@@ -803,6 +815,12 @@
     if(canonical)person.url=new URL("/",canonical).href;
     if(D.profile.email)person.email=D.profile.email;
     const script=document.createElement("script");script.id="person-jsonld";script.type="application/ld+json";script.textContent=JSON.stringify(person).replace(/</g,"\\u003c");document.head.append(script);
+    if(page==="index" && canonical){
+      const site={"@context":"https://schema.org","@type":"WebSite",url:new URL("/",canonical).href,name:D.profile.name};
+      if(D.profile.citationName)site.alternateName=D.profile.citationName;
+      const siteScript=document.createElement("script");siteScript.id="website-jsonld";siteScript.type="application/ld+json";
+      siteScript.textContent=JSON.stringify(site).replace(/</g,"\\u003c");document.head.append(siteScript);
+    }
   };
   const render = () => {
     renderHeader();renderFooter();

@@ -39,6 +39,8 @@ jobs:
           python -m playwright install chromium --with-deps
           python scripts/generate_sitemap.py
           python scripts/prerender.py
+      - name: Check published canonical URLs and SEO metadata
+        run: python scripts/test_domain.py
       - name: Commit checked outputs, if changed
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then

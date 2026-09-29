@@ -59,6 +59,9 @@ with sync_playwright() as p:
         assert tab.locator('.footer-col a[href="software.html"]').inner_text() == 'Code & Data', page_name
         assert tab.locator('main').inner_text().strip(),page_name
         assert tab.locator('html').get_attribute('lang')=='en', page_name
+        assert tab.title() == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].title.en', page_name), page_name
+        assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].description.en', page_name), page_name
+        assert tab.locator('meta[property="og:description"]').get_attribute('content') == tab.locator('meta[name="description"]').get_attribute('content'), page_name
         if page_name in ('index','about'):
             assert tab.locator('img.portrait-image').count()==1, page_name
         overflow=tab.evaluate('document.documentElement.scrollWidth > innerWidth')
@@ -68,6 +71,9 @@ with sync_playwright() as p:
             assert tab.locator('html').get_attribute('lang')=='en'
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            assert tab.title() == tab.evaluate('window.PORTFOLIO.seo.index.title.pt')
+            assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('window.PORTFOLIO.seo.index.description.pt')
+            assert tab.locator('meta[property="og:title"]').get_attribute('content') == tab.title()
             assert tab.locator('h1').inner_text().startswith('Willams Batista')
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
