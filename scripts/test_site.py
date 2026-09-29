@@ -224,7 +224,7 @@ with sync_playwright() as p:
             assert tab.locator('article.research-card').count()==6
             assert tab.locator('article.research-card').nth(5).locator('h3').inner_text() == 'Causal inference'
             assert 'spatial or longitudinal causal inference' in tab.locator('article.research-card').nth(5).inner_text()
-            assert 'Developing research interest' in tab.locator('article.research-card').nth(5).inner_text()
+            assert tab.evaluate("window.PORTFOLIO.research.find(r=>r.id==='causal').status.en") == 'Developing research interest'
             assert tab.locator('article.research-card').nth(2).locator('h3').inner_text() == 'Statistical Image Processing'
             assert 'medical' in tab.locator('article.research-card').nth(2).inner_text().lower()
             assert tab.locator('article.research-card').nth(3).locator('h3').inner_text() == 'Regression Models and Estimating Equations'
