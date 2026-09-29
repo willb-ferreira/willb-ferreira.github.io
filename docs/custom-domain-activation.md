@@ -1,6 +1,6 @@
-# Ativação do domínio `willamsferreira.com`
+# Configuração e manutenção do domínio `willamsferreira.com`
 
-**Importante:** este pull request permanece em rascunho até o novo domínio estar ativo e validado. A branch `main` e o site anterior continuam inalterados até a mesclagem.
+**Status em 29/09/2026:** DNS validado no GitHub Pages e Enforce HTTPS habilitado, conforme confirmação do proprietário; migração dos metadados mesclada no PR #18 e workflow de publicação concluído. As etapas abaixo documentam a configuração para manutenção. A verificação independente de redirecionamentos públicos pode ser executada com `scripts/check_live_domain.py` ou pelo workflow **Verify public domain redirects**.
 
 ## 1. Verificar a propriedade no GitHub
 
@@ -30,9 +30,11 @@ Em Windows PowerShell, confira `Resolve-DnsName willamsferreira.com -Type A` e `
 
 No mesmo painel **GitHub → Repository Settings → Pages**, aguarde a verificação DNS e a emissão do certificado. Habilite **Enforce HTTPS** quando a opção estiver disponível. Teste `https://willamsferreira.com/` e `https://www.willamsferreira.com/`; o segundo endereço deve redirecionar para o primeiro. Teste também uma página interna, por exemplo `/research.html`, e confira o certificado. Não habilite o proxy laranja da Cloudflare durante a emissão/diagnóstico do certificado.
 
-## 5. Publicar os metadados preparados
+## 5. Publicação automatizada e redirecionamentos
 
-Com DNS, HTTPS e redirecionamento comprovados, aguarde o workflow **Validate research library** deste PR finalizar com sucesso e mescle o PR. O workflow de publicação e a sincronização acadêmica semanal manterão as URLs canônicas, o sitemap e o robots a partir de `scripts/site_config.py`. Verifique a implantação em GitHub Actions e acesse `https://willamsferreira.com/sitemap.xml` e `https://willamsferreira.com/robots.txt`.
+A migração de URLs e metadados foi mesclada no PR #18. O workflow de publicação e a sincronização acadêmica semanal mantêm URLs canônicas, sitemap e robots a partir de `scripts/site_config.py`. Após cada implantação, consulte GitHub Actions e confira `https://willamsferreira.com/sitemap.xml` e `https://willamsferreira.com/robots.txt`.
+
+O GitHub Pages aplica o redirecionamento de `www.willamsferreira.com` para `willamsferreira.com` ao encontrar os registros DNS de ambos os endereços. O antigo endereço `willb-ferreira.github.io` é redirecionado pelo próprio Pages quando o domínio personalizado está ativo; não é possível configurar esse hostname em regras DNS da Cloudflare. Evite regras redundantes de redirecionamento no Cloudflare Free e preserve os caminhos de URLs internas. Execute `python scripts/check_live_domain.py` numa máquina com acesso público à Internet ou o workflow **Verify public domain redirects** no GitHub para verificar HTTP → HTTPS, www → sem www e o domínio legado, incluindo páginas internas. O script exige certificado TLS válido e confere as URLs canônicas retornadas.
 
 ## 6. Google Search Console
 
@@ -40,4 +42,4 @@ Em https://search.google.com/search-console/, clique em **Adicionar propriedade 
 
 ## Reversão e fontes
 
-Se uma etapa falhar, não mescle este PR; o site anterior e seus metadados permanecem na `main`. Não remova registros de e-mail ou verificações de outros serviços. Documentação: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site e https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages.
+Se uma etapa falhar, consulte primeiro o estado DNS/HTTPS no GitHub Pages, os logs do workflow de publicação e o script de verificação pública. Não remova registros de e-mail ou verificações de outros serviços e não altere o domínio canônico apenas para contornar uma falha temporária de propagação. Documentação: https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site e https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/verifying-your-custom-domain-for-github-pages.
