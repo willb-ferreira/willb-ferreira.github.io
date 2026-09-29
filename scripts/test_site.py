@@ -1,5 +1,6 @@
 """Offline smoke tests for this static site using Chromium + Playwright."""
 from pathlib import Path
+import os
 import re
 from playwright.sync_api import sync_playwright
 
@@ -7,6 +8,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
 css = (ROOT / 'assets/site.css').read_text()
 content = (ROOT / 'assets/content.js').read_text()
+library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
@@ -19,12 +21,13 @@ def load(tab, page_name):
     tab.set_content(html, wait_until='load')
     tab.add_style_tag(content=css)
     tab.add_script_tag(content=content)
+        tab.add_script_tag(content=library)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
 
 with sync_playwright() as p:
-    browser=p.chromium.launch(executable_path='/usr/bin/chromium',headless=True,args=['--no-sandbox'])
+    browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_BIN') or None,headless=True,args=['--no-sandbox'])
     for page_name in PAGES:
         tab=browser.new_page(viewport={'width':1365,'height':860}, device_scale_factor=1)
         tab.on('pageerror', lambda err: errors.append(str(err)))
@@ -48,14 +51,17 @@ with sync_playwright() as p:
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
         if page_name=='reading':
-            assert tab.locator('article.reading-area').count()==7
-            assert tab.locator('li.reading-reference').count()==23
-            assert tab.locator('a[href*="doi.org"]').count()>=15
+            assert tab.locator('#learning').count()==1
+            assert tab.locator('#causal').count()==1
+            assert tab.locator('.reading-extra').count()>=35
+            assert tab.locator('article.reading-area').count()==8
+            assert tab.locator('li.reading-reference').count()==69
+            assert tab.locator('a[href*="doi.org"]').count()>=35
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
             assert tab.locator('li.reading-reference').count()==23
-            print('CONTENT seven bilingual research reading guides and 23 checked references: PASS')
+            print('CONTENT eight bilingual research reading guides and 69 curated references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
