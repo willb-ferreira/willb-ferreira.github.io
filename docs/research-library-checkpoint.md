@@ -1,3 +1,9 @@
+# Current editorial status — 2026-09-29
+
+The website now displays **seven** research areas and **seven** bilingual reading guides, with **58** annotated bibliography entries. Statistical Learning Theory has been removed from the public research index and reading guide at the owner's request. The former **Time Series and Stochastic Processes** area is now **Time Series / Séries temporais**; stochastic processes and random fields are explicitly addressed under **Spatial and spatio-temporal statistics / Estatística espacial e espaço-temporal**. Stochastic-process concepts remain relevant prerequisites for time-series methods. The historical eight-area checkpoint below records a previous implementation; its reference counts and earlier test results are not the current public inventory.
+
+---
+
 # Eight-area research library — editorial checkpoint (2026-09-29)
 
 ## Implementation

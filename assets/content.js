@@ -34,8 +34,8 @@ window.PORTFOLIO = {
     {
       id: "spatial-models", number: "01", symbol: "∿",
       title: { pt: "Estatística espacial e espaço-temporal", en: "Spatial and spatio-temporal statistics" },
-      summary: { pt: "Modelos para processos espaciais, dependência em malhas bidimensionais e inferência para dados espacialmente correlacionados.", en: "Models for spatial processes, dependence on two-dimensional lattices, and inference with spatially correlated data." },
-      keywords: ["Spatial ARMA", {pt:"Dependência espacial",en:"Spatial dependence"}]
+      summary: { pt: "Processos estocásticos espaciais e espaço-temporais, campos aleatórios, dependência em malhas e inferência sob correlação espacial.", en: "Spatial and spatio-temporal stochastic processes, random fields, lattice dependence, and inference under spatial correlation." },
+      keywords: ["Spatial ARMA", {pt:"Processos estocásticos",en:"Stochastic processes"}]
     },
     {
       id: "theory", number: "02", symbol: "∑",
@@ -57,9 +57,9 @@ window.PORTFOLIO = {
     },
     {
       id: "time-series", number: "05", symbol: "t",
-      title: { pt: "Séries temporais e processos estocásticos", en: "Time series and stochastic processes" },
-      summary: { pt: "Modelos ARMA e suas extensões para processos não gaussianos, com aplicações em dados de amplitude e intensidade SAR.", en: "ARMA models and non-Gaussian extensions, including applications to SAR amplitude and intensity data." },
-      keywords: ["ARMA", {pt:"Processos estocásticos",en:"Stochastic processes"}]
+      title: { pt: "Séries temporais", en: "Time series" },
+      summary: { pt: "Modelos ARMA, dependência temporal, identificação, diagnóstico e previsão, incluindo extensões não gaussianas.", en: "ARMA models, temporal dependence, identification, diagnostics, and forecasting, including non-Gaussian extensions." },
+      keywords: ["ARMA", {pt:"Previsão e diagnóstico",en:"Forecasting and diagnostics"}]
     },
     {
       id: "geometry", number: "06", symbol: "∇",

@@ -51,19 +51,21 @@ with sync_playwright() as p:
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
         if page_name=='reading':
-            assert tab.locator('#learning').count()==1
+            assert tab.locator('#learning').count()==0
             assert tab.locator('#causal').count()==1
-            assert tab.locator('.reading-extra').count()>=35
-            assert tab.locator('article.reading-area').count()==8
-            assert tab.locator('li.reading-reference').count()==69
-            assert tab.locator('a[href*="doi.org"]').count()>=35
+            assert 'stochastic processes' in tab.locator('#spatial-models').inner_text().lower()
+            assert tab.locator('#time-series h2').inner_text() == 'Time series'
+            assert tab.locator('.reading-extra').count()>=30
+            assert tab.locator('article.reading-area').count()==7
+            assert tab.locator('li.reading-reference').count()==58
+            assert tab.locator('a[href*="doi.org"]').count()>=30
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
-            assert tab.locator('li.reading-reference').count()==69
-            print('CONTENT eight bilingual research reading guides and 69 curated references: PASS')
+            assert tab.locator('li.reading-reference').count()==58
+            print('CONTENT seven bilingual research reading guides and 58 curated references: PASS')
         if page_name=='research':
-            assert tab.locator('article.research-card').count()==8
+            assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
             tab.locator('button[data-area="sar"]').click()
             assert tab.locator('#project-results article').count()==2

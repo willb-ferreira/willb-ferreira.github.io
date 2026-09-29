@@ -6,10 +6,14 @@
   const extra = {
   "spatial-models": {
     "overview": {
-      "en": "Spatial statistics studies dependence indexed by location. Lattice models, geostatistical random fields, point processes and dynamic space–time processes require different stochastic assumptions; a conditional specification is not automatically a compatible joint law.",
-      "pt": "A estatística espacial estuda dependência indexada pela localização. Modelos em malhas, campos geoestatísticos, processos pontuais e processos espaço-temporais dinâmicos exigem hipóteses distintas; uma especificação condicional não implica automaticamente uma distribuição conjunta compatível."
+      "en": "Spatial statistics studies stochastic processes indexed by location and space–time. Lattice models, geostatistical random fields, point processes and dynamic space–time processes require distinct assumptions; a conditional specification is not automatically a compatible joint law.",
+      "pt": "A estatística espacial estuda processos estocásticos indexados no espaço e no espaço-tempo. Modelos em malhas, campos geoestatísticos, processos pontuais e processos espaço-temporais dinâmicos exigem hipóteses distintas; uma especificação condicional não implica automaticamente uma distribuição conjunta compatível."
     },
     "foundations": [
+      {
+        "en": "Stochastic processes and random fields indexed by space or space–time; finite-dimensional distributions, stationarity and joint compatibility.",
+        "pt": "Processos estocásticos e campos aleatórios indexados no espaço ou espaço-tempo; distribuições finito-dimensionais, estacionariedade e compatibilidade conjunta."
+      },
       {
         "en": "Positive-definite covariance functions, stationarity and variograms; distinguish intrinsic and second-order stationarity.",
         "pt": "Funções de covariância positivas definidas, estacionariedade e variogramas; diferencie estacionariedade intrínseca e de segunda ordem."
@@ -287,10 +291,10 @@
         }
       },
       {
-        "id": "learning",
+        "id": "causal",
         "note": {
-          "en": "Uniform laws and empirical processes support mathematical generalization analysis.",
-          "pt": "Leis uniformes e processos empíricos fundamentam a análise matemática de generalização."
+          "en": "Semiparametric causal-effect estimation relies on valid identification, regularity conditions and asymptotic inference.",
+          "pt": "A estimação semiparamétrica de efeitos causais depende de identificação válida, condições de regularidade e inferência assintótica."
         }
       }
     ],
@@ -757,8 +761,8 @@
   },
   "time-series": {
     "overview": {
-      "en": "Time-series models describe dependence over time, while stochastic-process theory provides conditions for stationarity, ergodicity, mixing and valid inference. Forecasting quality and inferential validity are distinct targets.",
-      "pt": "Modelos de séries temporais descrevem dependência no tempo, e a teoria de processos estocásticos fornece condições de estacionariedade, ergodicidade, mistura e inferência válida. Qualidade preditiva e validade inferencial são objetivos distintos."
+      "en": "Time-series models describe dependence over time. Conditions such as stationarity, ergodicity and mixing support inference; forecasting quality and inferential validity are distinct targets.",
+      "pt": "Modelos de séries temporais descrevem dependência no tempo. Condições como estacionariedade, ergodicidade e mistura fundamentam a inferência; qualidade preditiva e validade inferencial são objetivos distintos."
     },
     "foundations": [
       {
@@ -1130,377 +1134,6 @@
     ]
   }
 };
-  const learning = {
-  "id": "learning",
-  "question": {
-    "en": "What mathematical conditions allow a learning algorithm to generalize beyond its training sample?",
-    "pt": "Quais condições matemáticas permitem a um algoritmo de aprendizagem generalizar além da amostra de treinamento?"
-  },
-  "entry": {
-    "en": "Statistical learning theory studies risk, learnability, capacity and generalization. Empirical risk minimization does not by itself guarantee generalization; the hypotheses on the data, hypothesis class and learning rule are essential. Vapnik–Chervonenkis, PAC, stability and Rademacher approaches should be compared rather than conflated.",
-    "pt": "A teoria estatística da aprendizagem estuda risco, aprendibilidade, capacidade e generalização. Minimizar risco empírico não garante por si só generalização; hipóteses sobre dados, classe de hipóteses e regra de aprendizagem são essenciais. As abordagens Vapnik–Chervonenkis, PAC, estabilidade e Rademacher devem ser comparadas, não confundidas."
-  },
-  "background": {
-    "en": "Probability, real analysis, mathematical statistics, basic optimization; later: measure theory and empirical processes.",
-    "pt": "Probabilidade, análise real, estatística matemática, otimização básica; depois, teoria da medida e processos empíricos."
-  },
-  "overview": {
-    "en": "The central quantity is expected risk under a specified sampling and loss model. Uniform convergence can support ERM guarantees, structural risk minimization controls model classes, margins and kernels change function classes, and stability provides a complementary route to generalization.",
-    "pt": "A quantidade central é o risco esperado sob um modelo amostral e uma função de perda especificados. Convergência uniforme pode sustentar garantias para ERM, minimização estrutural controla classes de modelos, margens e kernels alteram classes de funções, e estabilidade fornece uma via complementar para generalização."
-  },
-  "foundations": [
-    {
-      "en": "Expected and empirical risk; ERM versus structural risk minimization; statistical risk and approximation–estimation trade-offs.",
-      "pt": "Riscos esperado e empírico; ERM versus minimização estrutural do risco; risco estatístico e compromisso aproximação–estimação."
-    },
-    {
-      "en": "Uniform laws of large numbers, VC dimension, growth functions, symmetrization and Rademacher complexity.",
-      "pt": "Leis uniformes dos grandes números, dimensão VC, funções de crescimento, simetrização e complexidade de Rademacher."
-    },
-    {
-      "en": "Convex optimization, regularization, margin bounds, reproducing-kernel Hilbert spaces and algorithmic stability.",
-      "pt": "Otimização convexa, regularização, limites por margem, espaços de Hilbert de núcleo reprodutor e estabilidade algorítmica."
-    }
-  ],
-  "fundamental": [
-    {
-      "en": "When is a hypothesis class learnable? Which uniform-convergence hypotheses make ERM consistent, and when does stability provide a different guarantee?",
-      "pt": "Quando uma classe de hipóteses é aprendível? Quais hipóteses de convergência uniforme tornam ERM consistente, e quando estabilidade fornece garantia diferente?"
-    },
-    {
-      "en": "How do model capacity, data dependence, overparameterization and optimization influence generalization?",
-      "pt": "Como capacidade do modelo, dependência dos dados, sobreparametrização e otimização influenciam a generalização?"
-    }
-  ],
-  "contemporary": [
-    {
-      "en": "Modern capacity results for neural-network classes sharpen classical VC estimates; they do not by themselves explain every empirical generalization phenomenon.",
-      "pt": "Resultados modernos de capacidade para classes de redes neurais refinam estimativas VC clássicas; por si sós não explicam todo fenômeno empírico de generalização."
-    },
-    {
-      "en": "Stability-based analyses and the limits of equivalence between learnability, ERM and uniform convergence require precise quantifiers and loss assumptions.",
-      "pt": "Análises por estabilidade e limites da equivalência entre aprendibilidade, ERM e convergência uniforme exigem quantificadores precisos e hipóteses sobre a perda."
-    }
-  ],
-  "path": [
-    {
-      "en": "Begin with Shalev-Shwartz and Ben-David for risk, PAC learning, ERM and VC dimension.",
-      "pt": "Comece por Shalev-Shwartz e Ben-David para risco, aprendibilidade PAC, ERM e dimensão VC."
-    },
-    {
-      "en": "Study Vapnik–Chervonenkis's original uniform-convergence result and the two distinct Vapnik books.",
-      "pt": "Estude o resultado original de convergência uniforme de Vapnik–Chervonenkis e os dois livros distintos de Vapnik."
-    },
-    {
-      "en": "Advance to margin methods, Rademacher complexity, stability and mathematical analyses of contemporary model classes.",
-      "pt": "Avance a métodos de margem, complexidade de Rademacher, estabilidade e análises matemáticas de classes contemporâneas."
-    }
-  ],
-  "learning": {
-    "undergraduate": [
-      {
-        "en": "Review probability inequalities, linear algebra and constrained optimization; implement a small ERM experiment with held-out risk.",
-        "pt": "Revise desigualdades de probabilidade, álgebra linear e otimização restrita; implemente pequeno experimento ERM com risco fora da amostra."
-      },
-      {
-        "en": "Read the PAC and VC introductions in Understanding Machine Learning; derive a finite-class union-bound guarantee.",
-        "pt": "Leia introduções a PAC e VC em Understanding Machine Learning; deduza garantia para classe finita usando limite da união."
-      }
-    ],
-    "masters": [
-      {
-        "en": "Prove a VC-based uniform-convergence bound under i.i.d. sampling and compare it with a Rademacher bound.",
-        "pt": "Demonstre limite de convergência uniforme baseado em VC sob amostragem i.i.d. e compare com limite de Rademacher."
-      },
-      {
-        "en": "Derive margin-based regularized SVM optimization and inspect kernels as Hilbert-space inner products.",
-        "pt": "Deduza otimização regularizada de SVM baseada em margens e examine kernels como produtos internos em espaços de Hilbert."
-      }
-    ],
-    "phd": [
-      {
-        "en": "Read Vapnik–Chervonenkis, Bartlett–Mendelson and Bousquet–Elisseeff in the original; map their assumptions precisely.",
-        "pt": "Leia Vapnik–Chervonenkis, Bartlett–Mendelson e Bousquet–Elisseeff nos originais; mapeie precisamente suas hipóteses."
-      },
-      {
-        "en": "Study counterexamples separating general learnability, ERM and uniform convergence before proposing a universal implication.",
-        "pt": "Estude contraexemplos que separam aprendibilidade geral, ERM e convergência uniforme antes de propor implicação universal."
-      }
-    ]
-  },
-  "directions": [
-    {
-      "type": "extension",
-      "text": {
-        "en": "A plausible extension is to establish stability or generalization guarantees for a clearly specified dependent-data learning rule; this is not claimed to be generally open.",
-        "pt": "Uma extensão plausível é estabelecer garantias de estabilidade ou generalização para regra de aprendizagem com dados dependentes claramente especificada; não se afirma que seja problema aberto em geral."
-      }
-    },
-    {
-      "type": "exercise",
-      "text": {
-        "en": "Calculate the VC dimension of intervals on the real line and prove the result with shattering arguments.",
-        "pt": "Calcule a dimensão VC de intervalos na reta real e demonstre usando argumentos de fragmentação."
-      }
-    }
-  ],
-  "connections": [
-    {
-      "id": "theory",
-      "note": {
-        "en": "Empirical-process tools and asymptotic statistics give a rigorous language for uniform convergence and risk estimation.",
-        "pt": "Processos empíricos e estatística assintótica fornecem linguagem rigorosa para convergência uniforme e estimação de risco."
-      }
-    },
-    {
-      "id": "causal",
-      "note": {
-        "en": "A flexible learner can estimate nuisance functions in causal inference, but only identification assumptions give those predictions a causal meaning.",
-        "pt": "Um aprendiz flexível pode estimar funções auxiliares em inferência causal, mas somente hipóteses de identificação conferem significado causal a essas previsões."
-      }
-    },
-    {
-      "id": "geometry",
-      "note": {
-        "en": "Kernel function spaces and information-geometric metrics are distinct structures; studying both clarifies the geometry behind learning.",
-        "pt": "Espaços de funções com kernel e métricas da geometria da informação são estruturas distintas; estudá-las esclarece a geometria da aprendizagem."
-      }
-    }
-  ],
-  "references": [
-    {
-      "authors": "Shai Shalev-Shwartz; Shai Ben-David",
-      "title": "Understanding Machine Learning: From Theory to Algorithms",
-      "year": 2014,
-      "venue": "Cambridge University Press, ISBN 9781107057135",
-      "url": "https://doi.org/10.1017/CBO9781107298019",
-      "note": {
-        "en": "Introduces formal PAC, ERM, VC bounds, regularization and optimization.",
-        "pt": "Introduz PAC, ERM, limites VC, regularização e otimização formais."
-      },
-      "preparation": {
-        "en": "Probability, calculus, basic statistical inference and linear algebra.",
-        "pt": "Probabilidade, cálculo, inferência estatística básica e álgebra linear."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to introduces formal PAC, ERM, VC bounds, regularization and optimization.",
-        "pt": "Leia esta obra por sua contribuição específica: introduz PAC, ERM, limites VC, regularização e otimização formais."
-      },
-      "stage": "undergraduate",
-      "kind": "entry"
-    },
-    {
-      "authors": "Vladimir N. Vapnik; Alexey Ya. Chervonenkis",
-      "title": "On the Uniform Convergence of Relative Frequencies of Events to Their Probabilities",
-      "year": 1971,
-      "venue": "Theory of Probability & Its Applications, 16(2), 264–280",
-      "url": "https://doi.org/10.1137/1116025",
-      "note": {
-        "en": "Establishes fundamental uniform-convergence results and combinatorial capacity arguments.",
-        "pt": "Estabelece resultados fundamentais de convergência uniforme e argumentos de capacidade combinatória."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to establishes fundamental uniform-convergence results and combinatorial capacity arguments.",
-        "pt": "Leia esta obra por sua contribuição específica: estabelece resultados fundamentais de convergência uniforme e argumentos de capacidade combinatória."
-      },
-      "stage": "phd",
-      "kind": "seminal"
-    },
-    {
-      "authors": "Vladimir N. Vapnik",
-      "title": "The Nature of Statistical Learning Theory, 2nd ed.",
-      "year": 2000,
-      "venue": "Springer, ISBN 9780387987804",
-      "url": "https://doi.org/10.1007/978-1-4757-3264-1",
-      "note": {
-        "en": "Presents risk, capacity control and structural risk minimization; distinguishes the 2000 second edition from the 1995 first.",
-        "pt": "Apresenta risco, controle de capacidade e minimização estrutural; distingue a segunda edição de 2000 da primeira de 1995."
-      },
-      "preparation": {
-        "en": "Mathematical statistics, proof writing, likelihood and asymptotic arguments.",
-        "pt": "Estatística matemática, demonstrações, verossimilhança e argumentos assintóticos."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to presents risk, capacity control and structural risk minimization; distinguishes the 2000 second edition from the 1995 first.",
-        "pt": "Leia esta obra por sua contribuição específica: apresenta risco, controle de capacidade e minimização estrutural; distingue a segunda edição de 2000 da primeira de 1995."
-      },
-      "stage": "masters",
-      "kind": "foundation"
-    },
-    {
-      "authors": "Vladimir N. Vapnik",
-      "title": "Statistical Learning Theory",
-      "year": 1998,
-      "venue": "Wiley, ISBN 9780471030034",
-      "url": "https://books.google.com/books?vid=ISBN9780471030034",
-      "note": {
-        "en": "Develops the broader technical learning-theory programme beyond the similarly named Springer volume.",
-        "pt": "Desenvolve programa técnico de teoria da aprendizagem mais amplo que o volume de nome semelhante da Springer."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to develops the broader technical learning-theory programme beyond the similarly named Springer volume.",
-        "pt": "Leia esta obra por sua contribuição específica: desenvolve programa técnico de teoria da aprendizagem mais amplo que o volume de nome semelhante da Springer."
-      },
-      "stage": "phd",
-      "kind": "foundation"
-    },
-    {
-      "authors": "Leslie G. Valiant",
-      "title": "A Theory of the Learnable",
-      "year": 1984,
-      "venue": "Communications of the ACM, 27(11), 1134–1142",
-      "url": "https://doi.org/10.1145/1968.1972",
-      "note": {
-        "en": "Introduces PAC learnability independently of the Vapnik–Chervonenkis tradition.",
-        "pt": "Introduz aprendibilidade PAC independentemente da tradição Vapnik–Chervonenkis."
-      },
-      "preparation": {
-        "en": "Mathematical statistics, proof writing, likelihood and asymptotic arguments.",
-        "pt": "Estatística matemática, demonstrações, verossimilhança e argumentos assintóticos."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to introduces PAC learnability independently of the Vapnik–Chervonenkis tradition.",
-        "pt": "Leia esta obra por sua contribuição específica: introduz aprendibilidade PAC independentemente da tradição Vapnik–Chervonenkis."
-      },
-      "stage": "masters",
-      "kind": "seminal"
-    },
-    {
-      "authors": "Corinna Cortes; Vladimir Vapnik",
-      "title": "Support-Vector Networks",
-      "year": 1995,
-      "venue": "Machine Learning, 20, 273–297",
-      "url": "https://doi.org/10.1007/BF00994018",
-      "note": {
-        "en": "Introduces support-vector network methods and margin-based classification.",
-        "pt": "Introduz métodos de vetores de suporte e classificação baseada em margens."
-      },
-      "preparation": {
-        "en": "Mathematical statistics, proof writing, likelihood and asymptotic arguments.",
-        "pt": "Estatística matemática, demonstrações, verossimilhança e argumentos assintóticos."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to introduces support-vector network methods and margin-based classification.",
-        "pt": "Leia esta obra por sua contribuição específica: introduz métodos de vetores de suporte e classificação baseada em margens."
-      },
-      "stage": "masters",
-      "kind": "seminal"
-    },
-    {
-      "authors": "Mehryar Mohri; Afshin Rostamizadeh; Ameet Talwalkar",
-      "title": "Foundations of Machine Learning, 2nd ed.",
-      "year": 2018,
-      "venue": "MIT Press, ISBN 9780262039406",
-      "url": "https://mitpress.mit.edu/9780262039406/foundations-of-machine-learning/",
-      "note": {
-        "en": "Develops modern bounds using complexity, algorithms and regularization.",
-        "pt": "Desenvolve limites modernos usando complexidade, algoritmos e regularização."
-      },
-      "preparation": {
-        "en": "Mathematical statistics, proof writing, likelihood and asymptotic arguments.",
-        "pt": "Estatística matemática, demonstrações, verossimilhança e argumentos assintóticos."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to develops modern bounds using complexity, algorithms and regularization.",
-        "pt": "Leia esta obra por sua contribuição específica: desenvolve limites modernos usando complexidade, algoritmos e regularização."
-      },
-      "stage": "masters",
-      "kind": "foundation"
-    },
-    {
-      "authors": "Peter L. Bartlett; Shahar Mendelson",
-      "title": "Rademacher and Gaussian Complexities: Risk Bounds and Structural Results",
-      "year": 2002,
-      "venue": "Journal of Machine Learning Research, 3, 463–482",
-      "url": "https://jmlr.org/papers/v3/bartlett02a.html",
-      "note": {
-        "en": "Derives data-dependent complexity bounds for risk.",
-        "pt": "Deduza limites de risco baseados em complexidade dependente dos dados."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to derives data-dependent complexity bounds for risk.",
-        "pt": "Leia esta obra por sua contribuição específica: deduza limites de risco baseados em complexidade dependente dos dados."
-      },
-      "stage": "phd",
-      "kind": "seminal"
-    },
-    {
-      "authors": "Olivier Bousquet; André Elisseeff",
-      "title": "Stability and Generalization",
-      "year": 2002,
-      "venue": "Journal of Machine Learning Research, 2, 499–526",
-      "url": "https://jmlr.org/papers/v2/bousquet02a.html",
-      "note": {
-        "en": "Develops algorithmic stability as an alternative analysis of generalization.",
-        "pt": "Desenvolve estabilidade algorítmica como análise alternativa de generalização."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to develops algorithmic stability as an alternative analysis of generalization.",
-        "pt": "Leia esta obra por sua contribuição específica: desenvolve estabilidade algorítmica como análise alternativa de generalização."
-      },
-      "stage": "phd",
-      "kind": "seminal"
-    },
-    {
-      "authors": "Shai Shalev-Shwartz; Ohad Shamir; Nathan Srebro; Karthik Sridharan",
-      "title": "Learnability, Stability and Uniform Convergence",
-      "year": 2010,
-      "venue": "Journal of Machine Learning Research, 11, 2635–2670",
-      "url": "https://jmlr.org/papers/v11/shalev-shwartz10a.html",
-      "note": {
-        "en": "Identifies limits of blanket equivalence between learnability, stability and uniform convergence.",
-        "pt": "Identifica limites de equivalências gerais entre aprendibilidade, estabilidade e convergência uniforme."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to identifies limits of blanket equivalence between learnability, stability and uniform convergence.",
-        "pt": "Leia esta obra por sua contribuição específica: identifica limites de equivalências gerais entre aprendibilidade, estabilidade e convergência uniforme."
-      },
-      "stage": "phd",
-      "kind": "advanced"
-    },
-    {
-      "authors": "Peter L. Bartlett; Nick Harvey; Christopher Liaw; Abbas Mehrabian",
-      "title": "Nearly-tight VC-dimension and Pseudodimension Bounds for Piecewise Linear Neural Networks",
-      "year": 2019,
-      "venue": "Journal of Machine Learning Research, 20(63), 1–17",
-      "url": "https://jmlr.org/papers/v20/17-612.html",
-      "note": {
-        "en": "Gives capacity bounds for piecewise-linear neural-network classes.",
-        "pt": "Fornece limites de capacidade para classes de redes neurais lineares por partes."
-      },
-      "preparation": {
-        "en": "Measure-theoretic probability, advanced inference and the article's technical assumptions.",
-        "pt": "Probabilidade com teoria da medida, inferência avançada e hipóteses técnicas do artigo."
-      },
-      "why": {
-        "en": "Read this work for its specific contribution to gives capacity bounds for piecewise-linear neural-network classes.",
-        "pt": "Leia esta obra por sua contribuição específica: fornece limites de capacidade para classes de redes neurais lineares por partes."
-      },
-      "stage": "phd",
-      "kind": "advanced"
-    }
-  ]
-};
   const causal = {
   "id": "causal",
   "question": {
@@ -1624,10 +1257,10 @@
       }
     },
     {
-      "id": "learning",
+      "id": "theory",
       "note": {
-        "en": "Statistical learning can estimate propensity or outcome nuisance functions; orthogonality does not repair failed identification.",
-        "pt": "Aprendizado estatístico pode estimar funções auxiliares de propensão ou desfecho; ortogonalidade não corrige falha de identificação."
+        "en": "Inference for causal estimators requires regularity, nuisance-function estimation and asymptotic uncertainty; none repairs failed identification.",
+        "pt": "A inferência para estimadores causais exige regularidade, estimação de funções auxiliares e análise da incerteza assintótica; nada disso corrige falhas de identificação."
       }
     },
     {
@@ -1858,29 +1491,8 @@
   const existing = { "spatial-models":"Research activity",theory:"Research activity",sar:"Research activity",regression:"Research activity","time-series":"Research activity",geometry:"Developing research interest" };
   for (const r of D.research) r.status = {en:existing[r.id],pt:existing[r.id]==="Research activity"?"Atuação em pesquisa":"Interesse de pesquisa em desenvolvimento"};
   D.research.push({
-  "id": "learning",
-  "number": "07",
-  "symbol": "∴",
-  "title": {
-    "en": "Statistical learning theory",
-    "pt": "Teoria estatística da aprendizagem"
-  },
-  "summary": {
-    "en": "Mathematical foundations of generalization, VC theory, statistical risk, margins and algorithmic stability.",
-    "pt": "Fundamentos matemáticos da generalização, teoria VC, risco estatístico, margens e estabilidade algorítmica."
-  },
-  "keywords": [
-    "VC theory",
-    "ERM / SRM"
-  ],
-  "status": {
-    "en": "Developing research interest",
-    "pt": "Interesse de pesquisa em desenvolvimento"
-  }
-});
-  D.research.push({
   "id": "causal",
-  "number": "08",
+  "number": "07",
   "symbol": "↗",
   "title": {
     "en": "Causal inference",
@@ -1903,6 +1515,6 @@
     const add = extra[g.id];
     return Object.assign({},g,add,{references:g.references.concat(add.addReferences)});
   });
-  D.readingGuides.push(learning,causal);
+  D.readingGuides.push(causal);
   D.researchLibraryPolicy = {en:"Research-library references are a curated study selection, not the author's publication record. Computing, Monte Carlo simulation, R programming and reproducibility are transversal research skills. Emerging interests are not represented as existing publications.",pt:"As referências da biblioteca são uma seleção de estudo, não a produção científica do autor. Computação, simulação Monte Carlo, programação em R e reprodutibilidade são competências transversais. Interesses emergentes não são apresentados como publicações existentes."};
 })();

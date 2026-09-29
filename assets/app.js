@@ -26,7 +26,7 @@
       readingTitle:"Por onde começar em cada área",
       readingIntro:"Uma seleção comentada de referências para construir fundamentos antes de escolher um problema de pesquisa.",
       readingButton:"Explorar os guias de leitura",
-      readingPageLead:"Oito percursos de leitura com fundamentos, questões para estudar e referências de editoras e periódicos. Não substituem uma revisão sistemática nem anunciam vagas de orientação.",
+      readingPageLead:"Sete percursos de leitura com fundamentos, questões para estudar e referências de editoras e periódicos. Não substituem uma revisão sistemática nem anunciam vagas de orientação.",
       readingBackground:"Conhecimentos prévios:",
       readingPath:"Um percurso possível",
       readingReferences:"Leituras selecionadas",
@@ -97,7 +97,7 @@
       readingTitle:"A starting point for each research area",
       readingIntro:"Annotated references to help students build foundations before choosing a research question.",
       readingButton:"Explore the reading guides",
-      readingPageLead:"Eight reading paths with foundations, questions to explore and publisher-linked references. These are curated starting points, not systematic reviews or advertised supervision positions.",
+      readingPageLead:"Seven reading paths with foundations, questions to explore and publisher-linked references. These are curated starting points, not systematic reviews or advertised supervision positions.",
       readingBackground:"Recommended background:",
       readingPath:"A possible route",
       readingReferences:"Selected reading",
@@ -264,7 +264,7 @@
     ${g.learning?`<section class="reading-extra"><h3>${e(words.paths)}</h3>${["undergraduate","masters","phd"].map(level=>`<h4>${e(words[level])}</h4><ol>${(g.learning[level]||[]).map(step=>`<li>${e(t(step))}</li>`).join("")}</ol>`).join("")}</section>`:""}
     ${directions?`<section class="reading-extra"><h3>${e(words.directions)}</h3><ul>${directions}</ul></section>`:""}
     ${connections?`<section class="reading-extra"><h3>${e(words.connections)}</h3><ul>${connections}</ul></section>`:""}
-    ${g.id==="learning"||g.id==="causal"?`<p class="reading-prereq"><strong>${e(words.research)}:</strong> ${e(lang==="pt"?"Esta linha é um interesse de pesquisa em desenvolvimento, não uma declaração de artigos já publicados nela.":"This is a developing research interest, not a claim of already published contributions in this area.")}</p>`:""}
+    ${g.id==="causal"?`<p class="reading-prereq"><strong>${e(words.research)}:</strong> ${e(lang==="pt"?"Esta linha é um interesse de pesquisa em desenvolvimento, não uma declaração de artigos já publicados nela.":"This is a developing research interest, not a claim of already published contributions in this area.")}</p>`:""}
     `;
   };
   const renderReading = () => {
