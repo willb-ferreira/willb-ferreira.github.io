@@ -169,7 +169,7 @@ with sync_playwright() as p:
             assert tab.locator('article.research-card').nth(2).locator('h3').inner_text() == 'Statistical Image Processing'
             assert 'medical' in tab.locator('article.research-card').nth(2).inner_text().lower()
             assert 'divergence-based estimation and hypothesis testing' in tab.locator('article.research-card').nth(1).inner_text()
-            assert 'geodesic distances' in tab.locator('article.research-card').nth(4).inner_text()
+            assert 'geodesic estimation and hypothesis testing' in tab.locator('article.research-card').nth(4).inner_text()
             assert tab.locator('article.research-card').first.locator('h3').inner_text() == 'Time Series and Spatial Statistics'
             assert 'Statistical modeling and inference for dependent data' in tab.locator('article.research-card').first.inner_text()
             assert tab.locator('#project-results article').count()==4
