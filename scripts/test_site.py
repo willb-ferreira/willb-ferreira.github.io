@@ -60,7 +60,7 @@ with sync_playwright() as p:
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
-            assert tab.locator('li.reading-reference').count()==23
+            assert tab.locator('li.reading-reference').count()==69
             print('CONTENT eight bilingual research reading guides and 69 curated references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==8
