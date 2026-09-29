@@ -34,6 +34,7 @@
       readingReferences:"Leituras selecionadas",
       readingBack:"Voltar ao início do guia",
       readingIndex:"Guias de pesquisa",
+      readingConnections:"Conexões com outras áreas",
       readingChoose:"Escolher área de pesquisa",
       readingPrevious:"Guia anterior",
       readingNext:"Próximo guia",
@@ -108,6 +109,7 @@
       readingReferences:"Selected reading",
       readingBack:"Back to guide start",
       readingIndex:"Research guides",
+      readingConnections:"Connections with other areas",
       readingChoose:"Choose a research area",
       readingPrevious:"Previous guide",
       readingNext:"Next guide",
@@ -272,7 +274,7 @@
   const labels=pt?{shared:"Fundamentos compartilhados",tracks:"Três caminhos para explorar",start:"Leitura inicial",refs:"Seis referências para começar"}:
   {shared:"Shared foundations",tracks:"Three ways to explore",start:"Start with",refs:"Six starting references"};
   const refs=new Map(g.references.map(r=>[r.id,r]));
-  return `<article class="reading-area reading-area-intro" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
+  return `<article class="reading-area reading-area-intro dependent-guide" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
     <span id="time-series" class="reading-anchor-alias" aria-hidden="true"></span>
     <div class="reading-intro">
       <span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span>
@@ -291,6 +293,10 @@
         <div class="reading-track-links"><strong>${e(labels.start)}:</strong> ${(track.refs||[]).map(id=>{const r=refs.get(id);return r?`<a href="#intro-ref-${e(id)}">${e(r.authors.split(";")[0])} (${e(String(r.year))})</a>`:"";}).filter(Boolean).join(" · ")}</div>
       </article>`).join("")}</div>
     </section>
+    <nav class="reading-related" aria-label="${tx("readingConnections")}">
+      <strong>${tx("readingConnections")}:</strong>
+      ${(g.relatedGuides||[]).map(link=>`<a href="#${e(link.target)}">${e(t(link.label))} ↗</a>`).join("")}
+    </nav>
     <section class="reading-bibliography reading-bibliography-short" aria-labelledby="reading-ref-title">
       <h3 id="reading-ref-title">${e(labels.refs)}</h3><ol>${g.references.map(r=>compactReference(r,true)).join("")}</ol>
     </section>
@@ -326,7 +332,10 @@
           <div class="reading-track-links"><strong>${e(words.reading)}:</strong> ${track.refs.map(id=>{const r=byId.get(id);return r?`<a href="#inference-ref-${e(id)}">${e(r.authors.split(";")[0])} (${e(String(r.year))})</a>`:"";}).filter(Boolean).join(" · ")}</div>
         </article>`).join("")}</div>
       </section>
-      ${g.crosslink?`<p class="reading-crosslink"><a href="#${e(g.crosslink.target)}">${e(t(g.crosslink.label))} ↗</a></p>`:""}
+      <nav class="reading-related" aria-label="${tx("readingConnections")}">
+        <strong>${tx("readingConnections")}:</strong>
+        ${[g.crosslink,...(g.relatedGuides||[])].filter(Boolean).map(link=>`<a href="#${e(link.target)}">${e(t(link.label))} ↗</a>`).join("")}
+      </nav>
       <section class="reading-bibliography reading-bibliography-short" aria-labelledby="inference-reference-title">
         <h3 id="inference-reference-title">${e(words.refs)}</h3>
         <ol>${visible.map(r=>`<li class="reading-reference reading-reference-compact" id="inference-ref-${e(r.id)}">
