@@ -2,3 +2,13 @@ __pycache__/
 *.py[cod]
 data/pending-dois.json
 .DS_Store
+
+# Local-only material. Ignoring a path does not conceal earlier Git commits.
+_site/
+private/
+research-private/
+.env
+.env.*
+*.pem
+*.p12
+*.key
