@@ -625,3 +625,12 @@ p {color:var(--muted)}
 .image-guide .reading-related>a:focus-visible,.image-guide .reading-track-links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 .image-guide .reading-reference-compact{scroll-margin-top:95px}
 @media(max-width:620px){.image-guide .reading-related{grid-template-columns:1fr}}
+
+
+/* Information Geometry only: concise, mobile-readable research pathways. */
+.geometry-guide .reading-related{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;margin:25px 0 10px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.geometry-guide .reading-related>strong{grid-column:1/-1;font-size:13px;color:var(--ink)}
+.geometry-guide .reading-related>a{font-size:12px;line-height:1.7;color:var(--accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.geometry-guide .reading-related>a:focus-visible,.geometry-guide .reading-track-links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.geometry-guide .reading-reference-compact{scroll-margin-top:95px}
+@media(max-width:620px){.geometry-guide .reading-related{grid-template-columns:1fr}}
