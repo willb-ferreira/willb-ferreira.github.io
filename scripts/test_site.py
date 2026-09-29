@@ -120,6 +120,8 @@ with sync_playwright() as p:
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').tracks.every(t=>t.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').visibleReferences.includes(id)))")
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.length") == 12
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.some(r=>r.id==='athey-imbens-2016')")
+            tab.locator('.reading-index a[data-reading-guide="causal"]').click()
+            assert tab.locator('#causal').is_visible()
             tab.locator('#causal-track-dependent a[href="#causal-ref-reich-2021"]').click()
             assert tab.evaluate('location.hash') == '#causal-ref-reich-2021'
             assert tab.locator('#regression .reading-related a').count()==4
