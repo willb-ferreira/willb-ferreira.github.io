@@ -69,15 +69,21 @@ with sync_playwright() as p:
             assert tab.locator('#inference-track-bayesian').count()==1
             assert tab.locator('#inference-track-information').count()==1
             assert tab.locator('#theory .reading-reference').count()==7
-            assert tab.locator('#geometry .reading-reference').count()==4
+            assert tab.locator('#geometry .reading-reference').count()==5
             assert tab.locator('#theory a[href="#geometry"]').count()==1
             assert tab.locator('#geometry a[href="#theory"]').count()==1
             assert tab.locator('#inference-ref-pardo-2006').count()==1
             assert tab.locator('#geometry a[href*="0167-9473"]').count()==1
+            assert tab.locator('#geometry a[href*="0893-9659"]').count()==1
+            assert tab.locator('#geometry a[href*="1022214326758"]').count()==1
+            assert tab.locator('#geometry a[href="#spatial-models"]').count()==1
+            assert tab.locator('#geometry .reading-reference').nth(3).locator('h4').inner_text().strip().startswith('Statistical tests based on geodesic distances')
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').visibleReferences.length") == 5
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').references.filter(r=>r.id==='menendez-morales-pardo-salicru-1995').length") == 1
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').tracks.every(k=>k.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').references.some(r=>r.id===id)))")
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').visibleReferences.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').references.some(r=>r.id===id))")
 
-            assert tab.locator('li.reading-reference').count()==26
+            assert tab.locator('li.reading-reference').count()==27
             assert tab.locator('#learning').count()==0
             assert tab.locator('#causal').count()==1
             assert tab.locator('.reading-extra').count()==0
@@ -97,12 +103,15 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
-            assert tab.locator('li.reading-reference').count()==26
+            assert tab.locator('li.reading-reference').count()==27
             assert 'Inferência estatística clássica' in tab.locator('#inference-track-classical').inner_text()
             assert 'Inferência estatística bayesiana' in tab.locator('#inference-track-bayesian').inner_text()
             assert 'Inferência por divergências' in tab.locator('#inference-track-information').inner_text() or 'inferência por divergências' in tab.locator('#inference-track-information').inner_text()
             assert 'testes de hipóteses' in tab.locator('#geometry').inner_text().lower()
-            print('CONTENT six concise bilingual guides, six inference/spatial tracks and 26 selected references: PASS')
+            assert 'testes geodésicos' in tab.locator('#geometry').inner_text().lower()
+            assert 'Modelos para dados dependentes' in tab.locator('#geometry .reading-crosslink').last.inner_text()
+            assert len(tab.locator('#geometry').inner_text()) < 5300
+            print('CONTENT six concise bilingual guides, six inference/spatial tracks and 27 selected references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==6
             assert 'divergence-based estimation and hypothesis testing' in tab.locator('article.research-card').nth(1).inner_text()
@@ -154,6 +163,8 @@ with sync_playwright() as p:
     assert mobile_reading.locator('html').get_attribute('lang')=='pt-BR'
     assert 'A ponte ARMA' in mobile_reading.locator('#spatial-track-a').inner_text()
     assert 'Inferência estatística bayesiana' in mobile_reading.locator('#inference-track-bayesian').inner_text()
+    assert mobile_reading.locator('#geometry a[href*="0893-9659"]').count()==1
+    assert mobile_reading.locator('#geometry a[href="#spatial-models"]').count()==1
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
     mobile_reading.screenshot(path=str(ROOT.parent/'willams-reading-mobile.png'),full_page=True)
     mobile_reading.close()
