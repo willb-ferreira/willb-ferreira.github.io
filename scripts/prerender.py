@@ -7,11 +7,13 @@ Run this script again after updating assets/content.js, before publishing.
 from __future__ import annotations
 import os
 import re
+import json
 from pathlib import Path
+from site_config import PAGE_SLUGS, SITE_URL, page_url
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
+PAGES = list(PAGE_SLUGS)
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
@@ -58,6 +60,28 @@ with sync_playwright() as p:
                           lambda _: structured, html, count=1, flags=re.S)
         else:
             html = html.replace('  </head>', structured + '\n  </head>') if '  </head>' in html else html.replace('</head>', structured + '\n</head>')
+        # Canonical/OG and Person metadata are regenerated from one production URL.
+        # Never rely on editing only a generated HTML document.
+        canonical_url = page_url(name)
+        replacements = (
+            (r'<link rel="canonical" href="[^"]+"\s*/>', f'<link rel="canonical" href="{canonical_url}" />'),
+            (r'<meta property="og:url" content="[^"]+"\s*/>', f'<meta property="og:url" content="{canonical_url}" />'),
+            (r'<meta property="og:image" content="[^"]+"\s*/>', f'<meta property="og:image" content="{SITE_URL}/assets/portrait.webp" />'),
+        )
+        for pattern, replacement in replacements:
+            if len(re.findall(pattern, html)) != 1:
+                raise RuntimeError(f'{name}: expected exactly one matching metadata tag: {pattern}')
+            html = re.sub(pattern, lambda _: replacement, html, count=1)
+        person_match = re.search(
+            r'(<script id="person-jsonld" type="application/ld\+json">)(.*?)(</script>)',
+            html, flags=re.S,
+        )
+        if not person_match:
+            raise RuntimeError(f'{name}: missing Person structured data')
+        person = json.loads(person_match.group(2))
+        person['url'] = SITE_URL + '/'
+        structured_json = json.dumps(person, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
+        html = html[:person_match.start(2)] + structured_json + html[person_match.end(2):]
         path.write_text(html, encoding='utf-8')
         print(f'PRERENDER {path.name}: {len(main)} main HTML chars')
     browser.close()

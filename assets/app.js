@@ -798,6 +798,9 @@
     document.getElementById("person-jsonld")?.remove();
     const publicLinks=Object.values(D.profile.social).filter(safe);
     const person={"@context":"https://schema.org","@type":"Person",name:D.profile.name,jobTitle:t(D.profile.role),worksFor:{"@type":"CollegeOrUniversity",name:"Universidade Federal de Pernambuco",alternateName:"UFPE"},description:t(D.profile.introduction),knowsAbout:D.research.map(x=>t(x.title)),sameAs:publicLinks};
+    if(D.profile.citationName)person.alternateName=D.profile.citationName;
+    const canonical=document.querySelector('link[rel="canonical"]')?.getAttribute("href");
+    if(canonical)person.url=new URL("/",canonical).href;
     if(D.profile.email)person.email=D.profile.email;
     const script=document.createElement("script");script.id="person-jsonld";script.type="application/ld+json";script.textContent=JSON.stringify(person).replace(/</g,"\\u003c");document.head.append(script);
   };
