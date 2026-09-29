@@ -246,6 +246,7 @@
   };
 
   const pickIntroReferences = function(g){
+  if(g.visibleReferences){const byId=new Map(g.references.map(r=>[r.id,r]));return g.visibleReferences.map(id=>byId.get(id)).filter(Boolean);}
   const chosen=[];
   ["entry","foundation","seminal","next"].forEach(kind=>{
     const r=(g.references||[]).find(item=>item.kind===kind&&!chosen.includes(item));
@@ -288,11 +289,52 @@
     <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
   </article>`;
 };
+  const renderInferenceGuide = (g,area,i) => {
+    const pt=lang==="pt";
+    const words=pt?{
+      common:"Fundamentos compartilhados",tracks:"Três percursos introdutórios",
+      refs:"Sete leituras selecionadas",reading:"Por onde começar",link:"Conexão entre as áreas"
+    }:{
+      common:"Shared foundations",tracks:"Three introductory routes",
+      refs:"Seven selected readings",reading:"Start with",link:"Connection between areas"
+    };
+    const byId=new Map(g.references.map(r=>[r.id,r]));
+    const visible=pickIntroReferences(g);
+    return `<article class="reading-area reading-area-intro inference-guide" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
+      <div class="reading-intro">
+        <span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span>
+        <h2 id="read-${e(g.id)}">${e(t(area.title))}</h2>
+        <p class="reading-question">${e(t(g.question))}</p>
+        <p>${e(t(g.entry))}</p>
+        <p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="inference-foundations-title">
+        <h3 id="inference-foundations-title">${e(words.common)}</h3><p>${e(t(g.shared))}</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="inference-tracks-title">
+        <h3 id="inference-tracks-title">${e(words.tracks)}</h3>
+        <div class="reading-track-grid">${g.tracks.map(track=>`<article class="reading-track" id="inference-track-${e(track.id)}">
+          <h4>${e(t(track.title))}</h4><p>${e(t(track.description))}</p>
+          <div class="reading-track-links"><strong>${e(words.reading)}:</strong> ${track.refs.map(id=>{const r=byId.get(id);return r?`<a href="#inference-ref-${e(id)}">${e(r.authors.split(";")[0])} (${e(String(r.year))})</a>`:"";}).filter(Boolean).join(" · ")}</div>
+        </article>`).join("")}</div>
+      </section>
+      ${g.crosslink?`<p class="reading-crosslink"><a href="#${e(g.crosslink.target)}">${e(t(g.crosslink.label))} ↗</a></p>`:""}
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="inference-reference-title">
+        <h3 id="inference-reference-title">${e(words.refs)}</h3>
+        <ol>${visible.map(r=>`<li class="reading-reference reading-reference-compact" id="inference-ref-${e(r.id)}">
+          <h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ↗</a></h4>
+          <p class="reading-authors">${e(r.authors)} · ${e(String(r.year))}</p><p>${e(t(r.note))}</p>
+        </li>`).join("")}</ol>
+      </section>
+      <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
+    </article>`;
+  };
   const renderReading = function(){
   const nav=D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))}<span aria-hidden="true">↗</span></a>`).join("");
   const articles=D.readingGuides.map((g,i)=>{
     const area=D.research.find(r=>r.id===g.id);
     if(g.id==="spatial-models" && g.tracks) return renderDependentGuide(g,area,i);
+    if(g.id==="theory" && g.tracks) return renderInferenceGuide(g,area,i);
     const refs=pickIntroReferences(g);
     return `<article class="reading-area reading-area-compact" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
       <div class="reading-intro">
@@ -302,6 +344,7 @@
         <p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p>
       </div>
       <div class="reading-path"><h3>${tx("readingPath")}</h3><ol>${(g.path||[]).slice(0,2).map(step=>`<li>${e(t(step))}</li>`).join("")}</ol></div>
+      ${g.crosslink?`<p class="reading-crosslink"><a href="#${e(g.crosslink.target)}">${e(t(g.crosslink.label))} ↗</a></p>`:""}
       <div class="reading-bibliography reading-bibliography-short"><h3>${tx("readingReferences")}</h3><ol>${refs.map(r=>compactReference(r,false)).join("")}</ol></div>
       <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
     </article>`;
