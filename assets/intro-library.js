@@ -106,6 +106,22 @@
       )
     ]
   };
+  // Connect dependency modelling to adjacent inferential and applied guides.
+  // Statistical dependence is not in itself a causal identification assumption.
+  merged.relatedGuides = [
+    {target:"theory",label:b(
+      "Statistical Inference: estimation, uncertainty and asymptotics under dependent sampling",
+      "Inferência Estatística: estimação, incerteza e assintótica sob amostragem dependente")},
+    {target:"sar",label:b(
+      "Statistical Image Processing: spatial dependence, SAR speckle and pixel-based inference",
+      "Processamento Estatístico de Imagens: dependência espacial, speckle SAR e inferência por pixels")},
+    {target:"regression",label:b(
+      "Regression and Estimating Equations: marginal dependence, spatial random effects and conditional models",
+      "Regressão e Equações de Estimação: dependência marginal, efeitos espaciais aleatórios e modelos condicionais")},
+    {target:"causal",label:b(
+      "Causal Inference: environmental time series and spatial dependence require separate identification assumptions",
+      "Inferência Causal: séries ambientais e dependência espacial exigem hipóteses próprias de identificação")}
+  ];
   D.readingGuides = D.readingGuides
     .filter(g => g.id !== "time-series")
     .map(g => g.id === "spatial-models" ? merged : g);

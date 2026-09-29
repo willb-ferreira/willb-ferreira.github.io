@@ -72,6 +72,17 @@
       "Continue em Geometria da Informação: distância de Fisher–Rao e os testes geodésicos de Menéndez, Morales, Pardo e Salicrú"
     )
   };
+  theory.relatedGuides = [
+    {target:"spatial-models",label:b(
+      "Time Series and Spatial Statistics: valid inference when observations are dependent",
+      "Séries Temporais e Estatística Espacial: inferência válida sob dependência entre observações")},
+    {target:"regression",label:b(
+      "Regression and Estimating Equations: likelihood, GEE and robust standard errors",
+      "Regressão e Equações de Estimação: verossimilhança, GEE e erros-padrão robustos")},
+    {target:"causal",label:b(
+      "Causal Inference: identification assumptions and uncertainty for estimated intervention effects",
+      "Inferência Causal: hipóteses de identificação e incerteza para efeitos de intervenção estimados")}
+  ];
   const theoryIds = new Map([
     ["Theory of Point Estimation, 2nd ed.","lehmann-casella"],
     ["Testing Statistical Hypotheses, 3rd ed.","lehmann-romano"],

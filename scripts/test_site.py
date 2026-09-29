@@ -74,12 +74,58 @@ with sync_playwright() as p:
         if page_name=='reading':
             assert tab.locator('article.reading-area').count()==6
             assert tab.locator('.reading-index a').count()==6
+            # Full editorial graph: each of the six guide introductions has precise,
+            # non-duplicated links to existing guide IDs and meaningful scope.
+            expected_edges={
+                'spatial-models':['theory','sar','regression','causal'],
+                'theory':['geometry','spatial-models','regression','causal'],
+                'sar':['spatial-models','theory','regression','geometry'],
+                'regression':['spatial-models','theory','sar','causal'],
+                'geometry':['theory','sar','spatial-models'],
+                'causal':['spatial-models','theory','regression','sar']
+            }
+            actual_edges=tab.evaluate("""() => Object.fromEntries(
+                Array.from(document.querySelectorAll('article.reading-area')).map(panel => [
+                    panel.id,Array.from(panel.querySelectorAll('.reading-related a')).map(a => a.getAttribute('href').slice(1))
+                ])
+            )""")
+            assert actual_edges == expected_edges,(actual_edges,expected_edges)
+            assert sum(map(len,actual_edges.values())) == 23
+            assert tab.evaluate("""() => Array.from(document.querySelectorAll('.reading-related a')).every(link => {
+                const id=link.getAttribute('href')?.slice(1);
+                return !!id && !!document.getElementById(id)
+                    && !!link.closest('.reading-area')
+                    && link.closest('.reading-area').id !== id
+                    && link.textContent.trim().length > 18
+            })""")
+            rail=tab.locator('.reading-index a').first
+            assert float(rail.evaluate("(el)=>getComputedStyle(el).fontSize").replace('px','')) >= 16
+            assert float(rail.evaluate("(el)=>getComputedStyle(el).lineHeight").replace('px','')) >= 22
+            assert 'Regression and Estimating Equations' in tab.locator('#sar .reading-related a[href="#regression"]').inner_text()
+            assert 'not necessarily geodesics' in tab.locator('#sar .reading-related a[href="#geometry"]').inner_text()
+            assert 'causal interference needs separate assumptions' in tab.locator('#causal .reading-related a[href="#spatial-models"]').inner_text()
+            assert 'identification assumptions' in tab.locator('#spatial-models .reading-related a[href="#causal"]').inner_text()
+            print('AUDIT 23 scientifically scoped links among six guides, current bilingual titles and 16px sidebar: PASS')
             assert tab.locator('article.reading-area:visible').count()==1
             assert tab.locator('#spatial-models').is_visible()
             assert tab.locator('#theory').is_hidden()
             assert tab.locator('.reading-index [aria-current="location"]').count()==1
             assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#spatial-models'
             assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
+            # Follow every cross-guide link as a reader would; verify that the
+            # hash opens exactly its target panel and retains the active nav marker.
+            for source,targets in expected_edges.items():
+                tab.locator(f'.reading-index a[data-reading-guide="{source}"]').click()
+                assert tab.locator(f'#{source}').is_visible()
+                for target in targets:
+                    tab.locator(f'#{source} .reading-related a[href="#{target}"]').click()
+                    assert tab.evaluate('location.hash') == f'#{target}',(source,target)
+                    assert tab.locator(f'#{target}').is_visible(),(source,target)
+                    assert tab.locator('article.reading-area:visible').count()==1
+                    assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == f'#{target}'
+                    tab.locator(f'.reading-index a[data-reading-guide="{source}"]').click()
+            tab.locator('.reading-index a[data-reading-guide="spatial-models"]').click()
+            print('INTERACTION all 23 cross-guide links and single active panel: PASS')
             assert tab.locator('.reading-pagination .previous').count()==0
             assert tab.locator('.reading-pagination .next').count()==1
             assert '01 / 06' in tab.locator('#spatial-models .eyebrow').first.inner_text()
@@ -232,6 +278,13 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models').is_visible()
             assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
             assert '01 / 06 · Biblioteca de pesquisa' in tab.locator('#spatial-models .eyebrow').first.text_content()
+            assert 'Regressão e Equações de Estimação' in tab.locator('#sar .reading-related a[href="#regression"]').inner_text()
+            assert 'não necessariamente geodésicas' in tab.locator('#sar .reading-related a[href="#geometry"]').inner_text()
+            assert 'interferência causal exige hipóteses adicionais' in tab.locator('#causal .reading-related a[href="#spatial-models"]').inner_text()
+            assert 'hipóteses próprias de identificação' in tab.locator('#spatial-models .reading-related a[href="#causal"]').inner_text()
+            assert tab.evaluate("""() => Array.from(document.querySelectorAll('.reading-related a')).every(a =>
+                a.textContent.trim().length > 18 && document.getElementById(a.getAttribute('href').slice(1))
+            )""")
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
@@ -326,6 +379,8 @@ with sync_playwright() as p:
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(mobile_reading,'reading')
     assert mobile_reading.locator('.reading-mobile-picker').is_visible()
+    assert mobile_reading.locator('#spatial-models .reading-related a').count()==4
+    assert mobile_reading.locator('#theory .reading-related a').count()==4
     assert mobile_reading.locator('.reading-index').is_hidden()
     assert mobile_reading.locator('#reading-guide-select option').count()==6
     assert mobile_reading.locator('article.reading-area:visible').count()==1
@@ -377,6 +432,17 @@ with sync_playwright() as p:
     assert not narrow.evaluate('document.documentElement.scrollWidth > innerWidth')
     narrow.close()
     print('INTERACTION concise library mobile 390/320px, EN/PT and overflow: PASS')
+    # The desktop rail remains readable immediately above the mobile breakpoint.
+    medium=browser.new_page(viewport={'width':900,'height':800},device_scale_factor=1)
+    load(medium,'reading')
+    assert medium.locator('.reading-index').is_visible()
+    assert float(medium.locator('.reading-index a').first.evaluate(
+        "(el)=>getComputedStyle(el).fontSize.replace('px','')")) >= 16
+    medium.locator('.reading-index a[data-reading-guide="regression"]').click()
+    assert medium.locator('#regression').is_visible()
+    assert not medium.evaluate('document.documentElement.scrollWidth > innerWidth')
+    medium.close()
+    print('INTERACTION 900px readable sidebar, 390/320px select and no overflow: PASS')
     # A direct URL to a hidden guide or a reference inside it must reveal it.
     deep=browser.new_page(viewport={'width':1365,'height':860},device_scale_factor=1)
     deep.on('pageerror', lambda err: errors.append(str(err)))

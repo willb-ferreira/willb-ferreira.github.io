@@ -113,8 +113,8 @@
   ];
   guide.relatedGuides=[
     {target:"spatial-models",label:b(
-      "Time Series and Spatial Statistics: spatial dependence, time-varying exposures and interference",
-      "Séries Temporais e Estatística Espacial: dependência espacial, exposições variáveis e interferência")},
+      "Time Series and Spatial Statistics: environmental dependence; causal interference needs separate assumptions",
+      "Séries Temporais e Estatística Espacial: dependência ambiental; interferência causal exige hipóteses adicionais")},
     {target:"theory",label:b(
       "Statistical Inference: influence functions, orthogonal scores and valid uncertainty",
       "Inferência Estatística: funções de influência, escores ortogonais e incerteza válida")},

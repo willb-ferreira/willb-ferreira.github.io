@@ -716,14 +716,14 @@ body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
 
 
 /* Single-guide research library: one visible article, six durable anchor links. */
-.reading-layout{grid-template-columns:minmax(206px,.31fr) minmax(0,1fr);gap:clamp(28px,5vw,70px)}
+.reading-layout{grid-template-columns:minmax(245px,.33fr) minmax(0,1fr);gap:clamp(28px,4.5vw,64px)}
 .reading-main{min-width:0}
 .reading-index{max-height:calc(100vh - 124px);overflow-y:auto;scrollbar-width:thin;align-self:start}
-.reading-index a{display:grid;grid-template-columns:23px minmax(0,1fr) 13px;align-items:start;column-gap:11px;padding:14px 10px;border-left:2px solid transparent;transition:color .15s ease,background-color .15s ease;overflow-wrap:anywhere}
-.reading-index .reading-nav-number{font-size:11px;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.65}
+.reading-index a{display:grid;grid-template-columns:27px minmax(0,1fr) 13px;align-items:start;column-gap:12px;padding:15px 10px;border-left:2px solid transparent;font-size:16px;line-height:1.48;font-weight:550;color:var(--ink);transition:color .15s ease,background-color .15s ease;overflow-wrap:anywhere}
+.reading-index .reading-nav-number{font-size:12.5px;font-variant-numeric:tabular-nums;color:var(--muted);line-height:1.65}
 .reading-index .reading-nav-title{min-width:0}
-.reading-index .reading-nav-arrow{font-size:11px;color:var(--muted);line-height:1.65}
-.reading-index a[aria-current="location"]{color:var(--ink);background:var(--accent-soft);border-left-color:var(--accent);font-weight:680}
+.reading-index .reading-nav-arrow{font-size:12px;color:var(--muted);line-height:1.65}
+.reading-index a[aria-current="location"]{color:var(--ink);background:var(--accent-soft);border-left-color:var(--accent);font-weight:700}
 .reading-index a[aria-current="location"] .reading-nav-number,.reading-index a[aria-current="location"] .reading-nav-arrow{color:var(--accent)}
 .reading-guides>.reading-area:not([hidden]){border-top:0;padding-top:10px;padding-bottom:31px}
 .reading-mobile-picker{display:none}
@@ -750,3 +750,11 @@ body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
   .reading-pagination{gap:14px}
 }
 @media(prefers-reduced-motion:reduce){.reading-index a{transition:none}}
+
+
+/* Closing editorial review: consistent cross-area links for the first two guides. */
+.dependent-guide .reading-related,.inference-guide .reading-related{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;margin:25px 0 10px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.dependent-guide .reading-related>strong,.inference-guide .reading-related>strong{grid-column:1/-1;font-size:13px;color:var(--ink)}
+.dependent-guide .reading-related>a,.inference-guide .reading-related>a{font-size:13px;line-height:1.65;color:var(--accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.dependent-guide .reading-related>a:focus-visible,.inference-guide .reading-related>a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+@media(max-width:620px){.dependent-guide .reading-related,.inference-guide .reading-related{grid-template-columns:1fr}}
