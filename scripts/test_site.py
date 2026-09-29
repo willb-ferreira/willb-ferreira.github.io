@@ -367,7 +367,7 @@ with sync_playwright() as p:
         if page_name=='people':
             assert tab.locator('.person-entry').count()==2
             assert 'Pedro Estevão Costa Viana de Araújo' in tab.locator('main').inner_text()
-            assert 'Muhammed Ismail' in tab.locator('main').inner_text()
+            assert 'Muhammad Ismail' in tab.locator('main').inner_text()
             assert 'Co-supervision' in tab.locator('main').inner_text()
             print('CONTENT students and supervision roles: PASS')
         if page_name=='software':

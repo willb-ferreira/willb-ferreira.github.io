@@ -34,9 +34,9 @@ with sync_playwright() as p:
     assert people.locator('.people-subgroup').count()==2
     assert people.locator('.person-entry').count()==2
     assert 'Pedro Estevão Costa Viana de Araújo' in people.locator('main').inner_text()
-    assert 'Muhammed Ismail' in people.locator('main').inner_text()
+    assert 'Muhammad Ismail' in people.locator('main').inner_text()
     assert people.locator('.person-entry').filter(has_text='Pedro Estevão Costa Viana de Araújo').locator('.directory-period').inner_text() == '2026.2'
-    assert people.locator('.person-entry').filter(has_text='Muhammed Ismail').locator('.directory-period').inner_text() == '2026.1'
+    assert people.locator('.person-entry').filter(has_text='Muhammad Ismail').locator('.directory-period').inner_text() == '2026.1'
     people.locator('#language-toggle').click()
     assert 'Coorientação' in people.locator('main').inner_text()
     print('PEOPLE grouped by level/relationship, bilingual: PASS')

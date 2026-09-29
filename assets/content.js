@@ -1031,7 +1031,7 @@ window.PORTFOLIO = {
   /* Public names and academic roles only. Confirm consent for public listing with each student. */
   students: [
     { id: "pedro-estevao", name: "Pedro Estevão Costa Viana de Araújo", levelId: "undergraduate", relation: "supervisor", status: "active", start: "2026.2", end: "", level: { pt: "Iniciação científica", en: "Undergraduate research" }, role: { pt: "Orientação", en: "Supervision" }, project: "", url: "" },
-    { id: "muhammed-ismail", name: "Muhammed Ismail", levelId: "phd", relation: "co-supervisor", status: "active", start: "2026.1", end: "", level: { pt: "Doutorado", en: "Ph.D." }, role: { pt: "Coorientação", en: "Co-supervision" }, project: "", url: "" }
+    { id: "muhammad-ismail", name: "Muhammad Ismail", levelId: "phd", relation: "co-supervisor", status: "active", start: "2026.1", end: "", level: { pt: "Doutorado", en: "Ph.D." }, role: { pt: "Coorientação", en: "Co-supervision" }, project: "", url: "" }
   ],
   /* Add courses as { id, title:{pt,en}, institution, term, level, description:{pt,en}, materials:"" }. */
   courses: [
