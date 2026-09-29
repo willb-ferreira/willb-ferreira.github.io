@@ -6,7 +6,8 @@ Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://will
 
 | Conteúdo | Arquivo / procedimento |
 | --- | --- |
-| Biografia, interesses, projetos, orientandos, disciplinas e notícias | `assets/content.js` |
+| Biografia, projetos, orientandos, disciplinas e notícias | `assets/content.js` |
+| Área unificada de processos estocásticos e guias introdutórios | `assets/intro-library.js` (aplica a curadoria final após `assets/research-library.js`) |
 | Adicionar um DOI aprovado ou selecionar artigos em destaque | `data/sources.json` |
 | Layout, estilos e componentes de interface | `assets/site.css`, `assets/app.js` |
 | Arquivo fotográfico autorizado | `assets/portrait.webp` |
@@ -41,12 +42,13 @@ Nunca publique senhas, tokens, dados pessoais de alunos ou conteúdo de reposit�
 
 ## Reading guides / Guias de leitura
 
-The site now defaults to English; the Portuguese toggle preserves a visitor's choice. `reading.html` contains seven annotated reading paths. Initial guide records are stored under `readingGuides` in `assets/content.js`; expanded bilingual commentary and reference records are maintained in `assets/research-library.js`. Statistical Learning Theory was removed from the public research index at the owner's request. Direct publisher/journal links are provided; the site does not copy copyrighted articles or claim that each list is exhaustive.
+The website defaults to English, with a full Brazilian Portuguese toggle. The public library contains **six concise guides**. *Stochastic Processes and Dependent Data* unifies the former separate time-series and spatial/spatio-temporal research cards. Its introduction has three routes: time series, spatial and spatio-temporal statistics (including geostatistics and Bayesian hierarchy), and the connection through conditional two-dimensional spatial ARMA regression. The historical anchor `reading.html#time-series` still points into the unified introduction.
 
-The guide structure separates entry points, foundational and seminal readings, and subsequent research bridges. The bibliography was checked against publisher, journal or bibliographic catalog records on 2026-09-28/29; editorial selection and the suggested reading paths remain recommendations, not a systematic literature review. The student's eventual research topic and supervision availability still require discussion with the professor. The Lattes is NOT automatically scraped, and the research guide references are not automatically rewritten by Crossref (only approved personal publication DOI records are synced).
+**Edit the public introduction** in `assets/intro-library.js`. This is the final bilingual editorial layer: it modifies only the former spatial/time-series topics, their reference selection and the research-card count. The five other guides keep their original data in `assets/content.js` and `assets/research-library.js`, but their public renderer shows just the introduction, two learning steps and three curated references per area. To change their visible order, update those data records or the compact selection in `assets/app.js`.
 
-To edit a guide: update its initial `readingGuides` object in `assets/content.js` and supplementary sections in `assets/research-library.js` when applicable; keep the bilingual `en` and `pt` fields, and link cited works to DOI, publisher or other authoritative bibliographic pages. To add a new research area also add its `readingGuides` entry and `research` item with the same `id`.
+The deeper, previously merged Topic 1 curriculum has **not been discarded**: `assets/spatial-guide.js` and `docs/spatial-topic-1-audit.md` preserve it as an editorial research archive, not as the public introduction. `reading.html` no longer loads the detailed 31-reference guide. None of the curated reading references is an automatic claim of a personal publication; only approved personal publication records are synced through the academic metadata workflow.
 
+When changing a title or a guide, maintain `en` and `pt` and run `python scripts/prerender.py`, `python scripts/test_site.py`, and the other existing checks before merging.
 
 ## Academic directories / Diretórios acadêmicos (2026)
 
