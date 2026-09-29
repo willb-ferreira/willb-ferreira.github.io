@@ -59,6 +59,18 @@ with sync_playwright() as p:
         assert tab.locator('.footer-col a[href="software.html"]').inner_text() == 'Code & Data', page_name
         assert tab.locator('main').inner_text().strip(),page_name
         assert tab.locator('html').get_attribute('lang')=='en', page_name
+        # Home always uses the domain root; the footer action matches its label.
+        assert tab.locator('#site-header .brand').get_attribute('href') == '/', page_name
+        assert tab.locator('#site-footer .footer-intro .brand').get_attribute('href') == '/', page_name
+        assert tab.locator('a[href="index.html"]').count() == 0, page_name
+        if page_name == 'index':
+            assert tab.locator('#site-footer .footer-bottom a').get_attribute('href') == '#main'
+            assert 'Back to top' in tab.locator('#site-footer .footer-bottom a').inner_text()
+        else:
+            assert tab.locator('#site-footer .footer-bottom a').get_attribute('href') == '/', page_name
+            assert 'Back to home' in tab.locator('#site-footer .footer-bottom a').inner_text()
+        if tab.locator('.breadcrumb a').count():
+            assert tab.locator('.breadcrumb a').first.get_attribute('href') == '/', page_name
         assert tab.title() == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].title.en', page_name), page_name
         assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].description.en', page_name), page_name
         assert tab.locator('meta[property="og:description"]').get_attribute('content') == tab.locator('meta[name="description"]').get_attribute('content'), page_name
@@ -372,6 +384,18 @@ with sync_playwright() as p:
             tab.locator('button[data-type="article"]').click()
             assert tab.locator('#pub-results article').count()==3
             print('INTERACTION three journal papers, one conference record, BibTeX: PASS')
+        if page_name in ('about', 'contact'):
+            lattes = tab.locator('.profile-links a[href*="lattes.cnpq.br"]')
+            assert lattes.count() == 1, page_name
+            assert lattes.inner_text().strip() == 'Lattes CV', page_name
+            assert 'Currículo Lattes' not in tab.locator('main').inner_text(), page_name
+            tab.locator('#language-toggle').click()
+            assert tab.locator('html').get_attribute('lang') == 'pt-BR', page_name
+            assert tab.locator('.profile-links a[href*="lattes.cnpq.br"]').inner_text().strip() == 'Currículo Lattes', page_name
+            assert tab.locator('#site-footer .footer-bottom a').get_attribute('href') == '/', page_name
+            tab.locator('#language-toggle').click()
+            assert tab.locator('.profile-links a[href*="lattes.cnpq.br"]').inner_text().strip() == 'Lattes CV', page_name
+            print(f'INTERACTION {page_name} Lattes localization and home URL: PASS')
         tab.close()
     phone=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(phone,'index')

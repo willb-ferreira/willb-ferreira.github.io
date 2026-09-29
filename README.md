@@ -33,6 +33,10 @@ O endereço principal é `https://willamsferreira.com/` (sem www). O DNS fica no
 
 `assets/content.js` → `seo` centraliza os títulos e descrições EN/PT das dez páginas. `assets/app.js` atualiza `<title>`, description e Open Graph ao alternar idioma sem criar URLs artificiais; `scripts/prerender.py` grava os metadados ingleses no HTML estático, preservando acesso sem JavaScript. A página inicial também publica `WebSite` JSON-LD com o nome curto e o nome acadêmico alternativo; todas as páginas mantêm `Person` JSON-LD e URLs canônicas no domínio sem www. O sitemap existente é suficiente para descoberta, sem requisições manuais de indexação para cada URL. Execute `python scripts/test_domain.py` após a prerenderização para verificar metadados únicos e consistentes.
 
+## Navegação canônica e idioma
+
+Os links para a página inicial usam `/` (domínio sem `/index.html`) em cabeçalho, trilhas de navegação e rodapé. A exceção é a visualização local `file://`, que usa `index.html` para continuar navegável. Visitas antigas a `/index.html` são normalizadas no navegador pela aplicação, preservando parâmetros e âncoras; a URL canônica do HTML já aponta para `/` (isso não constitui um redirecionamento HTTP 301). O rodapé usa **Back to top / Voltar ao topo** na página inicial e **Back to home / Voltar ao início** nas páginas internas. O link do currículo usa **Lattes CV** em inglês e **Currículo Lattes** em português. O prerender e os testes de navegação preservam essas escolhas.
+
 ## Implantação e verificação
 
 `main` aciona o workflow `.github/workflows/deploy.yml`: instala o navegador de renderização, gera HTML estático atualizado e publica no GitHub Pages. A sincronização semanal também gera HTML e publica a nova versão. Acompanhe os resultados em `https://github.com/willb-ferreira/willb-ferreira.github.io/actions`.
