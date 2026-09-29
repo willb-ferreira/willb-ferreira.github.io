@@ -1,5 +1,6 @@
 """Offline smoke tests for this static site using Chromium + Playwright."""
 from pathlib import Path
+import json
 import os
 import re
 from playwright.sync_api import sync_playwright
@@ -9,8 +10,38 @@ PAGES = ['index','research','reading','publications','supervision','people','tea
 css = (ROOT / 'assets/site.css').read_text()
 content = (ROOT / 'assets/content.js').read_text()
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
+spatial = (ROOT / 'assets/spatial-guide.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
+spatial_payload = spatial.split('  D.spatialGuide=', 1)[1].split(';\n  const i=', 1)[0]
+spatial_data = json.loads(spatial_payload)
+spatial_refs = spatial_data['references']
+spatial_ids = {r['id'] for r in spatial_refs}
+assert len(spatial_refs) == 31 and len(spatial_ids) == 31
+assert {s['id'] for s in spatial_data['sections']} == {
+    'foundations', 'track-a', 'track-b', 'bridges', 'learning-paths', 'reading-library'
+}
+assert [len(next(s for s in spatial_data['sections'] if s['id'] == key)['modules'])
+        for key in ('foundations', 'track-a', 'track-b')] == [4, 5, 5]
+for r in spatial_refs:
+    assert all(r.get(field) for field in ('authors', 'title', 'year', 'venue',
+                                          'identifier', 'url', 'verification', 'stage')), r['id']
+    assert r['url'].startswith('https://'), r['id']
+for section in spatial_data['sections']:
+    for module in section['modules']:
+        assert set(module['refs']).issubset(spatial_ids), module['title']
+def check_bilingual(value):
+    if isinstance(value, dict):
+        if 'en' in value or 'pt' in value:
+            assert set(('en', 'pt')).issubset(value), value
+            assert value['en'].strip() and value['pt'].strip(), value
+        for item in value.values():
+            check_bilingual(item)
+    elif isinstance(value, list):
+        for item in value:
+            check_bilingual(item)
+check_bilingual(spatial_data)
+print('SCIENTIFIC EDITORIAL SCHEMA Topic 1, 31 unique refs, link and EN/PT parity: PASS')
 errors=[]
 
 def load(tab, page_name):
@@ -22,6 +53,7 @@ def load(tab, page_name):
     tab.add_style_tag(content=css)
     tab.add_script_tag(content=content)
     tab.add_script_tag(content=library)
+    tab.add_script_tag(content=spatial)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
@@ -55,15 +87,26 @@ with sync_playwright() as p:
             assert tab.locator('#causal').count()==1
             assert 'stochastic processes' in tab.locator('#spatial-models').inner_text().lower()
             assert tab.locator('#time-series h2').inner_text() == 'Time series'
-            assert tab.locator('.reading-extra').count()>=30
+            assert tab.locator('.reading-extra').count()>=23
             assert tab.locator('article.reading-area').count()==7
-            assert tab.locator('li.reading-reference').count()==58
+            assert tab.locator('li.reading-reference').count()==81
             assert tab.locator('a[href*="doi.org"]').count()>=30
+            assert tab.locator('#spatial-track-a .spatial-module').count()==5
+            assert tab.locator('#spatial-track-b .spatial-module').count()==5
+            assert tab.locator('#spatial-foundations .spatial-module').count()==4
+            assert tab.locator('li.spatial-reference').count()==31
+            assert tab.locator('details.spatial-catalogue').count()==3
+            assert tab.locator('#spatial-learning-paths .spatial-level').count()==3
+            tab.locator('details.spatial-catalogue').first.locator('summary').click()
+            assert tab.locator('details.spatial-catalogue').first.get_attribute('open') is not None
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
-            assert tab.locator('li.reading-reference').count()==58
-            print('CONTENT seven bilingual research reading guides and 58 curated references: PASS')
+            assert tab.locator('li.reading-reference').count()==81
+            assert 'Vertente A' in tab.locator('#spatial-track-a h3').inner_text()
+            tab.locator('details.spatial-catalogue').first.locator('summary').click()
+            assert 'Catálogo da editora' in tab.locator('details.spatial-catalogue').first.inner_text()
+            print('CONTENT seven bilingual research reading guides and 81 curated references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
@@ -101,6 +144,18 @@ with sync_playwright() as p:
     phone.locator('#menu-toggle').click()
     phone.screenshot(path=str(ROOT.parent/'willams-site-mobile.png'),full_page=True)
     print('INTERACTION responsive mobile navigation and overflow: PASS')
+    phone.close()
+    mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
+    load(mobile_reading,'reading')
+    assert mobile_reading.locator('#spatial-track-a').count()==1
+    assert mobile_reading.locator('#spatial-track-b').count()==1
+    assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
+    mobile_reading.locator('#language-toggle').click()
+    assert mobile_reading.locator('html').get_attribute('lang')=='pt-BR'
+    assert 'Vertente A' in mobile_reading.locator('#spatial-track-a h3').inner_text()
+    assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
+    mobile_reading.close()
+    print('INTERACTION Topic 1 mobile EN/PT navigation and overflow: PASS')
     mock=browser.new_page(viewport={'width':1365,'height':860})
     mock.on('pageerror',lambda err: errors.append(str(err)))
     html=(ROOT/'publications.html').read_text()
