@@ -21,7 +21,7 @@ def load(tab, page_name):
     tab.set_content(html, wait_until='load')
     tab.add_style_tag(content=css)
     tab.add_script_tag(content=content)
-        tab.add_script_tag(content=library)
+    tab.add_script_tag(content=library)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
