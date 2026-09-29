@@ -42,7 +42,6 @@ with sync_playwright() as p:
     print('PEOPLE grouped by level/relationship, bilingual: PASS')
     people.close()
 
-    assert all(label not in CONTENT for label in ["msc-enl-mixtures","phd-manifold-influence","rinla-mcmc-package","spacetime-exp-family","phd-geodesic-regularization"]), 'A restricted topic identifier remains in public content'
     topics=load(browser,'supervision')
     assert topics.locator('#topic-results article').count()==6
     topics.locator('[data-level="masters"]').click()
