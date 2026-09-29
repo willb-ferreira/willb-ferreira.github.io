@@ -602,7 +602,7 @@
       const heading=article.querySelector("h2");
       heading.tabIndex=-1;heading.focus({preventScroll:true});
     }
-    if(scrollToTarget){
+    if(scrollToTarget&&(targetPanel||hash==="time-series")){
       const destination=targetPanel?.id===nextId?target:article;
       window.requestAnimationFrame(()=>{
         if(destination?.isConnected&&!destination.closest(".reading-area")?.hidden)
