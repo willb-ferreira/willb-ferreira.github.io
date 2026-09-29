@@ -116,10 +116,10 @@
       "Statistical Inference: estimation, uncertainty and hypothesis testing for image-derived measures",
       "Inferência Estatística: estimação, incerteza e testes para medidas extraídas de imagens")},
     {target:"regression",label:b(
-      "Regression and GEE: covariates and correlated outcomes in image studies",
-      "Regressão e GEE: covariáveis e respostas correlacionadas em estudos com imagens")},
+      "Regression and Estimating Equations: covariates, correlated outcomes and distributional image models",
+      "Regressão e Equações de Estimação: covariáveis, respostas correlacionadas e modelos distribucionais em imagens")},
     {target:"geometry",label:b(
-      "Information Geometry: comparing image-derived probability models using information and distances",
-      "Geometria da Informação: comparação de modelos probabilísticos de imagens por informação e distâncias")}
+      "Information Geometry: matrix-valued SAR models and statistical distances, not necessarily geodesics",
+      "Geometria da Informação: modelos SAR matriciais e distâncias estatísticas, não necessariamente geodésicas")}
   ];
 })();
