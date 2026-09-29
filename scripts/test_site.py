@@ -11,6 +11,7 @@ content = (ROOT / 'assets/content.js').read_text()
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
 inference = (ROOT / 'assets/inference-library.js').read_text(encoding='utf-8')
+image_library = (ROOT / 'assets/image-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
@@ -26,6 +27,7 @@ def load(tab, page_name):
     tab.add_script_tag(content=library)
     tab.add_script_tag(content=intro)
     tab.add_script_tag(content=inference)
+    tab.add_script_tag(content=image_library)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
@@ -69,6 +71,22 @@ with sync_playwright() as p:
             assert tab.locator('#inference-track-bayesian').count()==1
             assert tab.locator('#inference-track-information').count()==1
             assert tab.locator('#theory .reading-reference').count()==7
+            assert tab.locator('#sar h2').inner_text() == 'Statistical Image Processing'
+            assert tab.locator('#sar .reading-track').count()==3
+            assert tab.locator('#imaging-track-radar').count()==1
+            assert tab.locator('#imaging-track-optical').count()==1
+            assert tab.locator('#imaging-track-medical').count()==1
+            assert tab.locator('#sar .reading-reference').count()==7
+            assert tab.locator('#sar .reading-track-status').count()==3
+            assert tab.locator('#sar .reading-related a').count()==4
+            assert tab.locator('#sar .reading-related a[href="#spatial-models"]').count()==1
+            assert tab.locator('#sar .reading-related a[href="#theory"]').count()==1
+            assert tab.locator('#sar .reading-related a[href="#regression"]').count()==1
+            assert tab.locator('#sar .reading-related a[href="#geometry"]').count()==1
+            assert tab.locator('#imaging-ref-richards-2022').count()==1
+            assert tab.locator('#imaging-ref-pham-2000').count()==1
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='sar').visibleReferences.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='sar').references.some(r=>r.id===id))")
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='sar').tracks.every(k=>k.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='sar').references.some(r=>r.id===id)))")
             assert tab.locator('#geometry .reading-reference').count()==5
             assert tab.locator('#theory a[href="#geometry"]').count()==1
             assert tab.locator('#geometry a[href="#theory"]').count()==1
@@ -83,7 +101,7 @@ with sync_playwright() as p:
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').tracks.every(k=>k.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').references.some(r=>r.id===id)))")
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').visibleReferences.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').references.some(r=>r.id===id))")
 
-            assert tab.locator('li.reading-reference').count()==27
+            assert tab.locator('li.reading-reference').count()==31
             assert tab.locator('#learning').count()==0
             assert tab.locator('#causal').count()==1
             assert tab.locator('.reading-extra').count()==0
@@ -103,7 +121,13 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
-            assert tab.locator('li.reading-reference').count()==27
+            assert tab.locator('li.reading-reference').count()==31
+            assert tab.locator('#sar h2').inner_text() == 'Processamento Estatístico de Imagens'
+            assert 'Imagens de radar' in tab.locator('#imaging-track-radar').inner_text()
+            assert 'Sensoriamento remoto óptico' in tab.locator('#imaging-track-optical').inner_text()
+            assert 'imagens médicas' in tab.locator('#imaging-track-medical').inner_text().lower()
+            assert 'Interesse de pesquisa emergente' in tab.locator('#imaging-track-medical').inner_text()
+            assert 'Geometria da Informação' in tab.locator('#sar .reading-related').inner_text()
             assert 'Inferência estatística clássica' in tab.locator('#inference-track-classical').inner_text()
             assert 'Inferência estatística bayesiana' in tab.locator('#inference-track-bayesian').inner_text()
             assert 'Inferência por divergências' in tab.locator('#inference-track-information').inner_text() or 'inferência por divergências' in tab.locator('#inference-track-information').inner_text()
@@ -111,9 +135,11 @@ with sync_playwright() as p:
             assert 'testes por distâncias geodésicas' in tab.locator('#geometry').inner_text().lower()
             assert 'Modelos para dados dependentes' in tab.locator('#geometry .reading-crosslink').last.inner_text()
             assert len(tab.locator('#geometry').inner_text()) < 5300
-            print('CONTENT six concise bilingual guides, six inference/spatial tracks and 27 selected references: PASS')
+            print('CONTENT six concise bilingual guides, nine imaging/inference/spatial tracks and 31 selected references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==6
+            assert tab.locator('article.research-card').nth(2).locator('h3').inner_text() == 'Statistical Image Processing'
+            assert 'medical' in tab.locator('article.research-card').nth(2).inner_text().lower()
             assert 'divergence-based estimation and hypothesis testing' in tab.locator('article.research-card').nth(1).inner_text()
             assert 'geodesic distances' in tab.locator('article.research-card').nth(4).inner_text()
             assert tab.locator('article.research-card').first.locator('h3').inner_text() == 'Time Series and Spatial Statistics'
@@ -156,13 +182,18 @@ with sync_playwright() as p:
     phone.close()
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(mobile_reading,'reading')
-    assert mobile_reading.locator('.reading-track').count()==6
+    assert mobile_reading.locator('.reading-track').count()==9
+    assert mobile_reading.locator('#imaging-track-radar').count()==1
+    assert mobile_reading.locator('#imaging-track-optical').count()==1
+    assert mobile_reading.locator('#imaging-track-medical').count()==1
     assert mobile_reading.locator('#inference-track-information').count()==1
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
     mobile_reading.locator('#language-toggle').click()
     assert mobile_reading.locator('html').get_attribute('lang')=='pt-BR'
     assert 'A ponte ARMA' in mobile_reading.locator('#spatial-track-a').inner_text()
     assert 'Inferência estatística bayesiana' in mobile_reading.locator('#inference-track-bayesian').inner_text()
+    assert 'Processamento Estatístico de Imagens' in mobile_reading.locator('#sar h2').inner_text()
+    assert mobile_reading.locator('#sar .reading-related a').count()==4
     assert mobile_reading.locator('#geometry a[href*="0893-9659"]').count()==1
     assert mobile_reading.locator('#geometry a[href="#spatial-models"]').count()==1
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')

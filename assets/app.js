@@ -329,12 +329,61 @@
       <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
     </article>`;
   };
+  const renderImageGuide = (g,area,i) => {
+    const pt=lang==="pt";
+    const w=pt?{
+      shared:"Fundamentos compartilhados",tracks:"Três vertentes de aplicação",start:"Leituras de entrada",
+      refs:"Sete leituras selecionadas",related:"Conexões metodológicas"
+    }:{
+      shared:"Shared foundations",tracks:"Three application routes",start:"Start with",
+      refs:"Seven selected readings",related:"Methodological connections"
+    };
+    const byId=new Map(g.references.map(r=>[r.id,r]));
+    const selected=pickIntroReferences(g);
+    const displayAuthors=r=>{
+      const names=r.authors.split(";").map(n=>n.trim());
+      return names.length>4?names[0]+" et al.":r.authors;
+    };
+    return `<article class="reading-area reading-area-intro image-guide" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
+      <div class="reading-intro">
+        <span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span>
+        <h2 id="read-${e(g.id)}">${e(t(area.title))}</h2>
+        <p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p>
+        <p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="imaging-shared-title">
+        <h3 id="imaging-shared-title">${e(w.shared)}</h3><p>${e(t(g.shared))}</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="imaging-tracks-title">
+        <h3 id="imaging-tracks-title">${e(w.tracks)}</h3>
+        <div class="reading-track-grid">${g.tracks.map(track=>`<article class="reading-track" id="imaging-track-${e(track.id)}">
+          <span class="reading-track-status">${e(t(track.status))}</span>
+          <h4>${e(t(track.title))}</h4><p>${e(t(track.description))}</p>
+          <div class="reading-track-links"><strong>${e(w.start)}:</strong> ${track.refs.map(id=>{const r=byId.get(id);return r?`<a href="#imaging-ref-${e(id)}">${e(r.authors.split(";")[0])} (${e(String(r.year))})</a>`:"";}).filter(Boolean).join(" · ")}</div>
+        </article>`).join("")}</div>
+      </section>
+      <nav class="reading-related" aria-label="${e(w.related)}">
+        <strong>${e(w.related)}:</strong>
+        ${g.relatedGuides.map(c=>`<a href="#${e(c.target)}">${e(t(c.label))} ↗</a>`).join("")}
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="imaging-references-title">
+        <h3 id="imaging-references-title">${e(w.refs)}</h3>
+        <ol>${selected.map(r=>`<li class="reading-reference reading-reference-compact" id="imaging-ref-${e(r.id)}">
+          <h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ↗</a></h4>
+          <p class="reading-authors">${e(displayAuthors(r))} · ${e(String(r.year))}</p>
+          <p>${e(t(r.note))}</p>
+        </li>`).join("")}</ol>
+      </section>
+      <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
+    </article>`;
+  };
   const renderReading = function(){
   const nav=D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))}<span aria-hidden="true">↗</span></a>`).join("");
   const articles=D.readingGuides.map((g,i)=>{
     const area=D.research.find(r=>r.id===g.id);
     if(g.id==="spatial-models" && g.tracks) return renderDependentGuide(g,area,i);
     if(g.id==="theory" && g.tracks) return renderInferenceGuide(g,area,i);
+    if(g.id==="sar" && g.tracks) return renderImageGuide(g,area,i);
     const refs=pickIntroReferences(g);
     return `<article class="reading-area reading-area-compact" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
       <div class="reading-intro">

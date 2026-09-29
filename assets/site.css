@@ -615,3 +615,13 @@ p {color:var(--muted)}
 .reading-crosslink a{color:var(--accent);text-decoration:underline;text-underline-offset:4px}
 .reading-crosslink a:focus-visible,.inference-guide .reading-track a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 .inference-guide .reading-reference-compact{scroll-margin-top:92px}
+
+
+/* Topic 3 only: concise imaging pathways with visible scope and cross-guide links. */
+.image-guide .reading-track-status{display:inline-block;align-self:flex-start;font-size:10px;line-height:1.4;font-weight:650;letter-spacing:.025em;color:var(--accent);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:5px 9px}
+.image-guide .reading-related{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 18px;margin:25px 0 10px;padding:18px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.image-guide .reading-related>strong{grid-column:1/-1;font-size:13px;color:var(--ink)}
+.image-guide .reading-related>a{font-size:12px;line-height:1.7;color:var(--accent);text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.image-guide .reading-related>a:focus-visible,.image-guide .reading-track-links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
+.image-guide .reading-reference-compact{scroll-margin-top:95px}
+@media(max-width:620px){.image-guide .reading-related{grid-template-columns:1fr}}
