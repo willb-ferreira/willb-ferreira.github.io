@@ -572,10 +572,18 @@
     const unique=[...new Set(list.map(x=>String(x).trim()).filter(Boolean))];
     return unique.filter(term=>!/^\d{4}$/.test(term) || !unique.some(other=>other!==term && other.startsWith(term) && /^[.\/-][12]$/.test(other.slice(term.length)))).sort((a,b)=>entryDateKey(b)-entryDateKey(a));
   };
+  // Canonical course levels are "undergraduate" and "postgraduate". Existing "Undergraduate" entries remain valid.
+  const courseLevel = course => {
+    const value=String(course.level||"undergraduate").normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim().toLowerCase();
+    const graduateLevels=["postgraduate","graduate","graduate studies","postgrad","master","masters","master's","msc","phd","doctoral","doctorate","mestrado","doutorado","pos-graduacao","posgraduacao"];
+    return graduateLevels.includes(value)?"postgraduate":"undergraduate";
+  };
   const uniqueCourses = () => {
     const map=new Map();
     D.courses.forEach(course=>{
-      const key=String(course.code || t(course.title)).normalize("NFKC").trim().toLocaleLowerCase("en-US");
+      const institution=String(course.institution||"").normalize("NFKC").trim().toLocaleLowerCase("en-US");
+      const identity=String(course.code||t(course.title)).normalize("NFKC").trim().toLocaleLowerCase("en-US");
+      const key=[institution,courseLevel(course),identity].join("|");
       if(!map.has(key)) map.set(key,{...course,offerings:[]});
       const record=map.get(key);
       record.offerings.push(...courseOfferings(course));
@@ -583,18 +591,23 @@
     });
     return [...map.values()].map(c=>({...c,offerings:courseOfferings({...c,term:""}),latest:courseOfferings({...c,term:""})[0]||""})).sort((a,b)=>entryDateKey(b.latest)-entryDateKey(a.latest)||t(a.title).localeCompare(t(b.title),lang==="pt"?"pt-BR":"en"));
   };
-  const courseRow = c => `<article class="course-entry"><div><h3>${e(t(c.title))}</h3><p>${e(t(c.description||""))}</p>${c.offerings.length>1?`<details class="course-history"><summary>${lang==="pt"?"Histórico de ofertas":"Teaching history"} · ${c.offerings.length}</summary><ul>${c.offerings.map(term=>`<li>${e(term)}</li>`).join("")}</ul></details>`:""}</div><div class="course-meta"><span>${e(c.institution||"")}${c.latest?" · "+e(c.latest):""}</span>${link(c.materials,tx("website"))}</div></article>`;
+  const courseRow = c => `<article class="course-entry"><div><h3>${e(t(c.title))}</h3>${c.offerings.length>1?`<details class="course-history"><summary>${lang==="pt"?"Histórico de ofertas":"Teaching history"} · ${c.offerings.length}</summary><ul>${c.offerings.map(term=>`<li>${e(term)}</li>`).join("")}</ul></details>`:""}</div><div class="course-meta"><span>${e(c.institution||"")}${c.latest?" · "+e(c.latest):""}</span></div></article>`;
+  const renderCourseGroup = (level,items,expanded) => {
+    if(!items.length)return "";
+    const heading=level==="postgraduate"?(lang==="pt"?"Pós-graduação":"Graduate"):(lang==="pt"?"Graduação":"Undergraduate");
+    const shown=expanded?items:items.slice(0,6),older=expanded?[]:items.slice(6);
+    return `<section class="academic-level course-level" data-level="${level}" aria-labelledby="courses-${level}"><div class="directory-heading"><h2 id="courses-${level}">${heading}</h2><span class="directory-count">${items.length}</span></div><div class="course-list">${shown.map(courseRow).join("")}</div>${older.length?`<details class="directory-archive"><summary>${lang==="pt"?"Disciplinas anteriores":"Earlier courses"} (${older.length})</summary><div class="course-list">${older.map(courseRow).join("")}</div></details>`:""}</section>`;
+  };
   const renderCourseResults = () => {
     const query=courseSearch.trim().toLocaleLowerCase(lang==="pt"?"pt-BR":"en-US");
     const items=uniqueCourses().filter(c=>(selectedCourseYear==="all" || c.offerings.some(term=>term.startsWith(selectedCourseYear))) && (!query || [t(c.title),t(c.description||""),...c.offerings].join(" ").toLocaleLowerCase(lang==="pt"?"pt-BR":"en-US").includes(query)));
     const expanded=Boolean(query || selectedCourseYear!=="all");
-    const shown=expanded?items:items.slice(0,6), older=expanded?[]:items.slice(6);
-    return items.length?`<div class="course-list">${shown.map(courseRow).join("")}</div>${older.length?`<details class="directory-archive"><summary>${lang==="pt"?"Disciplinas anteriores":"Earlier courses"} (${older.length})</summary><div class="course-list">${older.map(courseRow).join("")}</div></details>`:""}`:empty("",tx("courses"),lang==="pt"?"Nenhuma disciplina corresponde à busca.":"No matching courses.");
+    return items.length?["undergraduate","postgraduate"].map(level=>renderCourseGroup(level,items.filter(c=>courseLevel(c)===level),expanded)).join(""):empty("",tx("courses"),lang==="pt"?"Nenhuma disciplina corresponde à busca.":"No matching courses.");
   };
   const renderTeaching = () => {
     const unique=uniqueCourses();
     const years=[...new Set(unique.flatMap(c=>c.offerings.map(term=>term.slice(0,4))).filter(s=>/^\d{4}$/.test(s)))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("teaching"),tx("teachingTitle"),tx("teachingLead"))}<section class="section"><div class="shell">${sectionTitle(tx("teaching"),tx("courses"))}${unique.length?`<div class="toolbar course-toolbar"><label class="search-input">${icon("search")}<input id="course-search" type="search" autocomplete="off" value="${e(courseSearch)}" placeholder="${lang==="pt"?"Buscar disciplinas":"Search courses"}" aria-label="${lang==="pt"?"Buscar disciplinas":"Search courses"}"/></label><label class="course-year-filter">${lang==="pt"?"Ano":"Year"} <select id="course-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${y}" ${selectedCourseYear===y?"selected":""}>${y}</option>`).join("")}</select></label></div><div id="course-results">${renderCourseResults()}</div><p class="directory-note">${lang==="pt"?"Cada disciplina aparece uma vez; períodos confirmados são reunidos no histórico da mesma disciplina. O ano não implica um semestre específico.":"Each course appears once. Confirmed teaching terms are grouped in its history; a year-only record does not specify a semester."}</p>`:empty("",tx("courses"),tx("coursesEmpty"))}</div></section>`;
+    return `${pageHero(tx("teaching"),tx("teachingTitle"),tx("teachingLead"))}<section class="section"><div class="shell">${sectionTitle(tx("teaching"),tx("courses"))}${unique.length?`<div class="toolbar course-toolbar"><label class="search-input">${icon("search")}<input id="course-search" type="search" autocomplete="off" value="${e(courseSearch)}" placeholder="${lang==="pt"?"Buscar disciplinas":"Search courses"}" aria-label="${lang==="pt"?"Buscar disciplinas":"Search courses"}"/></label><label class="course-year-filter">${lang==="pt"?"Ano":"Year"} <select id="course-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${y}" ${selectedCourseYear===y?"selected":""}>${y}</option>`).join("")}</select></label></div><div id="course-results">${renderCourseResults()}</div>`:empty("",tx("courses"),tx("coursesEmpty"))}</div></section>`;
   };
   const renderSoftware = () => `${pageHero(tx("software"),tx("softwareTitle"),tx("softwareLead"))}<section class="section"><div class="shell">${D.software.length?`<div class="cards-2">${D.software.map(s=>`<article class="project-card"><h3>${e(s.name)}</h3><p>${e(t(s.description))}</p>${link(s.url,tx("code"))}</article>`).join("")}</div>`:`<div class="note-box">${e(lang === "pt" ? "Ainda não disponibilizei repositórios de pesquisa nesta página. Os links serão incluídos quando os materiais estiverem prontos para divulgação." : "No research repositories are listed here yet. Links will be added when materials are ready for public release.")}</div>`}${safe(D.profile.social.github)?`<div style="height:22px"></div>${link(D.profile.social.github,"GitHub")}`:""}</div></section>`;
   const renderAbout = () => `${pageHero(tx("about"),tx("aboutTitle"),tx("aboutLead"))}<section class="section"><div class="shell split-section"><div class="prose"><span class="eyebrow">${tx("approach")}</span><h2>${e(t(D.profile.role))}</h2><p>${tx("aboutP1")}</p><p>${tx("aboutP2")}</p><div class="profile-links">${profileLinks()||`<a href="contact.html">${tx("contact")} ${icon("arrow")}</a>`}</div></div><div>${safe(D.profile.portrait)?portraitPanel("about"):`<div class="signal-panel" style="min-height:350px"><div class="signal-grid"></div><div class="panel-top"><span>${tx("visualHead")}</span><span class="panel-tag">WB</span></div><div style="position:absolute;inset:64px 20px 72px;display:grid;place-items:center;font-size:clamp(90px,14vw,150px);font-weight:800;letter-spacing:-.14em;color:#c4f6dc" aria-hidden="true">WB.</div><div class="panel-bottom"><div><strong>${e(D.profile.name)}</strong><span>${e(t(D.profile.location))}</span></div></div></div>`}</div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("about"),tx("academicPath"))}<div class="timeline">${D.experience.map(x=>`<div class="timeline-item"><span class="timeline-year">${e(t(x.year))}</span><h3>${e(t(x.title))}</h3><p>${e(x.institution)}</p></div>`).join("")}</div><div style="height:30px"></div><p class="small muted">${tx("aboutDisclaimer")}</p></div></section>${banner()}`;
