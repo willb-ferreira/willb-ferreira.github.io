@@ -1028,11 +1028,13 @@ window.PORTFOLIO = {
     }
   }
 ],
-  /* Public names and academic roles only. Confirm consent for public listing with each student. */
+  /* Store confirmed full names as editorial data; student and collaborator names are abbreviated at display time. Confirm consent before public listing. */
   students: [
     { id: "pedro-estevao", name: "Pedro Estevão Costa Viana de Araújo", levelId: "undergraduate", relation: "supervisor", status: "active", start: "2026.2", end: "", level: { pt: "Iniciação científica", en: "Undergraduate research" }, role: { pt: "Orientação", en: "Supervision" }, project: "", url: "" },
     { id: "muhammad-ismail", name: "Muhammad Ismail", levelId: "phd", relation: "co-supervisor", status: "active", start: "2026.1", end: "", level: { pt: "Doutorado", en: "Ph.D." }, role: { pt: "Coorientação", en: "Co-supervision" }, project: "", url: "" }
   ],
+  /* Future named research collaborators: { name, role:{pt,en}, affiliation:{pt,en}, url:"" }. Publish only with consent. */
+  collaborators: [],
   /* Add courses as { id, title:{pt,en}, institution, term, level, description:{pt,en}, materials:"" }. */
   courses: [
     { id: "probabilidade-2", title: { pt: "Probabilidade 2", en: "Probability II" }, institution: "UFPE", term: "2026.1", offerings: ["2026.1"], level: "Undergraduate", description: { pt: "Probabilidade para a graduação em Estatística.", en: "Probability for undergraduate Statistics students." }, materials: "" },

@@ -33,15 +33,34 @@ with sync_playwright() as p:
     assert people.locator('.academic-level').count()==2
     assert people.locator('.people-subgroup').count()==2
     assert people.locator('.person-entry').count()==2
-    assert 'Pedro Estevão Costa Viana de Araújo' in people.locator('main').inner_text()
+    assert 'Pedro E. C. V. de Araújo' in people.locator('main').inner_text()
     assert 'Muhammad Ismail' in people.locator('main').inner_text()
-    assert people.locator('.person-entry').filter(has_text='Pedro Estevão Costa Viana de Araújo').locator('.directory-period').inner_text() == '2026.2'
+    assert 'Pedro Estevão Costa Viana de Araújo' not in people.locator('main').inner_text()
+    assert people.locator('.person-entry').filter(has_text='Pedro E. C. V. de Araújo').locator('.directory-period').inner_text() == '2026.2'
     assert people.locator('.person-entry').filter(has_text='Muhammad Ismail').locator('.directory-period').inner_text() == '2026.1'
     people.locator('#language-toggle').click()
     assert 'Coorientação' in people.locator('main').inner_text()
     print('PEOPLE grouped by level/relationship, bilingual: PASS')
     people.close()
 
+    # Future collaborators use the same rule; two-name records remain intact.
+    collaborators_mock='''window.PORTFOLIO.collaborators.push(
+      {id:"collab-test-1",name:"Ana Maria da Silva",role:{pt:"Colaboração em pesquisa",en:"Research collaborator"},affiliation:{pt:"UFPE",en:"UFPE"}},
+      {id:"collab-test-2",name:"João da Silva"},
+      {id:"collab-test-3",name:"Maria Clara Silva Neto"});'''
+    collaborators=load(browser,'people',extra=collaborators_mock)
+    assert collaborators.locator('.academic-level').count()==3
+    assert collaborators.locator('.people-directory .person-entry').count()==5
+    assert 'Collaborators' in collaborators.locator('main').inner_text()
+    assert 'Ana M. da Silva' in collaborators.locator('main').inner_text()
+    assert 'João da Silva' in collaborators.locator('main').inner_text()
+    assert 'Maria C. Silva Neto' in collaborators.locator('main').inner_text()
+    assert 'Ana Maria da Silva' not in collaborators.locator('main').inner_text()
+    collaborators.locator('#language-toggle').click()
+    assert 'Colaboradores' in collaborators.locator('main').inner_text()
+    assert 'Ana M. da Silva' in collaborators.locator('main').inner_text()
+    print('PEOPLE future collaborators abbreviated; two-name and compound surnames preserved: PASS')
+    collaborators.close()
     topics=load(browser,'supervision')
     assert topics.locator('#topic-results article').count()==6
     topics.locator('[data-level="masters"]').click()

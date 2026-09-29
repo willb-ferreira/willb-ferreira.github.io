@@ -673,11 +673,27 @@
     const hit = String(value || "").match(/^(\d{4})(?:(?:[./]([12]))|(?:-(\d{2})))?/);
     return hit ? Number(hit[1]) * 100 + (hit[3] ? Number(hit[3]) : hit[2] ? (Number(hit[2])===1 ? 6 : 12) : 0) : 0;
   };
+  // Keep full names in editorial data; abbreviate only student/collaborator display.
+  // Preserve surname particles and family suffixes (e.g. "de Araújo", "Silva Neto").
+  const formatPublicPersonName = value => {
+    const words=String(value ?? "").trim().split(/\s+/u).filter(Boolean);
+    if(words.length < 3)return words.join(" ");
+    const particles=new Set(["de","da","do","das","dos","del","della","di","du","van","von","der","den","la","le"]);
+    const suffixes=new Set(["filho","filha","neto","neta","sobrinho","sobrinha","junior","júnior","jr","jr.","ii","iii"]);
+    let surnameEnd=words.length-1;
+    if(surnameEnd > 1 && suffixes.has(words[surnameEnd].toLocaleLowerCase()))surnameEnd--;
+    let surnameStart=surnameEnd;
+    while(surnameStart > 1 && particles.has(words[surnameStart-1].toLocaleLowerCase()))surnameStart--;
+    const initials=words.slice(1,surnameStart)
+      .filter(word=>!particles.has(word.toLocaleLowerCase()))
+      .map(word=>word.endsWith(".") ? word : `${Array.from(word)[0].toLocaleUpperCase()}.`);
+    return [words[0],...initials,...words.slice(surnameStart)].join(" ");
+  };
   const studentLevel = s => s.levelId || (/phd|doutor/i.test(t(s.level||"")) ? "phd" : /master|mestrad/i.test(t(s.level||"")) ? "masters" : "undergraduate");
   const studentRelation = s => s.relation || (/co.?super|coorient/i.test(t(s.role||"")) ? "co-supervisor" : "supervisor");
   const renderPerson = s => {
     const period = s.start || s.end ? `<span class="directory-period">${e(s.start || (lang==="pt"?"Data não informada":"Date not provided"))}${s.end?` – ${e(s.end)}`:""}</span>` : "";
-    return `<article class="person-entry"><div class="person-entry-main"><h3>${e(s.name)}</h3>${period}${s.project?`<p>${e(t(s.project))}</p>`:""}</div>${safe(s.url)?link(s.url,tx("website")):""}</article>`;
+    return `<article class="person-entry"><div class="person-entry-main"><h3>${e(formatPublicPersonName(s.name))}</h3>${period}${s.project?`<p>${e(t(s.project))}</p>`:""}</div>${safe(s.url)?link(s.url,tx("website")):""}</article>`;
   };
   const renderPersonList = people => {
     const ordered = [...people].sort((a,b) => (a.status==="alumnus")-(b.status==="alumnus") || entryDateKey(b.start||b.end)-entryDateKey(a.start||a.end) || a.name.localeCompare(b.name));
@@ -685,6 +701,11 @@
     const older = ordered.filter(x=>x.status==="alumnus");
     const show=recent.slice(0,6), hidden=recent.slice(6).concat(older);
     return `<div class="people-directory">${show.map(renderPerson).join("")}</div>${hidden.length?`<details class="directory-archive"><summary>${lang==="pt"?"Ver mais orientandos e egressos":"More students and alumni"} (${hidden.length})</summary><div class="people-directory">${hidden.map(renderPerson).join("")}</div></details>`:""}`;
+  };
+  // Named collaborators share the same display rule, without changing citation author lists.
+  const renderCollaborator = c => {
+    const role=t(c.role || ""),affiliation=t(c.affiliation || "");
+    return `<article class="person-entry"><div class="person-entry-main"><h3>${e(formatPublicPersonName(c.name))}</h3>${role?`<p>${e(role)}</p>`:""}${affiliation?`<p>${e(affiliation)}</p>`:""}</div>${safe(c.url)?link(c.url,tx("website")):""}</article>`;
   };
   const renderPeople = () => {
     const names = lang === "pt" ? {undergraduate:"Graduação e iniciação científica",masters:"Mestrado",phd:"Doutorado",supervisor:"Orientação",co:"Coorientação"} : {undergraduate:"Undergraduate research",masters:"Master's",phd:"Ph.D.",supervisor:"Supervision",co:"Co-supervision"};
@@ -698,7 +719,10 @@
       }).join("");
       return `<section class="academic-level"><div class="directory-heading"><h2>${names[level]}</h2><span class="directory-count">${members.length}</span></div>${roles}</section>`;
     }).join("");
-    return `${pageHero(tx("people"),tx("peopleTitle"),tx("peopleLead"))}<section class="section"><div class="shell">${sections || empty("",tx("people"),tx("peopleEmpty"))}<p class="directory-note">${lang==="pt"?"Organização por nível e modalidade de orientação. Períodos são mostrados apenas quando confirmados; alunos e egressos anteriores ficam no histórico.":"Grouped by academic level and supervision role. Dates appear only when confirmed; earlier students and alumni remain in the expandable archive."}</p></div></section>`;
+    const collaborators=(D.collaborators || []).filter(c=>String(c?.name || "").trim());
+    const collaborationSection=collaborators.length ? `<section class="academic-level"><div class="directory-heading"><h2>${lang==="pt"?"Colaboradores":"Collaborators"}</h2><span class="directory-count">${collaborators.length}</span></div><div class="people-directory">${collaborators.map(renderCollaborator).join("")}</div></section>` : "";
+    const directory=sections+collaborationSection || empty("",tx("people"),tx("peopleEmpty"));
+    return `${pageHero(tx("people"),tx("peopleTitle"),tx("peopleLead"))}<section class="section"><div class="shell">${directory}<p class="directory-note">${lang==="pt"?"Organização por nível e modalidade de orientação. Períodos são mostrados apenas quando confirmados; alunos e egressos anteriores ficam no histórico.":"Grouped by academic level and supervision role. Dates appear only when confirmed; earlier students and alumni remain in the expandable archive."}</p></div></section>`;
   };
   const courseOfferings = c => {
     const list = (Array.isArray(c.offerings) ? c.offerings : []).map(x => typeof x === "string" ? x : x?.term).filter(Boolean);

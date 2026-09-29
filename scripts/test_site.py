@@ -366,7 +366,8 @@ with sync_playwright() as p:
             print('INTERACTION supervision filter: PASS')
         if page_name=='people':
             assert tab.locator('.person-entry').count()==2
-            assert 'Pedro Estevão Costa Viana de Araújo' in tab.locator('main').inner_text()
+            assert 'Pedro E. C. V. de Araújo' in tab.locator('main').inner_text()
+            assert 'Pedro Estevão Costa Viana de Araújo' not in tab.locator('main').inner_text()
             assert 'Muhammad Ismail' in tab.locator('main').inner_text()
             assert 'Co-supervision' in tab.locator('main').inner_text()
             print('CONTENT students and supervision roles: PASS')

@@ -29,6 +29,10 @@ for slug in PAGE_SLUGS:
     assert og_urls == canonical, (path, og_urls)
     assert og_images == [SITE_URL + "/assets/portrait.webp"], (path, og_images)
     assert LEGACY_URL not in html, path
+    if slug == 'people':
+        assert 'Pedro E. C. V. de Araújo' in html, path
+        assert 'Pedro Estevão Costa Viana de Araújo' not in html, path
+        assert 'Muhammad Ismail' in html, path
     assert 'href="index.html"' not in html, path
     assert html.count('class="brand" href="/"') == 2, path
     if 'class="breadcrumb"' in html:
