@@ -31,6 +31,108 @@ window.PORTFOLIO = {
       linkedin: ""
     }
   },
+  seo: {
+    "index": {
+      "title": {
+        "en": "Willams Batista | Statistics Research and Teaching",
+        "pt": "Willams Batista | Pesquisa e Ensino em Estatística"
+      },
+      "description": {
+        "en": "Academic website of Willams Batista at UFPE: statistical inference, spatial models, SAR image processing, scientific publications and teaching.",
+        "pt": "Site acadêmico de Willams Batista na UFPE: inferência estatística, modelos espaciais, processamento de imagens SAR, publicações e ensino."
+      }
+    },
+    "research": {
+      "title": {
+        "en": "Research in Statistics | Willams Batista",
+        "pt": "Pesquisa em Estatística | Willams Batista"
+      },
+      "description": {
+        "en": "Research interests in spatial and spatio-temporal statistics, statistical inference, image processing, regression and causal inference at UFPE.",
+        "pt": "Áreas de interesse em estatística espacial e espaço-temporal, inferência, processamento de imagens, regressão e inferência causal na UFPE."
+      }
+    },
+    "reading": {
+      "title": {
+        "en": "Statistics Reading Guides | Willams Batista",
+        "pt": "Guias de Leitura em Estatística | Willams Batista"
+      },
+      "description": {
+        "en": "Six bilingual guides to spatial statistics, time series, statistical inference, image processing, regression, information geometry and causal inference.",
+        "pt": "Seis guias bilíngues de estatística espacial, séries temporais, inferência estatística, processamento de imagens, regressão, geometria e causalidade."
+      }
+    },
+    "publications": {
+      "title": {
+        "en": "Scientific Publications | Willams Batista",
+        "pt": "Publicações Científicas | Willams Batista"
+      },
+      "description": {
+        "en": "Scientific articles and conference contributions by Willams B. F. da Silva, with available DOI links and related research resources.",
+        "pt": "Artigos científicos e trabalhos em congressos de Willams B. F. da Silva, com links de DOI e recursos de pesquisa disponíveis."
+      }
+    },
+    "supervision": {
+      "title": {
+        "en": "Supervision and Research Topics | Willams Batista",
+        "pt": "Orientações e Temas de Pesquisa | Willams Batista"
+      },
+      "description": {
+        "en": "Supervision information, student projects and broad research topics for undergraduate and graduate students in statistics at UFPE.",
+        "pt": "Informações sobre orientação, projetos estudantis e temas de pesquisa para estudantes de graduação e pós-graduação em Estatística na UFPE."
+      }
+    },
+    "people": {
+      "title": {
+        "en": "Research Students | Willams Batista",
+        "pt": "Estudantes de Pesquisa | Willams Batista"
+      },
+      "description": {
+        "en": "Undergraduate and graduate research students supervised or co-supervised by Willams Batista at the Federal University of Pernambuco.",
+        "pt": "Estudantes de graduação e pós-graduação orientados ou coorientados por Willams Batista na Universidade Federal de Pernambuco."
+      }
+    },
+    "teaching": {
+      "title": {
+        "en": "Statistics Courses and Teaching | Willams Batista",
+        "pt": "Disciplinas e Ensino de Estatística | Willams Batista"
+      },
+      "description": {
+        "en": "Courses and teaching history in probability, statistical inference and multivariate analysis at the Federal University of Pernambuco.",
+        "pt": "Disciplinas e histórico de ensino em probabilidade, inferência estatística e análise multivariada na Universidade Federal de Pernambuco."
+      }
+    },
+    "software": {
+      "title": {
+        "en": "Code & Data | Willams Batista",
+        "pt": "Código e Dados | Willams Batista"
+      },
+      "description": {
+        "en": "Scientific code and data resources from Willams Batista, with links to public research repositories when materials are available.",
+        "pt": "Código científico e recursos de dados de Willams Batista, com links para repositórios públicos quando os materiais estiverem disponíveis."
+      }
+    },
+    "about": {
+      "title": {
+        "en": "About Willams Batista | Statistics at UFPE",
+        "pt": "Sobre Willams Batista | Estatística na UFPE"
+      },
+      "description": {
+        "en": "Academic background and research interests of Willams Batista, a professor in the Department of Statistics at the Federal University of Pernambuco.",
+        "pt": "Trajetória acadêmica e interesses de pesquisa de Willams Batista, professor do Departamento de Estatística da Universidade Federal de Pernambuco."
+      }
+    },
+    "contact": {
+      "title": {
+        "en": "Contact Willams Batista | UFPE Statistics",
+        "pt": "Contato com Willams Batista | Estatística UFPE"
+      },
+      "description": {
+        "en": "Contact Willams Batista about research collaboration, academic inquiries and supervision at UFPE via institutional email and public profiles.",
+        "pt": "Entre em contato com Willams Batista para colaboração em pesquisa, assuntos acadêmicos e orientação na UFPE por e-mail institucional e perfis públicos."
+      }
+    }
+  },
   research: [
     {
       id: "spatial-models", number: "01", symbol: "∿",
