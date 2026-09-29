@@ -377,6 +377,53 @@
       <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
     </article>`;
   };
+  const renderGeometryGuide = (g,area,i) => {
+    const pt=lang==="pt";
+    const w=pt?{
+      shared:"Fundamentos compartilhados",tracks:"Três vertentes de pesquisa",
+      start:"Leitura inicial",refs:"Oito leituras selecionadas",
+      related:"Conexões com outras áreas"
+    }:{
+      shared:"Shared foundations",tracks:"Three research pathways",
+      start:"Start with",refs:"Eight selected readings",
+      related:"Connections with other areas"
+    };
+    const byId=new Map(g.references.map(r=>[r.id,r]));
+    const chosen=pickIntroReferences(g);
+    const authorLabel=r=>r.authors.split(";").map(n=>n.trim()).length>4?
+      r.authors.split(";")[0].trim()+" et al.":r.authors;
+    return `<article class="reading-area reading-area-intro geometry-guide" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
+      <div class="reading-intro">
+        <span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span>
+        <h2 id="read-${e(g.id)}">${e(t(area.title))}</h2>
+        <p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p>
+        <p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="geometry-shared-title">
+        <h3 id="geometry-shared-title">${e(w.shared)}</h3><p>${e(t(g.shared))}</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="geometry-tracks-title">
+        <h3 id="geometry-tracks-title">${e(w.tracks)}</h3>
+        <div class="reading-track-grid">${g.tracks.map(track=>`<article class="reading-track" id="geometry-track-${e(track.id)}">
+          <h4>${e(t(track.title))}</h4><p>${e(t(track.description))}</p>
+          <div class="reading-track-links"><strong>${e(w.start)}:</strong> ${track.refs.map(id=>{const r=byId.get(id);return r?`<a href="#geometry-ref-${e(id)}">${e(r.authors.split(";")[0].trim())} (${e(String(r.year))})</a>`:"";}).filter(Boolean).join(" · ")}</div>
+        </article>`).join("")}</div>
+      </section>
+      <nav class="reading-related" aria-label="${e(w.related)}">
+        <strong>${e(w.related)}:</strong>
+        ${[g.crosslink,...(g.relatedGuides||[])].filter(Boolean).map(link=>`<a href="#${e(link.target)}">${e(t(link.label))} ↗</a>`).join("")}
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="geometry-references-title">
+        <h3 id="geometry-references-title">${e(w.refs)}</h3>
+        <ol>${chosen.map(r=>`<li class="reading-reference reading-reference-compact" id="geometry-ref-${e(r.id)}">
+          <h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ↗</a></h4>
+          <p class="reading-authors">${e(authorLabel(r))} · ${e(String(r.year))}</p>
+          <p>${e(t(r.note))}</p>
+        </li>`).join("")}</ol>
+      </section>
+      <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
+    </article>`;
+  };
   const renderReading = function(){
   const nav=D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))}<span aria-hidden="true">↗</span></a>`).join("");
   const articles=D.readingGuides.map((g,i)=>{
@@ -384,6 +431,7 @@
     if(g.id==="spatial-models" && g.tracks) return renderDependentGuide(g,area,i);
     if(g.id==="theory" && g.tracks) return renderInferenceGuide(g,area,i);
     if(g.id==="sar" && g.tracks) return renderImageGuide(g,area,i);
+    if(g.id==="geometry" && g.tracks) return renderGeometryGuide(g,area,i);
     const refs=pickIntroReferences(g);
     return `<article class="reading-area reading-area-compact" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
       <div class="reading-intro">
