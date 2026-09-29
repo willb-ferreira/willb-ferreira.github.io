@@ -736,10 +736,21 @@
   const toBibtex = p => p.bibtex || `@${p.type==="article"?"article":"misc"}{${(p.id||"paper").replace(/[^a-zA-Z0-9_-]/g,"")},\n  title = {${p.title||""}},\n  author = {${p.authors||""}},\n  year = {${p.year||""}},\n  journal = {${p.venue||""}}${p.doi?`,\n  doi = {${p.doi}}`:""}\n}`;
   const attach = () => {
     if(page==="reading"){
+      // Reveal a different guide before the browser attempts to scroll to a hidden anchor.
+      document.querySelector(".reading-layout")?.addEventListener("click",ev=>{
+        const link=ev.target.closest('a[href^="#"]');
+        if(!link)return;
+        const id=link.getAttribute("href").slice(1);
+        const panel=document.getElementById(id)?.closest(".reading-area");
+        if(!panel||panel.id===selectedReadingGuide)return;
+        ev.preventDefault();
+        window.location.hash=id;
+        syncReadingSelection(true);
+      });
       document.getElementById("reading-guide-select")?.addEventListener("change",ev=>{
         const id=ev.target.value;
-        if(window.location.hash==="#"+id)syncReadingSelection(true);
-        else window.location.hash=id;
+        if(window.location.hash!=="#"+id)window.location.hash=id;
+        syncReadingSelection(true);
       });
       syncReadingSelection(!readingNavigationInitialized&&Boolean(window.location.hash));
       readingNavigationInitialized=true;
