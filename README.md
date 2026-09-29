@@ -37,3 +37,12 @@ python scripts/test_sync_academic.py
 ```
 
 Nunca publique senhas, tokens, dados pessoais de alunos ou conteúdo de repositórios privados no GitHub Pages. O site é público.
+
+
+## Reading guides / Guias de leitura
+
+The site now defaults to English; the Portuguese toggle preserves a visitor's choice. `reading.html` contains seven annotated reading paths. The human-maintained reference records (titles, publishers/DOI URLs and bilingual notes) are stored under `readingGuides` in `assets/content.js`. Direct publisher/journal links are provided; the site does not copy copyrighted articles or claim that each list is exhaustive.
+
+The guide structure separates entry points, foundational and seminal readings, and subsequent research bridges. The bibliography was checked against publisher, journal or bibliographic catalog records on 2026-09-28/29; editorial selection and the suggested reading paths remain recommendations, not a systematic literature review. The student's eventual research topic and supervision availability still require discussion with the professor. The Lattes is NOT automatically scraped, and the research guide references are not automatically rewritten by Crossref (only approved personal publication DOI records are synced).
+
+To edit a guide: update the matching `readingGuides` object in `assets/content.js`; keep the bilingual `en` and `pt` fields, and link each cited work to its DOI, publisher or other authoritative bibliographic page. To add a new research area also add its `readingGuides` entry and `research` item with the same `id`.

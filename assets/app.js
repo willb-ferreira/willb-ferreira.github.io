@@ -7,7 +7,7 @@
   const href = name => name === "index" ? "index.html" : `${name}.html`;
   const getPref = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
   const setPref = (key, value) => { try { localStorage.setItem(key, value); } catch { /* file:// privacy settings */ } };
-  let lang = getPref("wb-lang", "pt") === "en" ? "en" : "pt";
+  let lang = getPref("wb-lang", "en") === "pt" ? "pt" : "en";
   let theme = getPref("wb-theme", "light") === "dark" ? "dark" : "light";
   let selectedPublicationType = "all";
   let publicationSearch = "";
@@ -18,6 +18,20 @@
 
   const M = {
     pt: {
+      reading:"Guias de leitura",
+      readingLink:"Ler o guia",
+      readingSmall:"Biblioteca de pesquisa",
+      readingTitle:"Por onde começar em cada área",
+      readingIntro:"Uma seleção comentada de referências para construir fundamentos antes de escolher um problema de pesquisa.",
+      readingButton:"Explorar os guias de leitura",
+      readingPageLead:"Sete percursos de leitura com fundamentos, questões para estudar e referências de editoras e periódicos. Não substituem uma revisão sistemática nem anunciam vagas de orientação.",
+      readingBackground:"Conhecimentos prévios:",
+      readingPath:"Um percurso possível",
+      readingReferences:"Leituras selecionadas",
+      readingBack:"Voltar ao início dos guias",
+      readingIndex:"Nesta página",
+      readingNoteTitle:"Como usar estes guias.",
+      readingNote:"Comece pela referência introdutória, passe aos fundamentos e leia artigos seminais com suas hipóteses em mente. As sugestões indicam caminhos de estudo, não uma classificação da qualidade das obras nem projetos de orientação disponíveis.",
       index:"Início",research:"Pesquisa",publications:"Publicações",supervision:"Orientação",people:"Pessoas",
       teaching:"Ensino",software:"Código e dados",about:"Sobre",contact:"Contato",
       skip:"Pular para o conteúdo",openMenu:"Abrir menu",closeMenu:"Fechar menu",toggleTheme:"Alternar tema",toggleLanguage:"Change language to English",
@@ -75,6 +89,20 @@
       news:"Atualizações",newsDesc:"Marcos recentes da pesquisa e da vida acadêmica.",nothingNews:"Novidades serão publicadas aqui.",backHome:"Voltar ao início"
     },
     en: {
+      reading:"Reading guides",
+      readingLink:"Reading guide",
+      readingSmall:"Research library",
+      readingTitle:"A starting point for each research area",
+      readingIntro:"Annotated references to help students build foundations before choosing a research question.",
+      readingButton:"Explore the reading guides",
+      readingPageLead:"Seven reading paths with foundations, questions to explore and publisher-linked references. These are curated starting points, not systematic reviews or advertised supervision positions.",
+      readingBackground:"Recommended background:",
+      readingPath:"A possible route",
+      readingReferences:"Selected reading",
+      readingBack:"Back to the guide index",
+      readingIndex:"On this page",
+      readingNoteTitle:"How to use these guides.",
+      readingNote:"Start with an accessible reference, move to the foundations and read seminal articles with their assumptions in view. The paths are study suggestions, not rankings of the literature or a list of available supervision projects.",
       index:"Home",research:"Research",publications:"Publications",supervision:"Supervision",people:"People",teaching:"Teaching",software:"Code & data",about:"About",contact:"Contact",
       skip:"Skip to content",openMenu:"Open menu",closeMenu:"Close menu",toggleTheme:"Toggle color theme",toggleLanguage:"Mudar idioma para português",
       eyebrowHome:"Federal University of Pernambuco · Department of Statistics",heroFocus:"Willams Batista",heroEm:"",heroEnd:"",
@@ -176,7 +204,7 @@
     const linkProps = url ? ` href="${url}" target="_blank" rel="noopener noreferrer"` : "";
     return `<${el} class="project-card"${linkProps}><div class="project-head"><span class="status">${tx("featuredProjects")}</span><span class="small muted">${e(p.year||"")}</span></div><div class="card-content"><h3>${e(t(p.title))}</h3><p>${e(t(p.description))}</p></div><div class="project-meta"><div class="card-footer">${(p.tags||[]).map(s=>tag(s)).join("")}</div>${url?`<span class="project-arrow">${icon("up")}</span>`:""}</div></${el}>`;
   };
-  const researchCard = (r) => `<article class="research-card"><div class="card-topline"><span class="card-number">${e(r.number)}</span><span class="card-symbol" aria-hidden="true">${e(r.symbol)}</span></div><div class="card-content"><h3>${e(t(r.title))}</h3><p>${e(t(r.summary))}</p></div><div class="card-footer">${(r.keywords||[]).map(s=>tag(s)).join("")}</div></article>`;
+  const researchCard = (r) => `<article class="research-card"><div class="card-topline"><span class="card-number">${e(r.number)}</span><span class="card-symbol" aria-hidden="true">${e(r.symbol)}</span></div><div class="card-content"><h3>${e(t(r.title))}</h3><p>${e(t(r.summary))}</p></div><div class="card-footer">${(r.keywords||[]).map(s=>tag(s)).join("")}</div><a class="reading-link" href="reading.html#${e(r.id)}">${tx("readingLink")} ${icon("arrow",15)}</a></article>`;
   const banner = () => `<section class="section tight"><div class="shell"><aside class="feature-banner"><div><span class="eyebrow">${tx("supervision")}</span><h2>${tx("opportunityTitle")}</h2><p>${tx("opportunityDesc")}</p></div><a class="inline-link" href="supervision.html">${tx("opportunityBtn")} ${icon("arrow")}</a></aside></div></section>`;
   const researchVisual = () => `<div class="signal-panel" role="img" aria-label="${e(tx("visualTitle"))}"><div class="signal-grid"></div><div class="panel-top"><span>${tx("visualHead")}</span><span class="panel-tag">● ${tx("visualStatus")}</span></div><svg class="signal-svg" viewBox="0 0 530 390" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><g stroke="#9ed9c9" stroke-width="1.25" opacity=".42"><path d="M68 205C132 95 242 119 293 200S431 282 475 147"/><path d="M68 205c64-65 100-10 165 0 73 11 160-98 242-58" stroke-dasharray="4 8"/><path d="M68 205C160 334 250 315 293 200c39-105 122-105 182-53" stroke-dasharray="2 8"/><path d="M147 100 293 200l96-77M147 100 165 280l128-80 110 82"/></g><g stroke="#c8f8df" stroke-width="1.4" opacity=".65"><circle cx="293" cy="200" r="93"/><circle cx="293" cy="200" r="138" stroke-dasharray="3 10"/><circle cx="293" cy="200" r="49"/></g><g fill="#b7f6d5"><circle cx="293" cy="200" r="11"/><circle cx="147" cy="100" r="6"/><circle cx="389" cy="123" r="5"/><circle cx="165" cy="280" r="6"/><circle cx="403" cy="282" r="6"/><circle cx="68" cy="205" r="4"/><circle cx="475" cy="147" r="4"/></g><g fill="#ecfff5" font-size="11" font-family="Inter,Arial,sans-serif" font-weight="650"><text x="263" y="161">INFERENCE</text><text x="87" y="85">SAR</text><text x="399" y="113">R</text><text x="95" y="306">MODELS</text><text x="409" y="309">DATA</text></g></svg><div class="floating-note"><span>${tx("visualNote")}</span>${tx("visualNoteDetail")}</div><div class="panel-bottom"><div><strong>${tx("visualTitle")}</strong><span>${tx("visualCaption")}</span></div><span class="panel-index">${tx("visualIndex")}</span></div></div>`;
 
@@ -207,14 +235,34 @@
   const renderHome = () => {
     const featured=(D.projects||[]).slice(0,3), sortedPapers=[...(D.publications||[])].sort((a,b)=>Number(b.year||0)-Number(a.year||0)), recent=sortedPapers.filter(p=>p.featured).slice(0,3);
     const papers=(recent.length?recent:sortedPapers.slice(0,3));
-    return `<section class="hero"><div class="shell hero-layout"><div class="hero-copy reveal"><span class="eyebrow">${tx("eyebrowHome")}</span><h1 class="hero-title">${e(D.profile.name)}</h1><p class="hero-position">${e(t(D.profile.role))} · UFPE</p><p class="lead">${e(t(D.profile.introduction))}</p><div class="hero-cta"><a href="research.html" class="inline-link">${tx("seeResearch")} ${icon("arrow")}</a><a href="publications.html" class="inline-link">${tx("seePublications")} ${icon("arrow")}</a></div></div>${portraitPanel()}</div></section>
+    return `<section class="hero"><div class="shell hero-layout"><div class="hero-copy reveal"><span class="eyebrow">${tx("eyebrowHome")}</span><h1 class="hero-title">${e(D.profile.name)}</h1><p class="hero-position">${e(t(D.profile.role))} · UFPE</p><p class="lead">${e(t(D.profile.introduction))}</p><div class="hero-cta"><a href="research.html" class="inline-link">${tx("seeResearch")} ${icon("arrow")}</a><a href="publications.html" class="inline-link">${tx("seePublications")} ${icon("arrow")}</a><a href="reading.html" class="inline-link">${tx("reading")} ${icon("arrow")}</a></div></div>${portraitPanel()}</div></section>
     <div class="ticker"><div class="shell ticker-row"><span class="ticker-title">${tx("focusAreas")}</span><p>${e(lang === "pt" ? "Inferência · Estatística espacial · Séries temporais · Imagens SAR" : "Inference · Spatial statistics · Time series · SAR imagery")}</p></div></div>
     <section class="section"><div class="shell">${sectionTitle(tx("research"),tx("researchTagline"),tx("researchIntro"),`<a class="inline-link" href="research.html">${tx("allResearch")} ${icon("arrow")}</a>`)}<div class="cards-4">${D.research.slice(0,4).map(researchCard).join("")}</div></div></section>
     <section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("activeProjects"),tx("projectDesc"),`<a class="inline-link" href="research.html">${tx("seeAllProjects")} ${icon("arrow")}</a>`)}<div class="cards-3">${featured.map(projectCard).join("")}</div></div></section>
     <section class="section"><div class="shell">${sectionTitle(tx("publications"),tx("papersHome"),tx("papersHomeDesc"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}${papers.length?`<div class="publication-list">${papers.map(pubCard).join("")}</div>`:empty("↗",tx("papersHome"),tx("noPapersHome"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}</div></section>
     ${D.news.length?`<section class="section tight"><div class="shell">${sectionTitle(tx("news"),tx("news"),tx("newsDesc"))}<div class="cards-3">${D.news.slice(0,3).map(n=>`<article class="project-card"><span class="small muted">${e(n.date)}</span><h3>${e(t(n.title))}</h3><p>${e(t(n.description))}</p>${link(n.url,tx("readMore"))}</article>`).join("")}</div></div></section>`:""}${banner()}`;
   };
-  const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${D.projects.filter(x=>selectedProjectArea==="all"||x.area===selectedProjectArea).map(projectCard).join("")}</div></div></section>${banner()}`;
+
+  const readingLabels = {
+    entry: {en:"Start here",pt:"Comece aqui"}, foundation:{en:"Foundation",pt:"Fundamentos"},
+    seminal:{en:"Seminal paper",pt:"Trabalho seminal"}, next:{en:"Next step",pt:"Próximo passo"},
+    application:{en:"Research example",pt:"Exemplo de pesquisa"}, advanced:{en:"Advanced",pt:"Avançado"}
+  };
+  const renderReading = () => {
+    const nav = D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))} <span aria-hidden="true">↗</span></a>`).join("");
+    const articles = D.readingGuides.map((g,i)=>{
+      const area=D.research.find(r=>r.id===g.id);
+      return `<article class="reading-area" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
+        <div class="reading-intro"><span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / 07 · ${tx("readingSmall")}</span><h2 id="read-${e(g.id)}">${e(t(area.title))}</h2><p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p><p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p></div>
+        <div class="reading-path"><h3>${tx("readingPath")}</h3><ol>${g.path.map(step=>`<li>${e(t(step))}</li>`).join("")}</ol></div>
+        <div class="reading-bibliography"><h3>${tx("readingReferences")}</h3><ol>${g.references.map(r=>`<li class="reading-reference"><div class="reading-ref-top"><span class="reading-ref-type">${e(t(readingLabels[r.kind]||readingLabels.next))}</span><span class="reading-ref-year">${e(String(r.year))}</span></div><h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ${icon("up",14)}</a></h4><p class="reading-authors">${e(r.authors)}</p><p>${e(t(r.note))}</p></li>`).join("")}</ol></div>
+        <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
+      </article>`;
+    }).join("");
+    return `${pageHero(tx("research"),tx("readingTitle"),tx("readingPageLead"))}
+      <section class="section reading-section" id="top"><div class="shell"><div class="reading-note"><strong>${tx("readingNoteTitle")}</strong> ${tx("readingNote")}</div><div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav><div class="reading-guides">${articles}</div></div></div></section>`;
+  };
+  const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div><div class="reading-cta"><div><span class="eyebrow">${tx("readingSmall")}</span><h3>${tx("readingTitle")}</h3><p>${tx("readingIntro")}</p></div><a class="inline-link" href="reading.html">${tx("readingButton")} ${icon("arrow",15)}</a></div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${D.projects.filter(x=>selectedProjectArea==="all"||x.area===selectedProjectArea).map(projectCard).join("")}</div></div></section>${banner()}`;
   const labelType = type => ({article:tx("articles"),preprint:tx("preprints"),conference:tx("conferences"),other:tx("others")})[type]||tx("others");
   const citeText = p => `${p.authors||""} (${p.year||""}). ${p.title||""}. ${p.venue||""}.${p.doi?` https://doi.org/${p.doi.replace(/^https?:\/\/doi\.org\//,"")}`:""}`;
   const pubCard = p => {
@@ -292,7 +340,7 @@
   };
   const render = () => {
     renderHeader();renderFooter();
-    const pages={index:renderHome,research:renderResearch,publications:renderPublications,supervision:renderSupervision,people:renderPeople,teaching:renderTeaching,software:renderSoftware,about:renderAbout,contact:renderContact};
+    const pages={index:renderHome,research:renderResearch,reading:renderReading,publications:renderPublications,supervision:renderSupervision,people:renderPeople,teaching:renderTeaching,software:renderSoftware,about:renderAbout,contact:renderContact};
     document.getElementById("main").innerHTML=(pages[page]||renderHome)();
     attach();addStructuredData();
   };

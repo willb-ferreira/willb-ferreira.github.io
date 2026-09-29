@@ -11,7 +11,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ['index','research','publications','supervision','people','teaching','software','about','contact']
+PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text(encoding='utf-8')
 app = (ROOT / 'assets/app.js').read_text(encoding='utf-8')

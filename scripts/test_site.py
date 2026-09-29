@@ -4,7 +4,7 @@ import re
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
-PAGES = ['index','research','publications','supervision','people','teaching','software','about','contact']
+PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
 css = (ROOT / 'assets/site.css').read_text()
 content = (ROOT / 'assets/content.js').read_text()
 auto = (ROOT / 'assets/auto-content.js').read_text()
@@ -33,17 +33,29 @@ with sync_playwright() as p:
         link_count=tab.locator('.nav a').count()
         assert link_count==8, (page_name,link_count)
         assert tab.locator('main').inner_text().strip(),page_name
+        assert tab.locator('html').get_attribute('lang')=='en', page_name
         if page_name in ('index','about'):
             assert tab.locator('img.portrait-image').count()==1, page_name
         overflow=tab.evaluate('document.documentElement.scrollWidth > innerWidth')
         print(f'PAGE {page_name}: H1={heading[:67]} | nav={link_count} | overflow={overflow}')
         if page_name=='index':
             tab.screenshot(path=str(ROOT.parent/'willams-site-desktop.png'),full_page=True)
+            assert tab.locator('html').get_attribute('lang')=='en'
             tab.locator('#language-toggle').click()
+            assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert tab.locator('h1').inner_text().startswith('Willams Batista')
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
+        if page_name=='reading':
+            assert tab.locator('article.reading-area').count()==7
+            assert tab.locator('li.reading-reference').count()==23
+            assert tab.locator('a[href*="doi.org"]').count()>=15
+            tab.locator('#language-toggle').click()
+            assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
+            assert tab.locator('li.reading-reference').count()==23
+            print('CONTENT seven bilingual research reading guides and 23 checked references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
@@ -59,11 +71,11 @@ with sync_playwright() as p:
             assert tab.locator('.person-entry').count()==2
             assert 'Pedro Estevão Costa Viana de Araújo' in tab.locator('main').inner_text()
             assert 'Muhammed Ismail' in tab.locator('main').inner_text()
-            assert 'Coorientação' in tab.locator('main').inner_text()
+            assert 'Co-supervision' in tab.locator('main').inner_text()
             print('CONTENT students and supervision roles: PASS')
         if page_name=='teaching':
             assert tab.locator('.course-entry').count()==4
-            assert 'Probabilidade 2 para Ciências Atuariais' in tab.locator('main').inner_text()
+            assert 'Probability II for Actuarial Science' in tab.locator('main').inner_text()
             print('CONTENT actuarial probability course: PASS')
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
