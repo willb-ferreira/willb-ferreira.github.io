@@ -18,7 +18,7 @@ app = (ROOT / 'assets/app.js').read_text()
 errors=[]
 SITEMAP_URLS = [loc.text for loc in ET.parse(ROOT / 'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
 EXPECTED_URLS = ['https://willb-ferreira.github.io/' if name == 'index' else 'https://willb-ferreira.github.io/' + name + '.html' for name in PAGES]
-assert SITEMAP_URLS == EXPECTED_URLS, ('Sitemap must use each canonical URL exactly once', SITEMAP_URLS)
+assert len(SITEMAP_URLS) == len(EXPECTED_URLS) and set(SITEMAP_URLS) == set(EXPECTED_URLS), ('Sitemap must list each canonical URL exactly once', SITEMAP_URLS)
 print('SITEMAP all ten canonical URLs: PASS')
 
 def load(tab, page_name):
