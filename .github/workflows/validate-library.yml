@@ -1,6 +1,8 @@
 name: Validate research library
 
 on:
+  push:
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
@@ -26,3 +28,5 @@ jobs:
         run: python scripts/test_site.py
       - name: Validate publication sync
         run: python scripts/test_sync_academic.py
+      - name: Validate directories and research topics
+        run: python scripts/test_directories.py

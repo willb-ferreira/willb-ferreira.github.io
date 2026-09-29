@@ -502,3 +502,76 @@ p {color:var(--muted)}
 @media(max-width:600px){.reading-index a{max-width:100%;flex:1 1 100%}.reading-area{padding:30px 0 55px}.reading-reference h4{font-size:19px}.reading-section{padding-top:28px}.portrait-panel{max-width:390px}.portrait-panel .portrait-image{height:auto;aspect-ratio:3/4}}
 .reading-link{display:inline-flex;align-items:center;gap:8px}
 .reading-link svg{display:inline-block;flex:none}
+
+/* Directory pages: one person / course per record; archives scale beyond one academic year. */
+.academic-level{margin-bottom:65px;border-top:1px solid var(--line);padding-top:23px}
+.academic-level:last-of-type{margin-bottom:34px}
+.directory-heading{display:flex;align-items:baseline;gap:12px;margin-bottom:28px}
+.directory-heading h2{font-size:clamp(26px,3vw,37px);letter-spacing:-.035em}
+.directory-count{font-size:12px;font-variant-numeric:tabular-nums;color:var(--muted);font-weight:600}
+.people-subgroup + .people-subgroup{margin-top:34px}
+.people-subgroup>h3{font-size:16px;letter-spacing:-.02em;display:flex;align-items:baseline;gap:10px;margin-bottom:15px}
+.person-entry{padding:18px 0;min-height:75px;align-items:center}
+.person-entry h3,.course-entry h3{font-size:clamp(18px,2.2vw,23px);letter-spacing:-.024em;line-height:1.35}
+.directory-period{font-size:12px;color:var(--muted);font-variant-numeric:tabular-nums}
+.directory-archive{border-top:1px solid var(--line);margin:3px 0 24px}
+.directory-archive>summary{cursor:pointer;font-size:13px;color:var(--accent);font-weight:650;padding:17px 0;list-style:none}
+.directory-archive>summary::-webkit-details-marker{display:none}
+.directory-archive>summary::after{content:' + ';font-size:19px;font-weight:400}
+.directory-archive[open]>summary::after{content:' −'}
+.directory-archive .people-directory,.directory-archive .course-list{margin-top:5px}
+.course-toolbar{margin:22px 0 19px;gap:18px}
+.course-toolbar .search-input{flex:1;max-width:410px}
+.course-year-filter{display:inline-flex;gap:10px;align-items:center;color:var(--muted);font-size:13px}
+.course-entry{padding:24px 0;align-items:start}
+.course-entry>div:first-child{gap:10px}
+.course-entry .course-meta{display:flex;flex-direction:column;gap:10px}
+.course-history{font-size:13px;margin-top:5px}
+.course-history>summary{cursor:pointer;color:var(--accent);font-weight:650}
+.course-history ul{list-style:none;border-left:1px solid var(--line);padding:0 0 0 17px;margin:13px 0 0;display:grid;gap:9px;font-variant-numeric:tabular-nums;color:var(--muted)}
+.spaced-intro{margin-top:43px}
+.filter-count{font-size:10px;margin-left:3px;opacity:.65;font-variant-numeric:tabular-nums}
+.topic-card{gap:19px}
+.topic-card .card-content{gap:15px}
+.topic-card .card-content h3{line-height:1.32}
+.topic-card .card-content p{line-height:1.76}
+.topic-area{color:var(--accent);font-size:11px;line-height:1.45;text-decoration:underline;text-underline-offset:3px}
+/* A separate, deliberately collapsed notebook for speculative faculty-led research directions. */
+.research-notebook{border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.idea-group{border-bottom:1px solid var(--line)}.idea-group:last-child{border-bottom:0}
+.idea-group>summary{cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:18px;padding:22px 2px;font-size:18px;font-weight:650;list-style:none}
+.idea-group>summary::-webkit-details-marker{display:none}
+.idea-group>summary span:first-child:before{content:'+';font-weight:400;color:var(--accent);display:inline-block;width:30px}
+.idea-group[open]>summary span:first-child:before{content:'−'}
+.research-idea-list{margin:0 0 25px 32px;border-top:1px solid var(--line)}
+.research-idea{padding:23px 0;border-bottom:1px solid var(--line);max-width:860px;display:grid;gap:11px}
+.research-idea h4{font-size:21px;letter-spacing:-.028em;line-height:1.36}
+.research-idea p{font-size:14px;line-height:1.72}
+.research-idea-caution{font-size:13px!important;padding-left:15px;border-left:2px solid var(--line)}
+.research-idea-caution strong{color:var(--ink)}
+/* Reading guides: readable separation of claims, learning paths and annotated citations. */
+.reading-note + .reading-note{margin-top:-25px;margin-bottom:46px}
+.reading-extra{border-top:1px solid var(--line);margin-top:50px;padding-top:31px;display:grid;gap:17px}
+.reading-extra h3{font-size:clamp(21px,2.2vw,26px);margin:0 0 7px;line-height:1.35}
+.reading-extra h4{font-size:17px;letter-spacing:-.01em;margin:14px 0 1px;line-height:1.4}
+.reading-extra p{line-height:1.9!important;max-width:760px;margin:0}
+.reading-extra p+p{margin-top:6px}
+.reading-extra ul,.reading-extra ol{margin:0;padding-left:25px;display:grid;gap:13px}
+.reading-extra li{padding-left:5px;color:var(--muted);line-height:1.76;font-size:14px;max-width:770px}
+.reading-extra li strong{color:var(--ink)}
+.reading-path{margin-top:48px}
+.reading-bibliography{margin-top:54px}
+.reading-reference{padding:28px 0 31px}
+.reading-reference h4{margin:0 0 14px;line-height:1.43}
+.reading-reference p{line-height:1.82;margin-top:10px}
+.reading-reference p+p{margin-top:13px}
+.reading-ref-top{margin-bottom:12px}
+.reading-prereq{margin-top:25px!important}
+@media(max-width:700px){
+ .academic-level{margin-bottom:45px}.people-subgroup + .people-subgroup{margin-top:28px}
+ .course-toolbar{align-items:stretch}.course-toolbar .search-input{max-width:100%;min-width:0;flex:1 1 100%}
+ .course-year-filter{justify-content:space-between;width:100%}
+ .research-idea-list{margin-left:12px}.idea-group>summary{font-size:16px}
+ .reading-extra{margin-top:37px;padding-top:24px;gap:14px}.reading-extra ul,.reading-extra ol{gap:12px}
+ .reading-bibliography{margin-top:38px}.reading-reference{padding:24px 0}
+}

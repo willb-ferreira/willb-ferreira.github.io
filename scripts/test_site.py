@@ -69,9 +69,9 @@ with sync_playwright() as p:
             assert tab.locator('#project-results article').count()==2
             print('INTERACTION research filter: PASS')
         if page_name=='supervision':
-            assert tab.locator('#topic-results article').count()==4
+            assert tab.locator('#topic-results article').count()==6
             tab.locator('button[data-level="undergraduate"]').click()
-            assert tab.locator('#topic-results article').count()==2
+            assert tab.locator('#topic-results article').count()==6
             print('INTERACTION supervision filter: PASS')
         if page_name=='people':
             assert tab.locator('.person-entry').count()==2
