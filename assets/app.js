@@ -319,6 +319,7 @@
         </article>`).join("")}</div>
       </section>
       ${g.crosslink?`<p class="reading-crosslink"><a href="#${e(g.crosslink.target)}">${e(t(g.crosslink.label))} ↗</a></p>`:""}
+      ${(g.relatedGuides||[]).map(item=>`<p class="reading-crosslink"><a href="#${e(item.target)}">${e(t(item.label))} ↗</a></p>`).join("")}
       <section class="reading-bibliography reading-bibliography-short" aria-labelledby="inference-reference-title">
         <h3 id="inference-reference-title">${e(words.refs)}</h3>
         <ol>${visible.map(r=>`<li class="reading-reference reading-reference-compact" id="inference-ref-${e(r.id)}">
