@@ -1,6 +1,12 @@
-# Current editorial status — 2026-09-29
+# Research-library checkpoints — historical archive (not current)
 
-The website now displays **seven** research areas and **seven** bilingual reading guides, with **58** annotated bibliography entries. Statistical Learning Theory has been removed from the public research index and reading guide at the owner's request. The former **Time Series and Stochastic Processes** area is now **Time Series / Séries temporais**; stochastic processes and random fields are explicitly addressed under **Spatial and spatio-temporal statistics / Estatística espacial e espaço-temporal**. Stochastic-process concepts remain relevant prerequisites for time-series methods. The historical eight-area checkpoint below records a previous implementation; its reference counts and earlier test results are not the current public inventory.
+> **Archive notice (2026-09-29):** This document preserves earlier editorial and test snapshots; it is **not** the current public research-library inventory. The website currently displays **six** concise bilingual research guides and **31** selected visible reading references, with the consolidated **Time Series and Spatial Statistics / Séries temporais e estatística espacial** introduction. The previous detailed Topic 1 curriculum is retained for editorial reference in `assets/spatial-guide.js` and `docs/spatial-topic-1-audit.md`; it is not loaded in the current public guide. For current behavior and maintenance, consult `README.md`, `assets/intro-library.js`, `assets/inference-library.js`, `assets/image-library.js`, and `scripts/test_site.py`. Earlier figures (seven guides/58 references, then eight guides/69 references) and their CI results describe only their respective historical revisions.
+
+---
+
+# Superseded seven-guide snapshot — 2026-09-29
+
+At this historical stage, the website displayed **seven** research areas and **seven** bilingual reading guides, with **58** annotated bibliography entries. Statistical Learning Theory has been removed from the public research index and reading guide at the owner's request. The former **Time Series and Stochastic Processes** area is now **Time Series / Séries temporais**; stochastic processes and random fields are explicitly addressed under **Spatial and spatio-temporal statistics / Estatística espacial e espaço-temporal**. Stochastic-process concepts remain relevant prerequisites for time-series methods. The historical eight-area checkpoint below records a previous implementation; its reference counts and earlier test results are not the current public inventory.
 
 ---
 

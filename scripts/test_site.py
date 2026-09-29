@@ -2,6 +2,7 @@
 from pathlib import Path
 import os
 import re
+from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -15,6 +16,10 @@ image_library = (ROOT / 'assets/image-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
+SITEMAP_URLS = [loc.text for loc in ET.parse(ROOT / 'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
+EXPECTED_URLS = ['https://willb-ferreira.github.io/' if name == 'index' else 'https://willb-ferreira.github.io/' + name + '.html' for name in PAGES]
+assert SITEMAP_URLS == EXPECTED_URLS, ('Sitemap must use each canonical URL exactly once', SITEMAP_URLS)
+print('SITEMAP all ten canonical URLs: PASS')
 
 def load(tab, page_name):
     html = (ROOT / f'{page_name}.html').read_text()
@@ -41,6 +46,8 @@ with sync_playwright() as p:
         heading=tab.locator('h1').first.inner_text().replace('\n',' ')
         link_count=tab.locator('.nav a').count()
         assert link_count==8, (page_name,link_count)
+        assert tab.locator('.nav a[href="software.html"]').inner_text() == 'Code & Data', page_name
+        assert tab.locator('.footer-col a[href="software.html"]').inner_text() == 'Code & Data', page_name
         assert tab.locator('main').inner_text().strip(),page_name
         assert tab.locator('html').get_attribute('lang')=='en', page_name
         if page_name in ('index','about'):
@@ -159,6 +166,10 @@ with sync_playwright() as p:
             assert 'Muhammed Ismail' in tab.locator('main').inner_text()
             assert 'Co-supervision' in tab.locator('main').inner_text()
             print('CONTENT students and supervision roles: PASS')
+        if page_name=='software':
+            assert tab.locator('h1').inner_text() == 'Code & Data'
+            assert tab.title() == 'Code & Data | Willams Batista'
+            print('CONTENT Code & Data title, navigation and document metadata: PASS')
         if page_name=='teaching':
             assert tab.locator('.course-entry').count()==4
             assert 'Probability II for Actuarial Science' in tab.locator('main').inner_text()
