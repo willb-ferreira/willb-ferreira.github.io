@@ -8,12 +8,12 @@
   const b = (en, pt) => ({en, pt});
   const topic = (D.research || []).find(r => r.id === "spatial-models");
   if (!topic) return;
-  topic.title = b("Stochastic processes and dependent data", "Processos estocásticos e dados dependentes");
+  topic.title = b("Time Series and Spatial Statistics", "Séries temporais e estatística espacial");
   topic.summary = b(
-    "Time series, spatial and spatio-temporal statistics, with a methodological bridge through conditional two-dimensional ARMA regression.",
-    "Séries temporais, estatística espacial e espaço-temporal, com uma ponte metodológica pela regressão ARMA bidimensional condicional."
+    "Statistical modeling and inference for dependent data, including time series, conditional spatial regression, two-dimensional ARMA models, random fields, geostatistics, and spatio-temporal processes.",
+    "Modelagem e inferência estatística para dados dependentes, incluindo séries temporais, regressão espacial condicional, modelos ARMA bidimensionais, campos aleatórios, geoestatística e processos espaço-temporais."
   );
-  topic.keywords = ["ARMA", b("Spatial dependence", "Dependência espacial"), b("Stochastic processes", "Processos estocásticos")];
+  topic.keywords = ["ARMA", b("Spatial dependence", "Dependência espacial"), b("Statistical inference", "Inferência estatística")];
   D.research = D.research.filter(r => r.id !== "time-series")
     .map((r, index) => ({...r, number: String(index + 1).padStart(2, "0")}));
 
@@ -27,8 +27,8 @@
       "O que muda na dependência quando as observações são indexadas no tempo, no espaço ou em ambos?"
     ),
     entry: b(
-      "A shared stochastic-process foundation connects temporal models, spatial random fields and space–time processes. The three routes below show what to study first and where their mathematical assumptions differ.",
-      "Uma base comum em processos estocásticos conecta modelos temporais, campos aleatórios espaciais e processos espaço-temporais. Os três percursos abaixo indicam por onde começar e onde suas hipóteses matemáticas diferem."
+      "Time series and spatial statistics share probabilistic tools for dependence, but temporal ordering, spatial neighbourhoods and space–time indexing require different modelling assumptions. The three short routes below introduce these connections.",
+      "Séries temporais e estatística espacial compartilham ferramentas probabilísticas para estudar a dependência, mas ordenação temporal, vizinhanças espaciais e indexação espaço-temporal exigem hipóteses de modelagem diferentes. Os três percursos breves a seguir apresentam essas conexões."
     ),
     background: b(
       "Probability, regression and introductory mathematical statistics; linear algebra for covariance and conditional models.",
