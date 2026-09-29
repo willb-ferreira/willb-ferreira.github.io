@@ -1,44 +1,39 @@
-# Willams Batista — academic website / site acadêmico
+# Site acadêmico · Willams Batista
 
-Site pessoal e acadêmico bilíngue (PT/EN), pronto para o repositório público `willb-ferreira/willb-ferreira.github.io`.
+Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://willb-ferreira.github.io/ via GitHub Pages. A versão do site reflete o perfil, as publicações, o ensino e os vínculos acadêmicos informados pelo titular. Os arquivos HTML são regenerados pelo workflow de publicação; a fonte editorial principal fica em `assets/content.js`.
 
-## Conteúdo desta versão
+## Onde atualizar cada informação
 
-- Fotografia autorizada do titular: `assets/portrait.webp` (otimizada para web; original não é enviado).
-- Perfil e vínculo conforme informação atual do titular: Professor Assistente de Estatística, Departamento de Estatística, UFPE. O Lattes antigo usa outra denominação funcional; confirme a denominação oficial para uma futura atualização.
-- E-mail público institucional e links Lattes, ORCID, Google Scholar e GitHub.
-- **Os três artigos de periódico registrados no Lattes e no CV**, com DOI conferidos e cache inicial de metadados.
-- Publicação do IGARSS 2024 classificada separadamente como trabalho de congresso.
-- Cursos 2026 informados nos dois currículos; a Análise Multivariada consta especificamente no CV em inglês.
-- Repositórios de pesquisa não estão publicados (lista de software e allowlist de repositórios vazias).
-- Temas de orientação são sugestões, não vagas abertas; informações de alunos ainda não aparecem.
-- Não foram incluídos PDFs dos currículos, nomes de alunos, emails de referências acadêmicas ou código de repositórios privados.
+| Conteúdo | Arquivo / procedimento |
+| --- | --- |
+| Biografia, interesses, projetos, orientandos, disciplinas e notícias | `assets/content.js` |
+| Adicionar um DOI aprovado ou selecionar artigos em destaque | `data/sources.json` |
+| Layout, estilos e componentes de interface | `assets/site.css`, `assets/app.js` |
+| Arquivo fotográfico autorizado | `assets/portrait.webp` |
+| Publicações importadas por DOI | `assets/auto-content.js` e `data/sync-cache.json` — **não editar manualmente** |
 
-## Colocar online hoje pelo GitHub Pages
+Para atualizar o texto, abra `assets/content.js` no GitHub, clique em **Edit** (lápis), faça a mudança e salve em **Commit changes** na branch `main`. Mantenha os campos `pt` e `en` em ambas as línguas. O workflow `Deploy academic website` recria os HTML e publica a versão nova automaticamente. Se alterar conteúdo, evite editar diretamente as nove páginas HTML: elas serão regeneradas.
 
-**Repositório:** https://github.com/willb-ferreira/willb-ferreira.github.io  
-**Endereço do site, após a publicação:** https://willb-ferreira.github.io/
+A lista `students` usa `name`, `level:{pt,en}`, `role:{pt,en}`, `project` e `url`. Os registros atuais informam apenas nome e vínculo de orientação. **Confirme a autorização dos estudantes antes de manter seus nomes em publicação pública.** Não envie informações pessoais, emails nem fotos sem autorização.
 
-1. Descompacte `site_academico_willams_pronto_publicar.zip` no seu computador. Na raiz do repositório, envie **o conteúdo da pasta** (não a pasta externa nem o ZIP). Preserve `assets/`, `data/`, `scripts/` e `.github/workflows/`. Se a interface web omitir arquivos ocultos, confira especificamente `.github/workflows/deploy.yml`, `.github/workflows/sync-academic.yml` e `.nojekyll`.
-2. No GitHub, abra `Settings → Pages → Build and deployment → Source` e escolha **GitHub Actions**. O workflow `.github/workflows/deploy.yml` deve fazer o deploy de `main`.
-3. Abra `Actions → Deploy academic website` e verifique que o workflow terminou com sucesso. Em `Settings → Pages`, clique em `Visit site`. A propagação pode levar alguns minutos. Se o primeiro deploy falhar por Pages não habilitado, selecione a fonte e execute o workflow novamente.
-4. Para verificar a coleta, execute `Actions → Sync public academic metadata → Run workflow`. Nas próximas semanas a atualização roda às segundas-feiras, 09:17 UTC, correspondente a 06:17 em Recife (UTC-3). O GitHub pode atrasar execuções agendadas.
-5. Caso o workflow de sincronização não consiga fazer `git push` para o `main`, revise `Settings → Actions → General → Workflow permissions` (read/write); só habilite o necessário e nunca adicione um token pessoal ao código.
+Para cadastrar uma disciplina, adicione uma entrada a `courses` com `id` único, `title:{pt,en}`, `institution`, `term` (deixe vazio quando desconhecido), `level`, `description:{pt,en}` e `materials` (vazio quando não houver material disponível).
 
-**IMPORTANTE:** esta pasta e o ZIP **não comprovam que o site foi publicado**. Só considere online após sucesso do deploy e abertura da URL pública.
+## Bibliografia e sincronização
 
-## Como a atualização funciona
+A lista de DOI explicitamente autorizados está em `data/sources.json`. Para acrescentar uma publicação, inclua uma nova entrada com DOI correto; configure `featured:false` caso não queira destacá-la na página inicial. O workflow `Sync public academic metadata` consulta semanalmente os metadados desses DOI via Crossref (segundas-feiras às 06h17 de Recife). Novos artigos não aparecem sem cadastro prévio do DOI. Na aba **Actions** do GitHub é possível executar a sincronização manualmente.
 
-`data/sources.json` contém a allowlist dos três DOI autorizados e nenhum repositório. A primeira versão já traz metadados conferidos em `data/sync-cache.json` e `assets/auto-content.js`; por isso funciona mesmo antes da primeira execução online. `scripts/sync_academic.py` consulta semanalmente os três DOI via Crossref e preserva o cache se a fonte falhar. Todos os novos artigos precisam ser **aprovados na allowlist** antes de aparecer no site. A descoberta ORCID está desativada no workflow atual; nenhuma credencial ORCID é necessária. A cada execução bem-sucedida, o workflow atualiza as páginas HTML para indexação e publica a nova versão.
+**Lattes não é importado automaticamente.** O link para o currículo existe no perfil, mas atualizações de orientação, estudantes, cursos, formação ou publicações feitas no Lattes devem ser incorporadas separadamente ao site. O ORCID não realiza descoberta/publicação automática na configuração atual. Repositórios privados não são publicados: a lista `github_repos` em `data/sources.json` permanece vazia até haver autorização explícita.
 
-Para adicionar um artigo: edite `data/sources.json`, acrescentando `{"doi":"10.xxxx/...","featured":true,"tags":["..."]}`; após salvar, use `Run workflow` no GitHub. Para manter o artigo fora da página inicial, configure `featured:false`.
+## Implantação e verificação
 
-Para atualizar bio, orientação, disciplinas e alunos autorizados: edite `assets/content.js`; o deploy automático ocorre após o commit na `main`. Nunca publique dados pessoais de alunos sem consentimento.
+`main` aciona o workflow `.github/workflows/deploy.yml`: instala o navegador de renderização, gera HTML estático atualizado e publica no GitHub Pages. A sincronização semanal também gera HTML e publica a nova versão. Acompanhe os resultados em `https://github.com/willb-ferreira/willb-ferreira.github.io/actions`.
 
-## Rodar e testar localmente
+Para validar localmente, instale Playwright e Chromium e execute:
 
-`python -m http.server 8000` a partir da raiz; abra http://localhost:8000. Para reconstruir as páginas estáticas, instale Playwright e Chromium e execute `python scripts/prerender.py`. Os testes de navegação e sincronização ficam em `scripts/test_site.py` e `scripts/test_sync_academic.py`.
+```bash
+python scripts/prerender.py
+python scripts/test_site.py
+python scripts/test_sync_academic.py
+```
 
-## Segurança e limites
-
-GitHub Pages hospeda conteúdo estático: nada do repositório público deve conter senha, token, dado de aluno sem consentimento ou manuscrito/repositório privado. A sincronização com Crossref é semanal, não em tempo real. O Google Scholar e o Lattes são vinculados, mas não extraídos automaticamente por scraping.
+Nunca publique senhas, tokens, dados pessoais de alunos ou conteúdo de repositórios privados no GitHub Pages. O site é público.

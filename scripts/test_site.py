@@ -40,11 +40,12 @@ with sync_playwright() as p:
         if page_name=='index':
             tab.screenshot(path=str(ROOT.parent/'willams-site-desktop.png'),full_page=True)
             tab.locator('#language-toggle').click()
-            assert tab.locator('h1').inner_text().startswith('Statistical methods')
+            assert tab.locator('h1').inner_text().startswith('Willams Batista')
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
         if page_name=='research':
+            assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
             tab.locator('button[data-area="sar"]').click()
             assert tab.locator('#project-results article').count()==2
@@ -54,6 +55,16 @@ with sync_playwright() as p:
             tab.locator('button[data-level="undergraduate"]').click()
             assert tab.locator('#topic-results article').count()==2
             print('INTERACTION supervision filter: PASS')
+        if page_name=='people':
+            assert tab.locator('.person-entry').count()==2
+            assert 'Pedro Estevão Costa Viana de Araújo' in tab.locator('main').inner_text()
+            assert 'Muhammed Ismail' in tab.locator('main').inner_text()
+            assert 'Coorientação' in tab.locator('main').inner_text()
+            print('CONTENT students and supervision roles: PASS')
+        if page_name=='teaching':
+            assert tab.locator('.course-entry').count()==4
+            assert 'Probabilidade 2 para Ciências Atuariais' in tab.locator('main').inner_text()
+            print('CONTENT actuarial probability course: PASS')
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
             assert tab.locator('#pub-results article').count()==4

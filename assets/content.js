@@ -10,12 +10,12 @@ window.PORTFOLIO = {
     monogram: "WB",
     role: { pt: "Professor Assistente de Estatística", en: "Assistant Professor of Statistics" },
     headline: {
-      pt: "Métodos estatísticos para dados complexos e problemas do mundo real.",
-      en: "Statistical methods for complex data and real-world problems."
+      pt: "Inferência estatística, modelos espaciais e processamento de imagens.",
+      en: "Statistical inference, spatial models, and image processing."
     },
     introduction: {
-      pt: "Sou professor de Estatística na UFPE. Minha pesquisa abrange inferência estatística, modelagem espacial, séries temporais e processamento estatístico de imagens de radar, com ênfase em métodos matemáticos e computacionais.",
-      en: "I am a Statistics professor at UFPE. My research spans statistical inference, spatial modeling, time series, and statistical processing of radar imagery, with an emphasis on mathematical and computational methods."
+      pt: "Sou professor no Departamento de Estatística da UFPE. Pesquiso inferência estatística, modelos para dados dependentes e métodos estatísticos para imagens SAR e PolSAR. Trabalho com teoria, simulação e aplicações em sensoriamento remoto.",
+      en: "I am a professor in the Department of Statistics at UFPE. My research covers statistical inference, models for dependent data, and statistical methods for SAR and PolSAR imagery, combining theory, simulation, and remote-sensing applications."
     },
     location: { pt: "Recife, Brasil", en: "Recife, Brazil" },
     affiliation: { pt: "Departamento de Estatística · Universidade Federal de Pernambuco (UFPE)", en: "Department of Statistics · Federal University of Pernambuco (UFPE)" },
@@ -33,39 +33,45 @@ window.PORTFOLIO = {
   research: [
     {
       id: "spatial-models", number: "01", symbol: "∿",
-      title: { pt: "Modelagem estatística espacial", en: "Spatial statistical modeling" },
-      summary: {
-        pt: "Modelos condicionais para processos espaciais, estruturas de dependência e identificação de modelos ARMA em duas dimensões.",
-        en: "Conditional models for spatial processes, dependence structures, and identification of two-dimensional ARMA models."
-      },
-      keywords: ["2D ARMA", { pt: "Dependência espacial", en: "Spatial dependence" }, { pt: "Estimação", en: "Estimation" }]
+      title: { pt: "Estatística espacial e espaço-temporal", en: "Spatial and spatio-temporal statistics" },
+      summary: { pt: "Modelos para processos espaciais, dependência em malhas bidimensionais e inferência para dados espacialmente correlacionados.", en: "Models for spatial processes, dependence on two-dimensional lattices, and inference with spatially correlated data." },
+      keywords: ["Spatial ARMA", {pt:"Dependência espacial",en:"Spatial dependence"}]
     },
     {
-      id: "sar", number: "02", symbol: "◈",
-      title: { pt: "Sensoriamento remoto e imagens SAR", en: "Remote sensing and SAR imagery" },
-      summary: {
-        pt: "Inferência para imagens de radar, caracterização do speckle, estimadores de ENL e distribuições para índices polarimétricos.",
-        en: "Inference for radar imagery, speckle characterization, ENL estimation, and distributions for polarimetric indices."
-      },
-      keywords: ["SAR", "ENL", { pt: "Polarimetria", en: "Polarimetry" }]
+      id: "theory", number: "02", symbol: "∑",
+      title: { pt: "Inferência estatística e teoria assintótica", en: "Statistical inference and asymptotic theory" },
+      summary: { pt: "Estatística matemática, estimação paramétrica, informação de Fisher e propriedades de estimadores e testes.", en: "Mathematical statistics, parametric estimation, Fisher information, and the properties of estimators and tests." },
+      keywords: [{pt:"Estatística matemática",en:"Mathematical statistics"}, {pt:"Assintótica",en:"Asymptotics"}]
     },
     {
-      id: "theory", number: "03", symbol: "∑",
-      title: { pt: "Inferência e teoria estatística", en: "Inference and statistical theory" },
-      summary: {
-        pt: "Propriedades de estimadores, informação de Fisher, diagnóstico de modelos e resultados assintóticos sob dependência.",
-        en: "Estimator properties, Fisher information, model diagnostics, and asymptotic results under dependence."
-      },
-      keywords: [{ pt: "Inferência", en: "Inference" }, { pt: "Assintótica", en: "Asymptotics" }, { pt: "Diagnóstico", en: "Diagnostics" }]
+      id: "sar", number: "03", symbol: "◈",
+      title: { pt: "Processamento estatístico de imagens", en: "Statistical image processing" },
+      summary: { pt: "Métodos estatísticos para imagens SAR e PolSAR: regressão, modelagem do speckle e distribuições para índices polarimétricos.", en: "Statistical methods for SAR and PolSAR imagery: regression, speckle modeling, and distributions for polarimetric indices." },
+      keywords: ["SAR / PolSAR", {pt:"Sensoriamento remoto",en:"Remote sensing"}]
     },
     {
-      id: "computing", number: "04", symbol: "{R}",
-      title: { pt: "Computação e pesquisa reproduzível", en: "Computing and reproducible research" },
-      summary: {
-        pt: "Simulações Monte Carlo, implementação de métodos em R e fluxos de trabalho verificáveis da teoria à aplicação.",
-        en: "Monte Carlo simulation, R implementations, and verifiable workflows from theory to application."
-      },
-      keywords: ["R", "Monte Carlo", "Open science"]
+      id: "regression", number: "04", symbol: "β",
+      title: { pt: "Regressão e equações de estimação generalizadas", en: "Regression and generalized estimating equations" },
+      summary: { pt: "Modelos de regressão, inferência para respostas correlacionadas e equações de estimação generalizadas (GEE).", en: "Regression models, inference for correlated responses, and generalized estimating equations (GEE)." },
+      keywords: ["GEE", {pt:"Regressão",en:"Regression"}]
+    },
+    {
+      id: "time-series", number: "05", symbol: "t",
+      title: { pt: "Séries temporais e processos estocásticos", en: "Time series and stochastic processes" },
+      summary: { pt: "Modelos ARMA e suas extensões para processos não gaussianos, com aplicações em dados de amplitude e intensidade SAR.", en: "ARMA models and non-Gaussian extensions, including applications to SAR amplitude and intensity data." },
+      keywords: ["ARMA", {pt:"Processos estocásticos",en:"Stochastic processes"}]
+    },
+    {
+      id: "geometry", number: "06", symbol: "∇",
+      title: { pt: "Geometria da informação", en: "Information geometry" },
+      summary: { pt: "Geometria de famílias de distribuições, divergências e estruturas geométricas aplicadas a problemas de inferência.", en: "Geometry of distribution families, divergences, and geometric structures applied to inference problems." },
+      keywords: [{pt:"Geometria estatística",en:"Statistical geometry"}, {pt:"Divergências",en:"Divergences"}]
+    },
+    {
+      id: "computing", number: "07", symbol: "R",
+      title: { pt: "Computação estatística", en: "Statistical computing" },
+      summary: { pt: "Simulações Monte Carlo, implementação de métodos em R e validação numérica de resultados teóricos.", en: "Monte Carlo simulation, R implementations, and numerical validation of theoretical results." },
+      keywords: ["R", "Monte Carlo"]
     }
   ],
   projects: [
@@ -159,12 +165,16 @@ window.PORTFOLIO = {
       requirements: { pt: "Interesse em programação; conhecimento prévio de R é desejável.", en: "Interest in programming; previous R experience is desirable." }
     }
   ],
-  /* Only add students after obtaining consent for their public listing. */
-  students: [],
+  /* Public names and academic roles only. Confirm consent for public listing with each student. */
+  students: [
+    { id: "pedro-estevao", name: "Pedro Estevão Costa Viana de Araújo", level: { pt: "Iniciação científica", en: "Undergraduate research" }, role: { pt: "Orientação", en: "Supervision" }, project: "", url: "" },
+    { id: "muhammed-ismail", name: "Muhammed Ismail", level: { pt: "Doutorado", en: "Ph.D." }, role: { pt: "Coorientação", en: "Co-supervision" }, project: "", url: "" }
+  ],
   /* Add courses as { id, title:{pt,en}, institution, term, level, description:{pt,en}, materials:"" }. */
   courses: [
     { id: "probabilidade-2-2026", title: { pt: "Probabilidade 2", en: "Probability II" }, institution: "UFPE", term: "2026", level: "Undergraduate", description: { pt: "Disciplina de graduação ministrada em 2026.", en: "Undergraduate course taught in 2026." }, materials: "" },
     { id: "inferencia-atuariais-2026", title: { pt: "Inferência Estatística para Ciências Atuariais", en: "Statistical Inference for Actuarial Sciences" }, institution: "UFPE", term: "2026", level: "Undergraduate", description: { pt: "Disciplina de graduação ministrada em 2026.", en: "Undergraduate course taught in 2026." }, materials: "" },
+    { id: "probabilidade-2-atuariais", title: { pt: "Probabilidade 2 para Ciências Atuariais", en: "Probability II for Actuarial Science" }, institution: "UFPE", term: "", level: "Undergraduate", description: { pt: "Disciplina de probabilidade para a graduação em Ciências Atuariais.", en: "Probability course for the undergraduate degree in Actuarial Science." }, materials: "" },
     { id: "analise-multivariada-2026", title: { pt: "Análise Multivariada", en: "Multivariate Analysis" }, institution: "UFPE", term: "2026", level: "Undergraduate", description: { pt: "Disciplina de graduação informada no currículo acadêmico.", en: "Undergraduate course listed in the academic CV." }, materials: "" }
   ],
   /* Add repositories as { id, name, description:{pt,en}, language, url, documentation, tags:[] }. */
