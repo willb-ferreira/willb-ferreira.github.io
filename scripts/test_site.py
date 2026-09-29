@@ -231,7 +231,7 @@ with sync_playwright() as p:
             assert tab.locator('article.reading-area:visible').count()==1
             assert tab.locator('#spatial-models').is_visible()
             assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
-            assert '01 / 06 · Biblioteca de pesquisa' in tab.locator('#spatial-models .eyebrow').first.inner_text()
+            assert '01 / 06 · Biblioteca de pesquisa' in tab.locator('#spatial-models .eyebrow').first.text_content()
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
