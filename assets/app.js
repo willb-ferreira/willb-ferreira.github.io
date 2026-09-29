@@ -267,10 +267,44 @@
     ${g.id==="causal"?`<p class="reading-prereq"><strong>${e(words.research)}:</strong> ${e(lang==="pt"?"Esta linha é um interesse de pesquisa em desenvolvimento, não uma declaração de artigos já publicados nela.":"This is a developing research interest, not a claim of already published contributions in this area.")}</p>`:""}
     `;
   };
+  const renderSpatialGuide = function(g,area){
+  const pt=lang==="pt";
+  const W=pt?{
+    inside:"Navegação deste guia",essential:"Quatro leituras para começar",openLibrary:"Consultar o catálogo completo de 28 referências comentadas",
+    sectionLinks:"Leituras relacionadas",attention:"Condição a verificar",comparison:"Dimensão metodológica",A:"Vertente A",B:"Vertente B",
+    common:"Base comum",undergraduate:"Graduação / Iniciação científica",masters:"Mestrado",phd:"Doutorado / Pesquisa avançada",
+    contribution:"Contribuição",assumptions:"Hipóteses e limites",verified:"Verificação",stage:"Etapa de leitura",record:"Registro bibliográfico",
+    published:"Literatura publicada; nenhuma formulação ou demonstração inédita é divulgada.",
+    sources:"Catálogo por eixo",details:"Abrir referências deste eixo",exercise:"Atividades formativas",
+    sourceNote:"Metadados e resumos de editoras ou catálogos verificados conforme o registro; a verificação bibliográfica não equivale à leitura integral de todas as obras.",
+    fullText:"texto na página da editora",publisher:"resumo ou índice da editora",catalogue:"catálogo bibliográfico ou repositório institucional"
+  }:{
+    inside:"Inside this guide",essential:"Four starting readings",openLibrary:"Explore the full catalogue of 28 annotated references",
+    sectionLinks:"Related readings",attention:"Assumption to check",comparison:"Methodological dimension",A:"Track A",B:"Track B",
+    common:"Shared foundation",undergraduate:"Undergraduate / Scientific initiation",masters:"Master's",phd:"Ph.D. / Advanced research",
+    contribution:"Contribution",assumptions:"Assumptions and limits",verified:"Verification",stage:"Suggested study stage",record:"Bibliographic record",
+    published:"Published literature only; no unpublished model or proof is disclosed.",
+    sources:"Catalogue by strand",details:"Open references for this strand",exercise:"Learning activities",
+    sourceNote:"Publisher/catalogue metadata and abstracts were checked as indicated per record; bibliographic verification is not a claim to have read every complete work.",
+    fullText:"publisher full-text page",publisher:"publisher abstract or index",catalogue:"bibliographic catalogue or institutional repository"
+  };
+  const escapeB=x=>e(t(x));
+  const refById=new Map(g.references.map(r=>[r.id,r]));
+  const refLink=id=>{const r=refById.get(id);return r?`<a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.authors.split(";")[0])} (${e(String(r.year))}) ↗</a>`:"";};
+  const readGroup=(ids,heading)=>`<section class="spatial-essential"><h4>${e(heading)}</h4><ol>${ids.map(id=>{const r=refById.get(id);return r?`<li><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ↗</a><span>${e(r.authors)} · ${e(String(r.year))}</span><p>${escapeB(r.contribution)}</p></li>`:"";}).join("")}</ol></section>`;
+  const modules=s=>s.modules.map((m,i)=>`<div class="spatial-module"><h4>${escapeB(m.title)}</h4><p>${escapeB(m.body)}</p><p class="spatial-caution"><strong>${e(W.attention)}:</strong> ${escapeB(m.check)}</p><p class="spatial-module-refs"><strong>${e(W.sectionLinks)}:</strong> ${m.refs.map(refLink).join(" · ")}</p></div>`).join("");
+  const steps=level=>{const p=g.learning[level];return `<div class="spatial-level"><h4>${e(W[level])}</h4>${[["shared",W.common],["A",W.A],["B",W.B]].map(([key,name])=>`<div class="spatial-stage"><h5>${e(name)}</h5><ol>${p[key].map(step=>`<li>${escapeB(step)}</li>`).join("")}</ol></div>`).join("")}</div>`;};
+  const refItem=r=>`<li class="reading-reference spatial-reference" id="spatial-ref-${e(r.id)}"><div class="reading-ref-top"><span class="reading-ref-type">${e(r.section==="common"?W.common:r.section==="A"?W.A:W.B)}</span><span class="reading-ref-year">${e(String(r.year))}</span></div><h5><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ↗</a></h5><p class="reading-authors">${e(r.authors)} · ${e(r.venue)}</p><p><strong>${e(W.record)}:</strong> ${e(r.identifier)}</p><p><strong>${e(W.contribution)}:</strong> ${escapeB(r.contribution)}</p><p><strong>${e(W.assumptions)}:</strong> ${escapeB(r.assumptions)}</p><p><strong>${e(W.stage)}:</strong> ${e(W[r.stage]||r.stage)}</p><p class="spatial-record-verification"><strong>${e(W.verified)}:</strong> ${e(r.verification.replaceAll("-"," "))}</p></li>`;
+  const referenceSection=()=>`<div class="spatial-bibliography"><p>${e(W.sourceNote)}</p>${[["common",W.common],["A",W.A],["B",W.B]].map(([section,name])=>`<details class="spatial-catalogue"><summary>${e(W.details)}: ${e(name)} (${g.references.filter(r=>r.section===section).length})</summary><ol>${g.references.filter(r=>r.section===section).map(refItem).join("")}</ol></details>`).join("")}</div>`;
+  const comparisonSection=()=>`<div class="spatial-compare">${g.comparison.map(c=>`<div class="spatial-compare-row"><h4>${escapeB(c.axis)}</h4><div class="spatial-compare-grid"><div><strong>${e(W.A)}</strong><p>${escapeB(c.A)}</p></div><div><strong>${e(W.B)}</strong><p>${escapeB(c.B)}</p></div></div></div>`).join("")}</div><div class="spatial-bridge-note"><h4>${pt?"Integração com a literatura publicada":"Integration with published literature"}</h4>${g.bridges.map(b=>`<p>${escapeB(b)}</p>`).join("")}<h4>${pt?"Conexão com a minha pesquisa":"Connections with my research"}</h4><p>${escapeB(g.research)}</p></div>`;
+  const sections=g.sections.map(s=>`<section class="spatial-chapter" id="spatial-${e(s.id)}" aria-labelledby="spatial-title-${e(s.id)}"><h3 id="spatial-title-${e(s.id)}">${escapeB(s.title)}</h3><p class="spatial-lead">${escapeB(s.lead)}</p>${s.modules.length?modules(s):s.id==="bridges"?comparisonSection():s.id==="learning-paths"?`<div class="spatial-learning">${["undergraduate","masters","phd"].map(steps).join("")}</div><div class="spatial-exercises"><h4>${e(W.exercise)}</h4><ul>${g.exercises.map(x=>`<li>${escapeB(x)}</li>`).join("")}</ul></div>`:s.id==="reading-library"?referenceSection():""}</section>`).join("");
+  return `<article class="reading-area spatial-guide" id="spatial-models" aria-labelledby="read-spatial-models"><div class="reading-intro"><span class="eyebrow">01 / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span><h2 id="read-spatial-models">${escapeB(area.title)}</h2><p class="reading-question">${escapeB(g.question)}</p><p>${escapeB(g.entry)}</p><p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${escapeB(g.background)}</p><p class="spatial-public-note">${e(W.published)}</p></div><nav class="spatial-toc" aria-label="${e(W.inside)}"><strong>${e(W.inside)}</strong><ol>${g.sections.map(s=>`<li><a href="#spatial-${e(s.id)}">${escapeB(s.title)}</a></li>`).join("")}</ol></nav>${readGroup(["cressie93","besag74","tjostheim78","diggle07"],W.essential)}${sections}<a class="reading-back" href="#top">↑ ${tx("readingBack")}</a></article>`;
+};
   const renderReading = () => {
     const nav = D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))} <span aria-hidden="true">↗</span></a>`).join("");
     const articles = D.readingGuides.map((g,i)=>{
       const area=D.research.find(r=>r.id===g.id);
+      if(g.id==="spatial-models" && D.spatialGuide) return renderSpatialGuide(g,area);
       return `<article class="reading-area" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
         <div class="reading-intro"><span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span><h2 id="read-${e(g.id)}">${e(t(area.title))}</h2><p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p><p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p></div>
         <div class="reading-path"><h3>${tx("readingPath")}</h3><ol>${g.path.map(step=>`<li>${e(t(step))}</li>`).join("")}</ol></div>
