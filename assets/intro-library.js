@@ -69,37 +69,37 @@
     ],
     references: [
       reference(
-        "rue-held", "diggle-ribeiro", "tjostheim", "besag", "cressie", "brockwell-davis", "Peter J. Brockwell; Richard A. Davis", "Introduction to Time Series and Forecasting, 3rd ed.", 2016,
+        "brockwell-davis", "Peter J. Brockwell; Richard A. Davis", "Introduction to Time Series and Forecasting, 3rd ed.", 2016,
         "https://doi.org/10.1007/978-3-319-29854-2",
         "An accessible route into temporal dependence, ARMA and forecasting.",
         "Entrada acessível para dependência temporal, ARMA e previsão.", "entry"
       ),
       reference(
-        "Noel A. C. Cressie", "Statistics for Spatial Data", 1993,
+        "cressie", "Noel A. C. Cressie", "Statistics for Spatial Data", 1993,
         "https://doi.org/10.1002/9781119115151",
         "A common foundation for geostatistics, lattice models and spatial prediction.",
         "Base comum para geoestatística, modelos em malhas e predição espacial."
       ),
       reference(
-        "Julian Besag", "Spatial Interaction and the Statistical Analysis of Lattice Systems", 1974,
+        "besag", "Julian Besag", "Spatial Interaction and the Statistical Analysis of Lattice Systems", 1974,
         "https://doi.org/10.1111/j.2517-6161.1974.tb00999.x",
         "An original source on lattice interactions and conditional-model compatibility.",
         "Fonte original sobre interação em malhas e compatibilidade de modelos condicionais.", "seminal"
       ),
       reference(
-        "Dag Tjøstheim", "Statistical Spatial Series Modelling", 1978,
+        "tjostheim", "Dag Tjøstheim", "Statistical Spatial Series Modelling", 1978,
         "https://doi.org/10.2307/1426722",
         "A specialized bridge to unilateral spatial series and multidimensional ARMA structure.",
         "Ponte especializada para séries espaciais unilaterais e estruturas ARMA multidimensionais.", "seminal"
       ),
       reference(
-        "Peter J. Diggle; Paulo J. Ribeiro Jr.", "Model-based Geostatistics", 2007,
+        "diggle-ribeiro", "Peter J. Diggle; Paulo J. Ribeiro Jr.", "Model-based Geostatistics", 2007,
         "https://doi.org/10.1007/978-0-387-48536-2",
         "Model-based spatial inference and prediction with geostatistical data.",
         "Inferência e predição espaciais baseadas em modelos para dados geoestatísticos.", "next"
       ),
       reference(
-        "Håvard Rue; Leonhard Held", "Gaussian Markov Random Fields: Theory and Applications", 2005,
+        "rue-held", "Håvard Rue; Leonhard Held", "Gaussian Markov Random Fields: Theory and Applications", 2005,
         "https://www.routledge.com/Gaussian-Markov-Random-Fields-Theory-and-Applications/Rue-Held/p/book/9781584884323",
         "Conditional independence, sparse precision and a route to Bayesian spatial modelling.",
         "Independência condicional, precisão esparsa e entrada para modelagem espacial bayesiana.", "next"
