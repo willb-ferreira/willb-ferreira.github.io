@@ -24,7 +24,7 @@ EXPECTED_URLS = ['https://willb-ferreira.github.io/' if name == 'index' else 'ht
 assert len(SITEMAP_URLS) == len(EXPECTED_URLS) and set(SITEMAP_URLS) == set(EXPECTED_URLS), ('Sitemap must list each canonical URL exactly once', SITEMAP_URLS)
 print('SITEMAP all ten canonical URLs: PASS')
 
-def load(tab, page_name):
+def load(tab, page_name, initial_hash=None):
     html = (ROOT / f'{page_name}.html').read_text()
     # Browser navigation is restricted in this environment, so use set_content.
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', html)
@@ -40,6 +40,8 @@ def load(tab, page_name):
     tab.add_script_tag(content=regression_library)
     tab.add_script_tag(content=causal_library)
     tab.add_script_tag(content=auto)
+    if initial_hash:
+        tab.evaluate('(value) => { window.location.hash = value; }', initial_hash)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
 
@@ -72,6 +74,16 @@ with sync_playwright() as p:
         if page_name=='reading':
             assert tab.locator('article.reading-area').count()==6
             assert tab.locator('.reading-index a').count()==6
+            assert tab.locator('article.reading-area:visible').count()==1
+            assert tab.locator('#spatial-models').is_visible()
+            assert tab.locator('#theory').is_hidden()
+            assert tab.locator('.reading-index [aria-current="location"]').count()==1
+            assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#spatial-models'
+            assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
+            assert tab.locator('.reading-pagination .previous').count()==0
+            assert tab.locator('.reading-pagination .next').count()==1
+            assert '01 / 06' in tab.locator('#spatial-models .eyebrow').first.inner_text()
+            assert not tab.evaluate('document.documentElement.scrollWidth > innerWidth')
             assert tab.locator('#spatial-models h2').inner_text() == 'Time Series and Spatial Statistics'
             assert tab.locator('#spatial-models .reading-track').count()==3
             assert tab.locator('#intro-track-temporal').count()==1
@@ -108,6 +120,8 @@ with sync_playwright() as p:
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').tracks.every(t=>t.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').visibleReferences.includes(id)))")
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.length") == 12
             assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='causal').references.some(r=>r.id==='athey-imbens-2016')")
+            tab.locator('.reading-index a[data-reading-guide="causal"]').click()
+            assert tab.locator('#causal').is_visible()
             tab.locator('#causal-track-dependent a[href="#causal-ref-reich-2021"]').click()
             assert tab.evaluate('location.hash') == '#causal-ref-reich-2021'
             assert tab.locator('#regression .reading-related a').count()==4
@@ -176,12 +190,48 @@ with sync_playwright() as p:
             assert len(ids)==6 and len(set(ids))==6 and 'time-series' not in ids,ids
             assert len(tab.locator('#spatial-models').inner_text()) < 4700
             assert len(tab.locator('main').inner_text()) < 34500
+            tab.locator('.reading-index a[data-reading-guide="theory"]').click()
+            assert tab.evaluate('location.hash') == '#theory'
+            assert tab.locator('#theory').is_visible() and tab.locator('#spatial-models').is_hidden()
+            assert tab.locator('article.reading-area:visible').count()==1
+            assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#theory'
             tab.locator('#inference-track-information a[href="#inference-ref-pardo-2006"]').click()
             assert tab.evaluate('location.hash') == '#inference-ref-pardo-2006'
+            assert tab.locator('#theory').is_visible()
+            tab.locator('.reading-pagination .previous').click()
+            assert tab.evaluate('location.hash') == '#spatial-models'
+            assert tab.locator('#spatial-models').is_visible()
+            assert tab.locator('.reading-pagination .previous').count()==0
+            assert tab.locator('.reading-pagination .next').count()==1
             tab.locator('a[href="#intro-ref-tjostheim"]').first.click()
             assert tab.evaluate('location.hash') == '#intro-ref-tjostheim'
+            assert tab.locator('#spatial-models').is_visible()
+            tab.locator('.reading-index a[data-reading-guide="sar"]').click()
+            tab.locator('#sar .reading-related a[href="#geometry"]').click()
+            assert tab.evaluate('location.hash') == '#geometry'
+            assert tab.locator('#geometry').is_visible()
+            assert tab.locator('#sar').is_hidden()
+            assert '05 / 06' in tab.locator('#geometry .eyebrow').first.inner_text()
+            assert tab.locator('.reading-pagination .next').count()==1
+            tab.locator('.reading-pagination .next').click()
+            assert tab.evaluate('location.hash') == '#causal'
+            assert tab.locator('#causal').is_visible()
+            assert tab.locator('.reading-pagination .next').count()==0
+            assert tab.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#causal'
+            tab.go_back()
+            tab.wait_for_function("location.hash === '#geometry' && !document.getElementById('geometry').hidden")
+            assert tab.locator('#geometry').is_visible()
+            tab.go_forward()
+            tab.wait_for_function("location.hash === '#causal' && !document.getElementById('causal').hidden")
+            assert tab.locator('#causal').is_visible()
+            tab.locator('.reading-index a[data-reading-guide="spatial-models"]').click()
+            assert tab.locator('#spatial-models').is_visible()
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            assert tab.locator('article.reading-area:visible').count()==1
+            assert tab.locator('#spatial-models').is_visible()
+            assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
+            assert '01 / 06 · Biblioteca de pesquisa' in tab.locator('#spatial-models .eyebrow').first.text_content()
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
@@ -275,6 +325,15 @@ with sync_playwright() as p:
     phone.close()
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(mobile_reading,'reading')
+    assert mobile_reading.locator('.reading-mobile-picker').is_visible()
+    assert mobile_reading.locator('.reading-index').is_hidden()
+    assert mobile_reading.locator('#reading-guide-select option').count()==6
+    assert mobile_reading.locator('article.reading-area:visible').count()==1
+    mobile_reading.locator('#reading-guide-select').select_option('causal')
+    assert mobile_reading.locator('#causal').is_visible()
+    assert mobile_reading.locator('#spatial-models').is_hidden()
+    assert mobile_reading.evaluate('location.hash') == '#causal'
+    assert mobile_reading.locator('.reading-pagination .next').count()==0
     assert mobile_reading.locator('.reading-track').count()==18
     assert mobile_reading.locator('#causal-track-identification').count()==1
     assert mobile_reading.locator('#causal-track-estimation').count()==1
@@ -291,6 +350,9 @@ with sync_playwright() as p:
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
     mobile_reading.locator('#language-toggle').click()
     assert mobile_reading.locator('html').get_attribute('lang')=='pt-BR'
+    assert mobile_reading.locator('#reading-guide-select').input_value() == 'causal'
+    assert mobile_reading.locator('#causal').is_visible()
+    assert mobile_reading.locator('article.reading-area:visible').count()==1
     assert 'A ponte ARMA' in mobile_reading.locator('#spatial-track-a').inner_text()
     assert 'Inferência estatística bayesiana' in mobile_reading.locator('#inference-track-bayesian').inner_text()
     assert 'Processamento Estatístico de Imagens' in mobile_reading.locator('#sar h2').inner_text()
@@ -308,9 +370,33 @@ with sync_playwright() as p:
     mobile_reading.close()
     narrow=browser.new_page(viewport={'width':320,'height':700},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(narrow,'reading')
+    assert narrow.locator('.reading-mobile-picker').is_visible()
+    narrow.locator('#reading-guide-select').select_option('regression')
+    assert narrow.locator('#regression').is_visible()
+    assert narrow.locator('article.reading-area:visible').count()==1
     assert not narrow.evaluate('document.documentElement.scrollWidth > innerWidth')
     narrow.close()
     print('INTERACTION concise library mobile 390/320px, EN/PT and overflow: PASS')
+    # A direct URL to a hidden guide or a reference inside it must reveal it.
+    deep=browser.new_page(viewport={'width':1365,'height':860},device_scale_factor=1)
+    deep.on('pageerror', lambda err: errors.append(str(err)))
+    load(deep,'reading','#geometry-ref-menendez-morales-pardo-salicru-1995')
+    assert deep.locator('#geometry').is_visible()
+    assert deep.locator('article.reading-area:visible').count()==1
+    assert deep.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#geometry'
+    assert deep.locator('#geometry-ref-menendez-morales-pardo-salicru-1995').is_visible()
+    deep.wait_for_function("() => { const e=document.getElementById('geometry-ref-menendez-morales-pardo-salicru-1995'); const r=e.getBoundingClientRect(); return r.top < innerHeight && r.bottom > 80; }")
+    deep.evaluate("window.location.hash='#time-series'")
+    deep.wait_for_function("location.hash === '#time-series' && !document.getElementById('spatial-models').hidden")
+    assert deep.locator('#spatial-models').is_visible()
+    assert deep.locator('#geometry').is_hidden()
+    assert deep.locator('.reading-index [aria-current="location"]').get_attribute('href') == '#spatial-models'
+    deep.evaluate("window.location.hash='#main'")
+    assert deep.locator('#spatial-models').is_visible()
+    assert deep.locator('article.reading-area:visible').count()==1
+    deep.close()
+    print('INTERACTION direct deep links, legacy time-series anchor, browser history and one visible guide: PASS')
+
     mock=browser.new_page(viewport={'width':1365,'height':860})
     mock.on('pageerror',lambda err: errors.append(str(err)))
     html=(ROOT/'publications.html').read_text()

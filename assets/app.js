@@ -16,6 +16,8 @@
   let selectedCourseYear = "all";
   let courseSearch = "";
   let selectedProjectArea = "all";
+  let selectedReadingGuide = null;
+  let readingNavigationInitialized = false;
   let toastTimer;
 
   const M = {
@@ -30,8 +32,11 @@
       readingBackground:"Conhecimentos prévios:",
       readingPath:"Um percurso possível",
       readingReferences:"Leituras selecionadas",
-      readingBack:"Voltar ao início dos guias",
-      readingIndex:"Nesta página",
+      readingBack:"Voltar ao início do guia",
+      readingIndex:"Guias de pesquisa",
+      readingChoose:"Escolher área de pesquisa",
+      readingPrevious:"Guia anterior",
+      readingNext:"Próximo guia",
       readingNoteTitle:"Como usar estes guias.",
       readingNote:"Escolha um percurso e siga as leituras indicadas. O objetivo é orientar os primeiros estudos, não substituir uma revisão bibliográfica.",
       index:"Início",research:"Pesquisa",publications:"Publicações",supervision:"Orientação",people:"Pessoas",
@@ -101,8 +106,11 @@
       readingBackground:"Recommended background:",
       readingPath:"A possible route",
       readingReferences:"Selected reading",
-      readingBack:"Back to the guide index",
-      readingIndex:"On this page",
+      readingBack:"Back to guide start",
+      readingIndex:"Research guides",
+      readingChoose:"Choose a research area",
+      readingPrevious:"Previous guide",
+      readingNext:"Next guide",
       readingNoteTitle:"How to use these guides.",
       readingNote:"Choose a path and follow the suggested readings. These are entry points, not comprehensive literature reviews.",
       index:"Home",research:"Research",publications:"Publications",supervision:"Supervision",people:"People",teaching:"Teaching",software:"Code & Data",about:"About",contact:"Contact",
@@ -517,7 +525,8 @@
     </article>`;
   };
   const renderReading = function(){
-  const nav=D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))}<span aria-hidden="true">↗</span></a>`).join("");
+  const nav=D.readingGuides.map((g,i)=>{const area=D.research.find(r=>r.id===g.id);return `<a href="#${e(g.id)}" data-reading-guide="${e(g.id)}" aria-controls="${e(g.id)}"><span class="reading-nav-number" aria-hidden="true">${e(String(i+1).padStart(2,"0"))}</span><span class="reading-nav-title">${e(t(area.title))}</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a>`;}).join("");
+  const choices=D.readingGuides.map((g,i)=>{const area=D.research.find(r=>r.id===g.id);return `<option value="${e(g.id)}">${e(String(i+1).padStart(2,"0"))} · ${e(t(area.title))}</option>`;}).join("");
   const articles=D.readingGuides.map((g,i)=>{
     const area=D.research.find(r=>r.id===g.id);
     if(g.id==="spatial-models" && g.tracks) return renderDependentGuide(g,area,i);
@@ -543,8 +552,64 @@
   }).join("");
   return `${pageHero(tx("research"),tx("readingTitle"),tx("readingPageLead"))}<section class="section reading-section" id="top">
     <div class="shell"><div class="reading-note"><strong>${tx("readingNoteTitle")}</strong> ${tx("readingNote")}</div>
-    <div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav><div class="reading-guides">${articles}</div></div></div></section>`;
+    <div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav>
+      <div class="reading-main"><div class="reading-mobile-picker"><label for="reading-guide-select">${tx("readingChoose")}</label><select id="reading-guide-select" aria-controls="reading-guides">${choices}</select></div>
+        <p class="reading-status" id="reading-guide-status" role="status" aria-live="polite" aria-atomic="true"></p>
+        <div class="reading-guides" id="reading-guides">${articles}</div><nav class="reading-pagination" aria-label="${tx("readingIndex")}"></nav>
+      </div></div></div></section>`;
 };
+  const readingHashId=()=>{
+    try{return decodeURIComponent(window.location.hash.slice(1));}
+    catch{return window.location.hash.slice(1);}
+  };
+  const readingPager=(index)=>{
+    const prev=D.readingGuides[index-1],next=D.readingGuides[index+1];
+    const guideTitle=id=>t(D.research.find(r=>r.id===id).title);
+    const link=(g,label,kind,arrow)=>g?`<a class="reading-page-link ${kind}" href="#${e(g.id)}" aria-label="${e(label+": "+guideTitle(g.id))}"><span class="reading-page-direction">${arrow} ${e(label)}</span><span class="reading-page-title">${e(guideTitle(g.id))}</span></a>`:
+      `<span class="reading-page-placeholder" aria-hidden="true"></span>`;
+    return `${link(prev,tx("readingPrevious"),"previous","←")}${link(next,tx("readingNext"),"next","→")}`;
+  };
+  const syncReadingSelection=(scrollToTarget=false)=>{
+    if(page!=="reading")return;
+    const guides=document.getElementById("reading-guides");
+    if(!guides)return;
+    const hash=readingHashId();
+    const target=hash?document.getElementById(hash):null;
+    const targetPanel=target?.closest(".reading-area");
+    const requestedId=targetPanel?.id||(hash==="time-series"?"spatial-models":null);
+    const ids=D.readingGuides.map(g=>g.id);
+    const nextId=ids.includes(requestedId)?requestedId:
+      ids.includes(selectedReadingGuide)?selectedReadingGuide:ids[0];
+    const previousFocusPanel=document.activeElement?.closest?.(".reading-area");
+    const changingFocus=previousFocusPanel&&previousFocusPanel.id!==nextId;
+    const changed=selectedReadingGuide!==nextId;
+    selectedReadingGuide=nextId;
+    const article=document.getElementById(nextId);
+    guides.querySelectorAll(".reading-area").forEach(panel=>{
+      panel.hidden=panel.id!==nextId;
+    });
+    document.querySelectorAll(".reading-index [data-reading-guide]").forEach(link=>{
+      if(link.dataset.readingGuide===nextId)link.setAttribute("aria-current","location");
+      else link.removeAttribute("aria-current");
+    });
+    const select=document.getElementById("reading-guide-select");
+    if(select)select.value=nextId;
+    const pager=document.querySelector(".reading-pagination");
+    if(pager)pager.innerHTML=readingPager(ids.indexOf(nextId));
+    const status=document.getElementById("reading-guide-status");
+    if(status&&changed)status.textContent=t(D.research.find(r=>r.id===nextId).title);
+    if(changingFocus){
+      const heading=article.querySelector("h2");
+      heading.tabIndex=-1;heading.focus({preventScroll:true});
+    }
+    if(scrollToTarget&&(targetPanel||hash==="time-series")){
+      const destination=targetPanel?.id===nextId?target:article;
+      window.requestAnimationFrame(()=>{
+        if(destination?.isConnected&&!destination.closest(".reading-area")?.hidden)
+          destination.scrollIntoView({block:"start",behavior:"auto"});
+      });
+    }
+  };
   const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div><div class="reading-cta"><div><span class="eyebrow">${tx("readingSmall")}</span><h3>${tx("readingTitle")}</h3><p>${tx("readingIntro")}</p></div><a class="inline-link" href="reading.html">${tx("readingButton")} ${icon("arrow",15)}</a></div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${D.projects.filter(x=>selectedProjectArea==="all"||x.area===selectedProjectArea).map(projectCard).join("")}</div></div></section>${renderResearchIdeas()}${banner()}`;
   const renderResearchIdeas = () => {
     const ideas=D.researchIdeas||[];
@@ -670,6 +735,26 @@
   const showToast = message => { const el=document.getElementById("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2500); };
   const toBibtex = p => p.bibtex || `@${p.type==="article"?"article":"misc"}{${(p.id||"paper").replace(/[^a-zA-Z0-9_-]/g,"")},\n  title = {${p.title||""}},\n  author = {${p.authors||""}},\n  year = {${p.year||""}},\n  journal = {${p.venue||""}}${p.doi?`,\n  doi = {${p.doi}}`:""}\n}`;
   const attach = () => {
+    if(page==="reading"){
+      // Reveal a different guide before the browser attempts to scroll to a hidden anchor.
+      document.querySelector(".reading-layout")?.addEventListener("click",ev=>{
+        const link=ev.target.closest('a[href^="#"]');
+        if(!link)return;
+        const id=link.getAttribute("href").slice(1);
+        const panel=document.getElementById(id)?.closest(".reading-area");
+        if(!panel||panel.id===selectedReadingGuide)return;
+        ev.preventDefault();
+        window.location.hash=id;
+        syncReadingSelection(true);
+      });
+      document.getElementById("reading-guide-select")?.addEventListener("change",ev=>{
+        const id=ev.target.value;
+        if(window.location.hash!=="#"+id)window.location.hash=id;
+        syncReadingSelection(true);
+      });
+      syncReadingSelection(!readingNavigationInitialized&&Boolean(window.location.hash));
+      readingNavigationInitialized=true;
+    }
     document.getElementById("project-filters")?.addEventListener("click",ev=>{
       const btn=ev.target.closest("[data-area]");if(!btn)return;selectedProjectArea=btn.dataset.area;
       document.querySelectorAll("[data-area]").forEach(b=>{b.classList.toggle("active",b.dataset.area===selectedProjectArea);b.setAttribute("aria-pressed",String(b.dataset.area===selectedProjectArea));});
@@ -713,5 +798,6 @@
     document.getElementById("main").innerHTML=(pages[page]||renderHome)();
     attach();addStructuredData();
   };
+  if(page==="reading")window.addEventListener("hashchange",()=>syncReadingSelection(true));
   render();
 })();
