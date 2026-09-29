@@ -35,6 +35,8 @@ with sync_playwright() as p:
     assert people.locator('.person-entry').count()==2
     assert 'Pedro Estevão Costa Viana de Araújo' in people.locator('main').inner_text()
     assert 'Muhammed Ismail' in people.locator('main').inner_text()
+    assert people.locator('.person-entry').filter(has_text='Pedro Estevão Costa Viana de Araújo').locator('.directory-period').inner_text() == '2026.2'
+    assert people.locator('.person-entry').filter(has_text='Muhammed Ismail').locator('.directory-period').inner_text() == '2026.1'
     people.locator('#language-toggle').click()
     assert 'Coorientação' in people.locator('main').inner_text()
     print('PEOPLE grouped by level/relationship, bilingual: PASS')
@@ -70,6 +72,12 @@ with sync_playwright() as p:
     assert courses.locator('.course-entry').count()==4
     assert courses.locator('.course-entry h3').all_inner_texts().count('Probability II for Actuarial Science')==1
     assert courses.locator('#course-year option').count()==2
+    actual_offerings = {row.locator('h3').inner_text(): row.locator('.course-meta').inner_text().strip() for row in courses.locator('.course-entry').all()}
+    assert actual_offerings['Probability II'].endswith('2026.1'), actual_offerings
+    assert actual_offerings['Statistical Inference for Actuarial Sciences'].endswith('2026.1'), actual_offerings
+    assert actual_offerings['Probability II for Actuarial Science'].endswith('2026.2'), actual_offerings
+    assert actual_offerings['Multivariate Analysis I'].endswith('2026.2'), actual_offerings
+    assert courses.locator('.course-entry').first.locator('h3').inner_text() in ['Multivariate Analysis I','Probability II for Actuarial Science']
     courses.locator('#course-search').fill('Actuarial')
     assert courses.locator('.course-entry').count()==2
     courses.locator('#course-search').fill('')
