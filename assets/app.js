@@ -270,7 +270,7 @@
   const renderSpatialGuide = function(g,area){
   const pt=lang==="pt";
   const W=pt?{
-    inside:"Navegação deste guia",essential:"Quatro leituras para começar",openLibrary:"Consultar o catálogo completo de 28 referências comentadas",
+    inside:"Navegação deste guia",essential:"Quatro leituras para começar",openLibrary:"Consultar o catálogo completo de 31 referências comentadas",
     sectionLinks:"Leituras relacionadas",attention:"Condição a verificar",comparison:"Dimensão metodológica",A:"Vertente A",B:"Vertente B",
     common:"Base comum",undergraduate:"Graduação / Iniciação científica",masters:"Mestrado",phd:"Doutorado / Pesquisa avançada",
     contribution:"Contribuição",assumptions:"Hipóteses e limites",verified:"Verificação",stage:"Etapa de leitura",record:"Registro bibliográfico",
@@ -279,7 +279,7 @@
     sourceNote:"Metadados e resumos de editoras ou catálogos verificados conforme o registro; a verificação bibliográfica não equivale à leitura integral de todas as obras.",
     fullText:"texto na página da editora",publisher:"resumo ou índice da editora",catalogue:"catálogo bibliográfico ou repositório institucional"
   }:{
-    inside:"Inside this guide",essential:"Four starting readings",openLibrary:"Explore the full catalogue of 28 annotated references",
+    inside:"Inside this guide",essential:"Four starting readings",openLibrary:"Explore the full catalogue of 31 annotated references",
     sectionLinks:"Related readings",attention:"Assumption to check",comparison:"Methodological dimension",A:"Track A",B:"Track B",
     common:"Shared foundation",undergraduate:"Undergraduate / Scientific initiation",masters:"Master's",phd:"Ph.D. / Advanced research",
     contribution:"Contribution",assumptions:"Assumptions and limits",verified:"Verification",stage:"Suggested study stage",record:"Bibliographic record",
