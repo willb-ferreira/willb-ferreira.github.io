@@ -42,30 +42,31 @@ with sync_playwright() as p:
     print('PEOPLE grouped by level/relationship, bilingual: PASS')
     people.close()
 
+    assert all(label not in CONTENT for label in ["msc-enl-mixtures","phd-manifold-influence","rinla-mcmc-package","spacetime-exp-family","phd-geodesic-regularization"]), 'A restricted topic identifier remains in public content'
     topics=load(browser,'supervision')
     assert topics.locator('#topic-results article').count()==6
     topics.locator('[data-level="masters"]').click()
-    assert topics.locator('#topic-results article').count()==6
-    topics.locator('[data-level="phd"]').click()
     assert topics.locator('#topic-results article').count()==5
+    topics.locator('[data-level="phd"]').click()
+    assert topics.locator('#topic-results article').count()==3
     topics.locator('[data-level="all"]').click()
-    assert topics.locator('#topic-results article').count()==17
-    assert '17 proposals' in topics.locator('#topic-count').inner_text()
+    assert topics.locator('#topic-results article').count()==14
+    assert '14 proposals' in topics.locator('#topic-count').inner_text()
     topics.locator('#language-toggle').click()
     assert 'propostas' in topics.locator('#topic-count').inner_text()
-    print('SUPERVISION 6 undergraduate + 6 masters + 5 PhD, filters & bilingual: PASS')
+    print('SUPERVISION 6 undergraduate + 5 masters + 3 PhD, filters & bilingual: PASS')
     topics.close()
 
     research=load(browser,'research')
     assert research.locator('#research-notebook').count()==1
     assert research.locator('details.idea-group').count()==3
-    assert research.locator('.research-idea').count()==5
+    assert research.locator('.research-idea').count()==3
     assert not research.locator('details.idea-group').first.evaluate('(el)=>el.open')
     research.locator('details.idea-group').first.locator('summary').click()
     assert research.locator('details.idea-group').first.evaluate('(el)=>el.open')
     research.locator('#language-toggle').click()
-    assert 'CADERNO DE PESQUISA' in research.locator('main').inner_text()
-    print('RESEARCH five faculty-led ideas separate and collapsed: PASS')
+    assert 'COLABORAÇÃO' in research.locator('main').inner_text().upper()
+    print('RESEARCH three broad collaboration themes, collapsed and bilingual: PASS')
     research.close()
 
     courses=load(browser,'teaching')
