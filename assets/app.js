@@ -24,7 +24,7 @@
       readingTitle:"Por onde começar em cada área",
       readingIntro:"Uma seleção comentada de referências para construir fundamentos antes de escolher um problema de pesquisa.",
       readingButton:"Explorar os guias de leitura",
-      readingPageLead:"Sete percursos de leitura com fundamentos, questões para estudar e referências de editoras e periódicos. Não substituem uma revisão sistemática nem anunciam vagas de orientação.",
+      readingPageLead:"Oito percursos de leitura com fundamentos, questões para estudar e referências de editoras e periódicos. Não substituem uma revisão sistemática nem anunciam vagas de orientação.",
       readingBackground:"Conhecimentos prévios:",
       readingPath:"Um percurso possível",
       readingReferences:"Leituras selecionadas",
@@ -95,7 +95,7 @@
       readingTitle:"A starting point for each research area",
       readingIntro:"Annotated references to help students build foundations before choosing a research question.",
       readingButton:"Explore the reading guides",
-      readingPageLead:"Seven reading paths with foundations, questions to explore and publisher-linked references. These are curated starting points, not systematic reviews or advertised supervision positions.",
+      readingPageLead:"Eight reading paths with foundations, questions to explore and publisher-linked references. These are curated starting points, not systematic reviews or advertised supervision positions.",
       readingBackground:"Recommended background:",
       readingPath:"A possible route",
       readingReferences:"Selected reading",
@@ -248,19 +248,38 @@
     seminal:{en:"Seminal paper",pt:"Trabalho seminal"}, next:{en:"Next step",pt:"Próximo passo"},
     application:{en:"Research example",pt:"Exemplo de pesquisa"}, advanced:{en:"Advanced",pt:"Avançado"}
   };
+  const readingExtras = g => {
+    const block = (heading,items,ordered=false) => !items || !items.length ? "" : `<section class="reading-extra"><h3>${e(heading)}</h3><${ordered?"ol":"ul"}>${items.map(item=>`<li>${e(t(item))}</li>`).join("")}</${ordered?"ol":"ul"}></section>`;
+    const words = lang === "pt"
+      ? {overview:"Visão geral",foundations:"Fundamentos matemáticos e estatísticos",questions:"Questões fundamentais",contemporary:"Pesquisa contemporânea",paths:"Percursos formativos",undergraduate:"Iniciação científica / Graduação",masters:"Mestrado",phd:"Doutorado / Pesquisa avançada",directions:"Direções de pesquisa e exercícios",extension:"Extensão metodológica plausível",exercise:"Exercício formativo",open:"Problema aberto documentado",connections:"Conexões com outras áreas",research:"Relações com minha pesquisa",transversal:"Competências transversais"}
+      : {overview:"Overview",foundations:"Mathematical and statistical foundations",questions:"Fundamental questions",contemporary:"Contemporary research",paths:"Suggested learning paths",undergraduate:"Undergraduate / Scientific initiation",masters:"Master's",phd:"Ph.D. / Advanced research",directions:"Research directions and exercises",extension:"Plausible methodological extension",exercise:"Learning exercise",open:"Documented open problem",connections:"Connections with other areas",research:"Connections with my research",transversal:"Transversal skills"};
+    const paragraphs = (heading,values) => !values || !values.length ? "" : `<section class="reading-extra"><h3>${e(heading)}</h3>${values.map(value=>`<p>${e(t(value))}</p>`).join("")}</section>`;
+    const directions = (g.directions || []).map(d=>`<li><strong>${e(words[d.type]||d.type)}:</strong> ${e(t(d.text))}</li>`).join("");
+    const connections = (g.connections||[]).map(c=>{const area=D.research.find(a=>a.id===c.id);return area?`<li><a href="#${e(c.id)}">${e(t(area.title))}</a>: ${e(t(c.note))}</li>`:"";}).join("");
+    return `${g.overview?`<section class="reading-extra"><h3>${e(words.overview)}</h3><p>${e(t(g.overview))}</p></section>`:""}
+    ${block(words.foundations,g.foundations)}${block(words.questions,g.fundamental)}
+    ${paragraphs(words.contemporary,g.contemporary)}
+    ${g.learning?`<section class="reading-extra"><h3>${e(words.paths)}</h3>${["undergraduate","masters","phd"].map(level=>`<h4>${e(words[level])}</h4><ol>${(g.learning[level]||[]).map(step=>`<li>${e(t(step))}</li>`).join("")}</ol>`).join("")}</section>`:""}
+    ${directions?`<section class="reading-extra"><h3>${e(words.directions)}</h3><ul>${directions}</ul></section>`:""}
+    ${connections?`<section class="reading-extra"><h3>${e(words.connections)}</h3><ul>${connections}</ul></section>`:""}
+    ${g.id==="learning"||g.id==="causal"?`<p class="reading-prereq"><strong>${e(words.research)}:</strong> ${e(lang==="pt"?"Esta linha é um interesse de pesquisa em desenvolvimento, não uma declaração de artigos já publicados nela.":"This is a developing research interest, not a claim of already published contributions in this area.")}</p>`:""}
+    `;
+  };
   const renderReading = () => {
     const nav = D.research.map(r=>`<a href="#${e(r.id)}">${e(t(r.title))} <span aria-hidden="true">↗</span></a>`).join("");
     const articles = D.readingGuides.map((g,i)=>{
       const area=D.research.find(r=>r.id===g.id);
       return `<article class="reading-area" id="${e(g.id)}" aria-labelledby="read-${e(g.id)}">
-        <div class="reading-intro"><span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / 07 · ${tx("readingSmall")}</span><h2 id="read-${e(g.id)}">${e(t(area.title))}</h2><p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p><p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p></div>
+        <div class="reading-intro"><span class="eyebrow">${e(String(i+1).padStart(2,"0"))} / ${String(D.readingGuides.length).padStart(2,"0")} · ${tx("readingSmall")}</span><h2 id="read-${e(g.id)}">${e(t(area.title))}</h2><p class="reading-question">${e(t(g.question))}</p><p>${e(t(g.entry))}</p><p class="reading-prereq"><strong>${tx("readingBackground")}</strong> ${e(t(g.background))}</p></div>
         <div class="reading-path"><h3>${tx("readingPath")}</h3><ol>${g.path.map(step=>`<li>${e(t(step))}</li>`).join("")}</ol></div>
-        <div class="reading-bibliography"><h3>${tx("readingReferences")}</h3><ol>${g.references.map(r=>`<li class="reading-reference"><div class="reading-ref-top"><span class="reading-ref-type">${e(t(readingLabels[r.kind]||readingLabels.next))}</span><span class="reading-ref-year">${e(String(r.year))}</span></div><h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ${icon("up",14)}</a></h4><p class="reading-authors">${e(r.authors)}</p><p>${e(t(r.note))}</p></li>`).join("")}</ol></div>
+        ${readingExtras(g)}
+        <div class="reading-bibliography"><h3>${tx("readingReferences")}</h3><ol>${g.references.map(r=>`<li class="reading-reference"><div class="reading-ref-top"><span class="reading-ref-type">${e(t(readingLabels[r.kind]||readingLabels.next))}</span><span class="reading-ref-year">${e(String(r.year))}</span></div><h4><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)} ${icon("up",14)}</a></h4><p class="reading-authors">${e(r.authors)}${r.venue?` · ${e(r.venue)}`:""}</p><p>${e(t(r.note))}</p>${r.preparation?`<p class="reading-prereq"><strong>${lang==="pt"?"Preparação recomendada":"Recommended preparation"}:</strong> ${e(t(r.preparation))}</p>`:""}${r.why?`<p><strong>${lang==="pt"?"Por que ler":"Why read"}:</strong> ${e(t(r.why))}</p>`:""}${r.stage?`<p class="reading-ref-stage">${e(lang==="pt"?"Etapa recomendada":"Suggested stage")}: ${e(r.stage==="undergraduate"?(lang==="pt"?"Graduação / IC":"Undergraduate"):r.stage==="masters"?(lang==="pt"?"Mestrado":"Master’s"):(lang==="pt"?"Doutorado":"Ph.D."))}</p>`:""}</li>`).join("")}</ol></div>
+        ${g.id==="geometry"&&D.transversalComputing?`<section class="reading-extra"><h3>${lang==="pt"?"Competências transversais: computação e reprodutibilidade":"Transversal skills: computing and reproducibility"}</h3><p>${e(t(D.transversalComputing.entry))}</p><ol>${D.transversalComputing.references.map(r=>`<li><a href="${safe(r.url)}" target="_blank" rel="noopener noreferrer">${e(r.title)}</a> — ${e(t(r.note))}</li>`).join("")}</ol></section>`:""}
         <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
       </article>`;
     }).join("");
     return `${pageHero(tx("research"),tx("readingTitle"),tx("readingPageLead"))}
-      <section class="section reading-section" id="top"><div class="shell"><div class="reading-note"><strong>${tx("readingNoteTitle")}</strong> ${tx("readingNote")}</div><div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav><div class="reading-guides">${articles}</div></div></div></section>`;
+      <section class="section reading-section" id="top"><div class="shell"><div class="reading-note"><strong>${tx("readingNoteTitle")}</strong> ${tx("readingNote")}</div>${D.researchLibraryPolicy?`<p class="reading-note">${e(t(D.researchLibraryPolicy))}</p>`:""}<div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav><div class="reading-guides">${articles}</div></div></div></section>`;
   };
   const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div><div class="reading-cta"><div><span class="eyebrow">${tx("readingSmall")}</span><h3>${tx("readingTitle")}</h3><p>${tx("readingIntro")}</p></div><a class="inline-link" href="reading.html">${tx("readingButton")} ${icon("arrow",15)}</a></div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${D.projects.filter(x=>selectedProjectArea==="all"||x.area===selectedProjectArea).map(projectCard).join("")}</div></div></section>${banner()}`;
   const labelType = type => ({article:tx("articles"),preprint:tx("preprints"),conference:tx("conferences"),other:tx("others")})[type]||tx("others");
