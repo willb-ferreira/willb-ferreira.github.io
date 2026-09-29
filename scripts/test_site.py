@@ -59,12 +59,12 @@ with sync_playwright() as p:
             assert tab.locator('#time-series h2').inner_text() == 'Time series'
             assert tab.locator('.reading-extra').count()>=23
             assert tab.locator('article.reading-area').count()==7
-            assert tab.locator('li.reading-reference').count()==78
+            assert tab.locator('li.reading-reference').count()==81
             assert tab.locator('a[href*="doi.org"]').count()>=30
             assert tab.locator('#spatial-track-a .spatial-module').count()==5
             assert tab.locator('#spatial-track-b .spatial-module').count()==5
             assert tab.locator('#spatial-foundations .spatial-module').count()==4
-            assert tab.locator('li.spatial-reference').count()==28
+            assert tab.locator('li.spatial-reference').count()==31
             assert tab.locator('details.spatial-catalogue').count()==3
             assert tab.locator('#spatial-learning-paths .spatial-level').count()==3
             tab.locator('details.spatial-catalogue').first.locator('summary').click()
@@ -72,8 +72,8 @@ with sync_playwright() as p:
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
-            assert tab.locator('li.reading-reference').count()==78
-            print('CONTENT seven bilingual research reading guides and 78 curated references: PASS')
+            assert tab.locator('li.reading-reference').count()==81
+            print('CONTENT seven bilingual research reading guides and 81 curated references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==7
             assert tab.locator('#project-results article').count()==4
