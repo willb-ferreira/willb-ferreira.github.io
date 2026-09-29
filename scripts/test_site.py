@@ -121,7 +121,7 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
-            assert tab.locator('li.reading-reference').count()==27
+            assert tab.locator('li.reading-reference').count()==31
             assert tab.locator('#sar h2').inner_text() == 'Processamento Estatístico de Imagens'
             assert 'Imagens de radar' in tab.locator('#imaging-track-radar').inner_text()
             assert 'Sensoriamento remoto óptico' in tab.locator('#imaging-track-optical').inner_text()
