@@ -213,7 +213,8 @@
             "besag-moran75",
             "mardia84",
             "varin11",
-            "basu93"
+            "basu93",
+            "besag75"
           ]
         }
       ]
@@ -306,7 +307,9 @@
             "rue05",
             "banerjee14",
             "rue09",
-            "lindgren11"
+            "lindgren11",
+            "gelfand-smith90",
+            "besag-green93"
           ]
         },
         {
@@ -1147,6 +1150,69 @@
       },
       "stage": "phd",
       "verification": "institutional-catalogue",
+      "essential": false
+    },
+    {
+      "id": "besag75",
+      "section": "A",
+      "authors": "Julian Besag",
+      "title": "Statistical Analysis of Non-Lattice Data",
+      "year": 1975,
+      "venue": "Journal of the Royal Statistical Society, Series D (The Statistician), 24(3), 179–195",
+      "identifier": "10.2307/2987782",
+      "url": "https://doi.org/10.2307/2987782",
+      "contribution": {
+        "en": "Develops a Markovian spatial-interaction treatment for irregular sampling sites and methods related to conditional estimation.",
+        "pt": "Desenvolve tratamento de interação espacial markoviana para locais de amostragem irregulares e métodos ligados à estimação condicional."
+      },
+      "assumptions": {
+        "en": "The methods apply to specified Markovian spatial models; do not interpret conditional-product inference as full likelihood without an appropriate joint construction.",
+        "pt": "Os métodos aplicam-se a modelos espaciais markovianos especificados; não interprete inferência por produto condicional como verossimilhança plena sem construção conjunta apropriada."
+      },
+      "stage": "masters",
+      "verification": "publisher-abstract",
+      "essential": true
+    },
+    {
+      "id": "gelfand-smith90",
+      "section": "B",
+      "authors": "Alan E. Gelfand; Adrian F. M. Smith",
+      "title": "Sampling-Based Approaches to Calculating Marginal Densities",
+      "year": 1990,
+      "venue": "Journal of the American Statistical Association, 85(410), 398–409",
+      "identifier": "10.1080/01621459.1990.10476213",
+      "url": "https://doi.org/10.1080/01621459.1990.10476213",
+      "contribution": {
+        "en": "Systematically compares Gibbs sampling, stochastic substitution and sampling-importance-resampling for numerical marginal posterior calculation.",
+        "pt": "Compara sistematicamente amostragem de Gibbs, substituição estocástica e amostragem-ponderação-reamostragem para cálculo numérico de marginais posteriores."
+      },
+      "assumptions": {
+        "en": "Monte Carlo targets require a proper specified joint distribution and computational convergence or adequate sampling diagnostics; sampling output alone does not establish posterior propriety.",
+        "pt": "Alvos Monte Carlo exigem distribuição conjunta própria e especificada e convergência computacional ou diagnósticos amostrais adequados; a saída do amostrador não estabelece, por si só, propriedade posterior."
+      },
+      "stage": "masters",
+      "verification": "publisher-abstract",
+      "essential": true
+    },
+    {
+      "id": "besag-green93",
+      "section": "B",
+      "authors": "Julian Besag; Peter J. Green",
+      "title": "Spatial Statistics and Bayesian Computation",
+      "year": 1993,
+      "venue": "Journal of the Royal Statistical Society, Series B, 55(1), 25–37",
+      "identifier": "10.1111/j.2517-6161.1993.tb01467.x",
+      "url": "https://doi.org/10.1111/j.2517-6161.1993.tb01467.x",
+      "contribution": {
+        "en": "Reviews Bayesian MCMC developments for spatial Markov fields and illustrates spatial applications, including agricultural field experiments.",
+        "pt": "Revisa desenvolvimentos de MCMC bayesiano para campos espaciais markovianos e ilustra aplicações espaciais, inclusive experimentos agrícolas."
+      },
+      "assumptions": {
+        "en": "Gibbs or auxiliary-variable sampling requires a specified posterior target and does not by itself guarantee a proper posterior or well-mixed chains.",
+        "pt": "Amostragem de Gibbs ou por variáveis auxiliares requer posterior-alvo especificada e não garante, por si, posterior própria nem cadeias bem misturadas."
+      },
+      "stage": "phd",
+      "verification": "publisher-abstract",
       "essential": false
     }
   ]
