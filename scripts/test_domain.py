@@ -1,6 +1,7 @@
 """Offline checks for the canonical domain, structured data and sitemap."""
 import json
 import re
+from html import unescape
 from pathlib import Path
 from xml.etree import ElementTree as ET
 
@@ -8,6 +9,8 @@ from site_config import LEGACY_URL, PAGE_SLUGS, SITE_URL, page_url
 
 root = Path(__file__).resolve().parents[1]
 expected = {page_url(name) for name in PAGE_SLUGS}
+page_titles = set()
+page_descriptions = set()
 urls = [loc.text for loc in ET.parse(root / "sitemap.xml").findall(
     ".//{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
 )]
@@ -26,6 +29,21 @@ for slug in PAGE_SLUGS:
     assert og_urls == canonical, (path, og_urls)
     assert og_images == [SITE_URL + "/assets/portrait.webp"], (path, og_images)
     assert LEGACY_URL not in html, path
+    titles = re.findall(r'<title>(.*?)</title>', html, flags=re.S)
+    descriptions = re.findall(r'<meta name="description" content="([^"]*)"\s*/>', html)
+    og_titles = re.findall(r'<meta property="og:title" content="([^"]*)"\s*/>', html)
+    og_descriptions = re.findall(r'<meta property="og:description" content="([^"]*)"\s*/>', html)
+    site_names = re.findall(r'<meta property="og:site_name" content="([^"]*)"\s*/>', html)
+    assert len(titles) == len(descriptions) == len(og_titles) == len(og_descriptions) == 1, path
+    title, description = unescape(titles[0]), unescape(descriptions[0])
+    assert 15 <= len(title) <= 90, (path, title)
+    assert 85 <= len(description) <= 180, (path, description)
+    assert unescape(og_titles[0]) == title and unescape(og_descriptions[0]) == description, path
+    assert site_names == ['Willams Batista'], (path, site_names)
+    assert title not in page_titles and description not in page_descriptions, path
+    page_titles.add(title)
+    page_descriptions.add(description)
+    assert 'hreflang=' not in html, 'Language variants share one URL; do not fabricate alternate URLs'
     jsonld = re.findall(
         r'<script id="person-jsonld" type="application/ld\+json">(.*?)</script>',
         html, flags=re.S,
@@ -37,6 +55,13 @@ for slug in PAGE_SLUGS:
     assert person["alternateName"] == "Willams B. F. da Silva", path
     assert person["url"] == SITE_URL + "/", path
     assert person["email"] == "willams.bfsilva@ufpe.br", path
+    sites = re.findall(r'<script id="website-jsonld" type="application/ld\+json">(.*?)</script>', html, flags=re.S)
+    assert len(sites) == (1 if slug == 'index' else 0), path
+    if sites:
+        website = json.loads(sites[0])
+        assert website['@type'] == 'WebSite' and website['name'] == person['name'], path
+        assert website['alternateName'] == person['alternateName'], path
+        assert website['url'] == SITE_URL + '/', path
 
 assert (root / "assets/portrait.webp").is_file()
-print("DOMAIN 10 canonical/OG/Person records, sitemap and robots: PASS")
+print("DOMAIN 10 unique bilingual-ready metadata records, canonical/OG/Person, home WebSite, sitemap and robots: PASS")

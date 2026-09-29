@@ -1,4 +1,4 @@
-"""Prerender default Portuguese content into the static HTML for SEO and no-JS access.
+"""Prerender default English content into static HTML for SEO and no-JS access.
 
 Requires: pip install playwright && python -m playwright install chromium
 Optional: set CHROMIUM_BIN=/path/to/chromium when Chromium is already installed.
@@ -8,6 +8,7 @@ from __future__ import annotations
 import os
 import re
 import json
+from html import escape as html_escape
 from pathlib import Path
 from site_config import PAGE_SLUGS, SITE_URL, page_url
 from playwright.sync_api import sync_playwright
@@ -48,6 +49,14 @@ with sync_playwright() as p:
         header = tab.locator('#site-header').inner_html()
         footer = tab.locator('#site-footer').inner_html()
         structured = tab.locator('#person-jsonld').evaluate('(el) => el.outerHTML')
+        website_structured = tab.locator('#website-jsonld').evaluate('(el) => el.outerHTML') if name == 'index' else None
+        metadata = {
+            'title': tab.title(),
+            'description': tab.locator('meta[name="description"]').get_attribute('content'),
+            'og_title': tab.locator('meta[property="og:title"]').get_attribute('content'),
+            'og_description': tab.locator('meta[property="og:description"]').get_attribute('content'),
+            'site_name': tab.evaluate('window.PORTFOLIO.profile.name'),
+        }
         tab.close()
         html = re.sub(r'<main id="main" tabindex="-1">.*?</main>',
                       lambda _: f'<main id="main" tabindex="-1">{main}</main>', html, count=1, flags=re.S)
@@ -60,10 +69,20 @@ with sync_playwright() as p:
                           lambda _: structured, html, count=1, flags=re.S)
         else:
             html = html.replace('  </head>', structured + '\n  </head>') if '  </head>' in html else html.replace('</head>', structured + '\n</head>')
+        if website_structured:
+            if 'id="website-jsonld"' in html:
+                html = re.sub(r'<script id="website-jsonld" type="application/ld\+json">.*?</script>',
+                              lambda _: website_structured, html, count=1, flags=re.S)
+            else:
+                html = html.replace('</head>', website_structured + '\n</head>', 1)
         # Canonical/OG and Person metadata are regenerated from one production URL.
         # Never rely on editing only a generated HTML document.
         canonical_url = page_url(name)
         replacements = (
+            (r'<title>.*?</title>', f'<title>{html_escape(metadata["title"])}</title>'),
+            (r'<meta name="description" content="[^"]*"\s*/>', f'<meta name="description" content="{html_escape(metadata["description"], quote=True)}" />'),
+            (r'<meta property="og:title" content="[^"]*"\s*/>', f'<meta property="og:title" content="{html_escape(metadata["og_title"], quote=True)}" />'),
+            (r'<meta property="og:description" content="[^"]*"\s*/>', f'<meta property="og:description" content="{html_escape(metadata["og_description"], quote=True)}" />'),
             (r'<link rel="canonical" href="[^"]+"\s*/>', f'<link rel="canonical" href="{canonical_url}" />'),
             (r'<meta property="og:url" content="[^"]+"\s*/>', f'<meta property="og:url" content="{canonical_url}" />'),
             (r'<meta property="og:image" content="[^"]+"\s*/>', f'<meta property="og:image" content="{SITE_URL}/assets/portrait.webp" />'),
@@ -72,6 +91,12 @@ with sync_playwright() as p:
             if len(re.findall(pattern, html)) != 1:
                 raise RuntimeError(f'{name}: expected exactly one matching metadata tag: {pattern}')
             html = re.sub(pattern, lambda _: replacement, html, count=1)
+        site_name_tag = f'<meta property="og:site_name" content="{html_escape(metadata["site_name"], quote=True)}" />'
+        if re.search(r'<meta property="og:site_name"', html):
+            html = re.sub(r'<meta property="og:site_name" content="[^"]*"\s*/>',
+                          lambda _: site_name_tag, html, count=1)
+        else:
+            html = html.replace('  <meta property="og:title"', '  ' + site_name_tag + '\n  <meta property="og:title"', 1)
         person_match = re.search(
             r'(<script id="person-jsonld" type="application/ld\+json">)(.*?)(</script>)',
             html, flags=re.S,

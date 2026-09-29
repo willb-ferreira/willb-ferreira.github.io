@@ -29,6 +29,10 @@ A lista de DOI explicitamente autorizados está em `data/sources.json`. Para acr
 
 O endereço principal é `https://willamsferreira.com/` (sem www). O DNS fica no Cloudflare Free; a hospedagem e o HTTPS ficam no GitHub Pages. `scripts/site_config.py` centraliza a URL de produção e as dez rotas; o prerender gera metadados canônicos e Open Graph, e `scripts/generate_sitemap.py` mantém sitemap e robots sincronizados nos dois workflows de publicação. A configuração de Cloudflare DNS, GitHub Pages, HTTPS e Google Search Console está detalhada em `docs/custom-domain-activation.md`. O GitHub Pages redireciona a variante `www` e o antigo endereço `willb-ferreira.github.io` para o domínio principal. Para verificar publicamente os redirecionamentos e o certificado, execute `python scripts/check_live_domain.py` com acesso à Internet ou o workflow manual **Verify public domain redirects**.
 
+## Metadados SEO bilíngues
+
+`assets/content.js` → `seo` centraliza os títulos e descrições EN/PT das dez páginas. `assets/app.js` atualiza `<title>`, description e Open Graph ao alternar idioma sem criar URLs artificiais; `scripts/prerender.py` grava os metadados ingleses no HTML estático, preservando acesso sem JavaScript. A página inicial também publica `WebSite` JSON-LD com o nome curto e o nome acadêmico alternativo; todas as páginas mantêm `Person` JSON-LD e URLs canônicas no domínio sem www. O sitemap existente é suficiente para descoberta, sem requisições manuais de indexação para cada URL. Execute `python scripts/test_domain.py` após a prerenderização para verificar metadados únicos e consistentes.
+
 ## Implantação e verificação
 
 `main` aciona o workflow `.github/workflows/deploy.yml`: instala o navegador de renderização, gera HTML estático atualizado e publica no GitHub Pages. A sincronização semanal também gera HTML e publica a nova versão. Acompanhe os resultados em `https://github.com/willb-ferreira/willb-ferreira.github.io/actions`.
