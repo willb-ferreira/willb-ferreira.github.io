@@ -1,5 +1,6 @@
 """Offline smoke tests for this static site using Chromium + Playwright."""
 from pathlib import Path
+import json
 import os
 import re
 from playwright.sync_api import sync_playwright
@@ -12,6 +13,35 @@ library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 spatial = (ROOT / 'assets/spatial-guide.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
+spatial_payload = spatial.split('  D.spatialGuide=', 1)[1].split(';\n  const i=', 1)[0]
+spatial_data = json.loads(spatial_payload)
+spatial_refs = spatial_data['references']
+spatial_ids = {r['id'] for r in spatial_refs}
+assert len(spatial_refs) == 31 and len(spatial_ids) == 31
+assert {s['id'] for s in spatial_data['sections']} == {
+    'foundations', 'track-a', 'track-b', 'bridges', 'learning-paths', 'reading-library'
+}
+assert [len(next(s for s in spatial_data['sections'] if s['id'] == key)['modules'])
+        for key in ('foundations', 'track-a', 'track-b')] == [4, 5, 5]
+for r in spatial_refs:
+    assert all(r.get(field) for field in ('authors', 'title', 'year', 'venue',
+                                          'identifier', 'url', 'verification', 'stage')), r['id']
+    assert r['url'].startswith('https://'), r['id']
+for section in spatial_data['sections']:
+    for module in section['modules']:
+        assert set(module['refs']).issubset(spatial_ids), module['title']
+def check_bilingual(value):
+    if isinstance(value, dict):
+        if 'en' in value or 'pt' in value:
+            assert set(('en', 'pt')).issubset(value), value
+            assert value['en'].strip() and value['pt'].strip(), value
+        for item in value.values():
+            check_bilingual(item)
+    elif isinstance(value, list):
+        for item in value:
+            check_bilingual(item)
+check_bilingual(spatial_data)
+print('SCIENTIFIC EDITORIAL SCHEMA Topic 1, 31 unique refs, link and EN/PT parity: PASS')
 errors=[]
 
 def load(tab, page_name):
@@ -73,6 +103,9 @@ with sync_playwright() as p:
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
             assert 'Por onde começar em cada área' in tab.locator('h1').inner_text()
             assert tab.locator('li.reading-reference').count()==81
+            assert 'Vertente A' in tab.locator('#spatial-track-a h3').inner_text()
+            tab.locator('details.spatial-catalogue').first.locator('summary').click()
+            assert 'Catálogo da editora' in tab.locator('details.spatial-catalogue').first.inner_text()
             print('CONTENT seven bilingual research reading guides and 81 curated references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==7
