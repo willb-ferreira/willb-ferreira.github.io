@@ -611,7 +611,7 @@
       "year": 1954,
       "venue": "Biometrika, 41(3–4), 434–449",
       "identifier": "10.1093/biomet/41.3-4.434",
-      "url": "https://academic.oup.com/biomet/article/41/3-4/434/248119",
+      "url": "https://doi.org/10.1093/biomet/41.3-4.434",
       "contribution": {
         "en": "Early treatment of stationary spatial processes in the plane and spectral ideas.",
         "pt": "Tratamento inicial de processos espaciais estacionários no plano e de ideias espectrais."
@@ -632,7 +632,7 @@
       "year": 1982,
       "venue": "Biometrika, 69(1), 95–105",
       "identifier": "10.1093/biomet/69.1.95",
-      "url": "https://academic.oup.com/biomet/article/69/1/95/246066",
+      "url": "https://doi.org/10.1093/biomet/69.1.95",
       "contribution": {
         "en": "Explains spatial edge effects and studies asymptotic estimation on expanding d-dimensional lattices.",
         "pt": "Explica efeitos de borda espaciais e estuda estimação assintótica em malhas d-dimensionais crescentes."
