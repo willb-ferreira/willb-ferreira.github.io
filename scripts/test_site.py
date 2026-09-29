@@ -10,6 +10,7 @@ css = (ROOT / 'assets/site.css').read_text()
 content = (ROOT / 'assets/content.js').read_text()
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
+inference = (ROOT / 'assets/inference-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text()
 app = (ROOT / 'assets/app.js').read_text()
 errors=[]
@@ -24,6 +25,7 @@ def load(tab, page_name):
     tab.add_script_tag(content=content)
     tab.add_script_tag(content=library)
     tab.add_script_tag(content=intro)
+    tab.add_script_tag(content=inference)
     tab.add_script_tag(content=auto)
     tab.add_script_tag(content=app)
     tab.locator('h1').first.wait_for(timeout=5000)
@@ -62,7 +64,20 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-track-b').count()==1
             assert tab.locator('#time-series').count()==1  # Legacy link still works.
             assert tab.locator('#spatial-models .reading-reference-compact').count()==6
-            assert tab.locator('li.reading-reference').count()==21
+            assert tab.locator('#theory .reading-track').count()==3
+            assert tab.locator('#inference-track-classical').count()==1
+            assert tab.locator('#inference-track-bayesian').count()==1
+            assert tab.locator('#inference-track-information').count()==1
+            assert tab.locator('#theory .reading-reference').count()==7
+            assert tab.locator('#geometry .reading-reference').count()==4
+            assert tab.locator('#theory a[href="#geometry"]').count()==1
+            assert tab.locator('#geometry a[href="#theory"]').count()==1
+            assert tab.locator('#inference-ref-pardo-2006').count()==1
+            assert tab.locator('#geometry a[href*="0167-9473"]').count()==1
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').tracks.every(k=>k.refs.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='theory').references.some(r=>r.id===id)))")
+            assert tab.evaluate("window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').visibleReferences.every(id=>window.PORTFOLIO.readingGuides.find(g=>g.id==='geometry').references.some(r=>r.id===id))")
+
+            assert tab.locator('li.reading-reference').count()==26
             assert tab.locator('#learning').count()==0
             assert tab.locator('#causal').count()==1
             assert tab.locator('.reading-extra').count()==0
@@ -72,6 +87,8 @@ with sync_playwright() as p:
             assert len(ids)==6 and len(set(ids))==6 and 'time-series' not in ids,ids
             assert len(tab.locator('#spatial-models').inner_text()) < 4700
             assert len(tab.locator('main').inner_text()) < 19500
+            tab.locator('#inference-track-information a[href="#inference-ref-pardo-2006"]').click()
+            assert tab.evaluate('location.hash') == '#inference-ref-pardo-2006'
             tab.locator('a[href="#intro-ref-tjostheim"]').first.click()
             assert tab.evaluate('location.hash') == '#intro-ref-tjostheim'
             tab.locator('#language-toggle').click()
@@ -80,10 +97,16 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models h2').inner_text() == 'Séries temporais e estatística espacial'
             assert 'Séries temporais' in tab.locator('#intro-track-temporal').inner_text()
             assert 'A ponte ARMA' in tab.locator('#spatial-track-a').inner_text()
-            assert tab.locator('li.reading-reference').count()==21
-            print('CONTENT six concise bilingual research guides, three linked tracks and 21 visible references: PASS')
+            assert tab.locator('li.reading-reference').count()==26
+            assert 'Inferência estatística clássica' in tab.locator('#inference-track-classical').inner_text()
+            assert 'Inferência estatística bayesiana' in tab.locator('#inference-track-bayesian').inner_text()
+            assert 'Inferência por divergências' in tab.locator('#inference-track-information').inner_text() or 'inferência por divergências' in tab.locator('#inference-track-information').inner_text()
+            assert 'testes de hipóteses' in tab.locator('#geometry').inner_text().lower()
+            print('CONTENT six concise bilingual guides, six inference/spatial tracks and 26 selected references: PASS')
         if page_name=='research':
             assert tab.locator('article.research-card').count()==6
+            assert 'divergence-based estimation and hypothesis testing' in tab.locator('article.research-card').nth(1).inner_text()
+            assert 'geodesic distances' in tab.locator('article.research-card').nth(4).inner_text()
             assert tab.locator('article.research-card').first.locator('h3').inner_text() == 'Time Series and Spatial Statistics'
             assert 'Statistical modeling and inference for dependent data' in tab.locator('article.research-card').first.inner_text()
             assert tab.locator('#project-results article').count()==4
@@ -124,11 +147,13 @@ with sync_playwright() as p:
     phone.close()
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(mobile_reading,'reading')
-    assert mobile_reading.locator('.reading-track').count()==3
+    assert mobile_reading.locator('.reading-track').count()==6
+    assert mobile_reading.locator('#inference-track-information').count()==1
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
     mobile_reading.locator('#language-toggle').click()
     assert mobile_reading.locator('html').get_attribute('lang')=='pt-BR'
     assert 'A ponte ARMA' in mobile_reading.locator('#spatial-track-a').inner_text()
+    assert 'Inferência estatística bayesiana' in mobile_reading.locator('#inference-track-bayesian').inner_text()
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
     mobile_reading.screenshot(path=str(ROOT.parent/'willams-reading-mobile.png'),full_page=True)
     mobile_reading.close()

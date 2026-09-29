@@ -15,6 +15,7 @@ PAGES = ['index','research','reading','publications','supervision','people','tea
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
+inference = (ROOT / 'assets/inference-library.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text(encoding='utf-8')
 app = (ROOT / 'assets/app.js').read_text(encoding='utf-8')
 
@@ -29,6 +30,7 @@ with sync_playwright() as p:
         tab.add_script_tag(content=content)
         tab.add_script_tag(content=library)
         tab.add_script_tag(content=intro)
+        tab.add_script_tag(content=inference)
         tab.add_script_tag(content=auto)
         tab.add_script_tag(content=app)
         tab.locator('main h1').wait_for(timeout=5000)
