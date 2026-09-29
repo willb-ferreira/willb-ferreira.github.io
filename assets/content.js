@@ -549,40 +549,28 @@ window.PORTFOLIO = {
 ],
   projects: [
     {
-      id: "spatial-arma", area: "spatial-models", status: "ongoing", year: "2026",
-      title: { pt: "Modelos ARMA espaciais condicionais", en: "Conditional spatial ARMA models" },
-      description: {
-        pt: "Modelagem de dependência bidimensional, construção condicional e propriedades inferenciais de processos espaciais.",
-        en: "Two-dimensional dependence modeling, conditional construction, and inferential properties of spatial processes."
-      },
-      tags: ["2D ARMA", { pt: "Inferência", en: "Inference" }], url: ""
+      id: "spatial-models-research", area: "spatial-models", status: "ongoing", year: "2026",
+      title: {pt:"Inferência para dados espacialmente dependentes",en:"Inference for spatially dependent data"},
+      description:{pt:"Investigação metodológica de dependência espacial, adequação de modelos e propriedades inferenciais.",en:"Methodological research on spatial dependence, model adequacy and inferential properties."},
+      tags:[{pt:"Dependência espacial",en:"Spatial dependence"},{pt:"Inferência",en:"Inference"}],url:""
     },
     {
-      id: "dprvi", area: "sar", status: "ongoing", year: "2026",
-      title: { pt: "Distribuição estatística do DpRVI", en: "Statistical distribution of DpRVI" },
-      description: {
-        pt: "Estudo de distribuições e propriedades teóricas de um índice polarimétrico para aplicações em sensoriamento remoto.",
-        en: "Distributional and theoretical study of a polarimetric index for remote-sensing applications."
-      },
-      tags: [{ pt: "Polarimetria", en: "Polarimetry" }, { pt: "Distribuições", en: "Distributions" }], url: ""
+      id: "polarimetric-indices", area: "sar", status: "ongoing", year: "2026",
+      title: {pt:"Inferência para índices polarimétricos",en:"Inference for polarimetric indices"},
+      description:{pt:"Estudo de modelos probabilísticos e quantificação da incerteza para estatísticas derivadas de imagens polarimétricas.",en:"Probability modeling and uncertainty quantification for summaries derived from polarimetric radar imagery."},
+      tags:[{pt:"Polarimetria",en:"Polarimetry"},{pt:"Inferência",en:"Inference"}],url:""
     },
     {
-      id: "portmanteau", area: "theory", status: "ongoing", year: "2026",
-      title: { pt: "Diagnóstico residual para modelos espaciais", en: "Residual diagnostics for spatial models" },
-      description: {
-        pt: "Desenvolvimento de ferramentas de diagnóstico e testes portmanteau para modelos ARMA espaciais condicionais.",
-        en: "Development of diagnostic tools and portmanteau tests for conditional spatial ARMA models."
-      },
-      tags: ["Portmanteau", { pt: "Dependência", en: "Dependence" }], url: ""
+      id: "spatial-diagnostics", area: "theory", status: "ongoing", year: "2026",
+      title: {pt:"Diagnóstico estatístico para modelos espaciais",en:"Statistical diagnostics for spatial models"},
+      description:{pt:"Estudo de procedimentos para avaliar a adequação de modelos em observações espacialmente dependentes.",en:"Study of methods for assessing model adequacy in spatially dependent observations."},
+      tags:[{pt:"Diagnóstico",en:"Diagnostics"},{pt:"Dependência",en:"Dependence"}],url:""
     },
     {
-      id: "enl", area: "sar", status: "ongoing", year: "2026",
-      title: { pt: "Estimação de ENL sob correlação espacial", en: "ENL estimation under spatial correlation" },
-      description: {
-        pt: "Propriedades e desempenho de estimadores do número equivalente de looks em imagens SAR com dependência espacial.",
-        en: "Properties and performance of equivalent-number-of-looks estimators in spatially dependent SAR images."
-      },
-      tags: ["ENL", { pt: "Imagens SAR", en: "SAR images" }], url: ""
+      id: "sar-dependence-uncertainty", area: "sar", status: "ongoing", year: "2026",
+      title: {pt:"Incerteza em imagens SAR espacialmente correlacionadas",en:"Uncertainty in spatially correlated SAR imagery"},
+      description:{pt:"Investigação do efeito da dependência espacial sobre a interpretação de estatísticas calculadas em imagens de radar.",en:"Investigation of how spatial dependence affects the interpretation of statistics derived from radar imagery."},
+      tags:["SAR",{pt:"Incerteza",en:"Uncertainty"}],url:""
     }
   ],
   /* Add VERIFIED bibliographic records here. See README.md for a complete example.
@@ -600,436 +588,342 @@ window.PORTFOLIO = {
       featured: false, tags: ["SAR", "ANOVA", "Log-symmetric"]
     }
   ],
+  /* Public research directions only. Detailed or restricted project notes must not be committed here. */
   topics: [
-    {
-        "id": "ic-sentinel1-pipeline",
-        "area": "sar",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Pipeline reprodutível de dados Sentinel-1",
-            "en": "A reproducible Sentinel-1 data pipeline"
-        },
-        "description": {
-            "pt": "Automatizar consulta, aquisição, pré-processamento documentado e controle de qualidade de cenas SAR públicas; produzir um conjunto de dados pequeno e reprodutível.",
-            "en": "Build a documented workflow for querying, downloading, preprocessing and quality-checking public SAR scenes; deliver a small reproducible dataset."
-        },
-        "requirements": {
-            "pt": "R ou Python, noções de SIG e disposição para estudar metadados e geometria das cenas.",
-            "en": "R or Python, basic GIS and willingness to learn scene metadata and geometry."
-        },
-        "status": "proposal"
+  {
+    "id": "ic-sentinel1-pipeline",
+    "area": "sar",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Pipeline reprodutível de dados Sentinel-1",
+      "en": "A reproducible Sentinel-1 data pipeline"
     },
-    {
-        "id": "ic-crop-time-series",
-        "area": "sar",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Assinaturas temporais de uva e manga com Sentinel-1",
-            "en": "Grape and mango temporal signatures from Sentinel-1"
-        },
-        "description": {
-            "pt": "Explorar séries temporais de retroespalhamento para parcelas rotuladas de uva e manga; avaliar sazonalidade, fenologia e sensibilidade a chuva e manejo, sem presumir separabilidade.",
-            "en": "Explore backscatter time series for labeled grape and mango parcels; assess phenology, rainfall and management effects without assuming the crops can be separated reliably."
-        },
-        "requirements": {
-            "pt": "Estatística descritiva, R, séries temporais básicas e acesso a parcelas validadas.",
-            "en": "Descriptive statistics, R, basic time series and access to validated field parcels."
-        },
-        "status": "proposal"
+    "description": {
+      "pt": "Construir um fluxo documentado para aquisição, preparação e controle de qualidade de dados SAR públicos, com resultados reproduzíveis.",
+      "en": "Build a documented workflow to retrieve, prepare and quality-check public SAR data, with reproducible results."
     },
-    {
-        "id": "ic-field-boundaries",
-        "area": "sar",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Detecção de limites agrícolas por entropia",
-            "en": "Entropy-based agricultural field boundary detection"
-        },
-        "description": {
-            "pt": "Comparar medidas de entropia local e detectores de borda para delimitar parcelas; avaliar com referência geográfica e dados multitemporais, quando disponíveis.",
-            "en": "Compare local entropy features and edge detectors for field boundaries; evaluate against georeferenced labels and multitemporal data where available."
-        },
-        "requirements": {
-            "pt": "Processamento de imagens, álgebra linear básica e avaliação de classificação.",
-            "en": "Image processing, basic linear algebra and classification evaluation."
-        },
-        "status": "proposal"
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
     },
-    {
-        "id": "ic-noncircularity",
-        "area": "sar",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Efeitos da não circularidade em observações SAR complexas",
-            "en": "Effects of noncircularity in complex SAR observations"
-        },
-        "description": {
-            "pt": "Construir um estudo de simulação de modelos complexos próprios e impróprios e comparar estimadores e testes sob hipóteses controladas. Imagens de intensidade, isoladamente, não permitem esse estudo.",
-            "en": "Simulate proper and improper complex-valued models and compare estimators and tests under controlled assumptions. Intensity-only images are insufficient for this question."
-        },
-        "requirements": {
-            "pt": "Probabilidade, simulação Monte Carlo e noções de variáveis aleatórias complexas.",
-            "en": "Probability, Monte Carlo simulation and basic complex random variables."
-        },
-        "status": "proposal"
+    "status": "proposal"
+  },
+  {
+    "id": "ic-agricultural-remote-sensing",
+    "area": "sar",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Séries temporais de sensoriamento remoto na agricultura",
+      "en": "Remote-sensing time series in agriculture"
     },
-    {
-        "id": "ic-ggarma-likelihood",
-        "area": "spatial-models",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Visualização da verossimilhança em modelos gama generalizada ARMA",
-            "en": "Likelihood geometry in generalized-gamma ARMA models"
-        },
-        "description": {
-            "pt": "Mapear perfis e seções bidimensionais da log-verossimilhança em exemplos identificáveis, examinando curvatura, máximos locais e sensibilidade à inicialização.",
-            "en": "Visualize profiles and two-dimensional sections of the log-likelihood in identifiable examples, examining curvature, local optima and initialization sensitivity."
-        },
-        "requirements": {
-            "pt": "Inferência paramétrica, otimização numérica básica e R.",
-            "en": "Parametric inference, basic numerical optimization and R."
-        },
-        "status": "proposal"
+    "description": {
+      "pt": "Estudar como observações de radar variam ao longo do tempo em aplicações agrícolas e aprender a validar interpretações com dados de referência.",
+      "en": "Study temporal variation in radar observations for agricultural applications and learn to validate interpretations against reference data."
     },
-    {
-        "id": "ic-entropy-outliers",
-        "area": "theory",
-        "levels": [
-            "undergraduate"
-        ],
-        "title": {
-            "pt": "Comparação de diagnósticos de outliers baseados em entropia",
-            "en": "Benchmarking entropy-based outlier diagnostics"
-        },
-        "description": {
-            "pt": "Definir uma família de cenários de contaminação e comparar medidas baseadas em entropia/divergência a métodos clássicos por taxa de falso positivo e poder.",
-            "en": "Define controlled contamination scenarios and compare entropy/divergence-based measures with classical diagnostics using false-positive rate and detection power."
-        },
-        "requirements": {
-            "pt": "Simulação, inferência introdutória e métricas de avaliação.",
-            "en": "Simulation, introductory inference and evaluation metrics."
-        },
-        "status": "proposal"
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
     },
-    {
-        "id": "msc-sar-circularity",
-        "area": "sar",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Circularidade em SAR: propriedades e sensibilidade inferencial",
-            "en": "Circularity in SAR: properties and inferential sensitivity"
-        },
-        "description": {
-            "pt": "Investigar consequências de circularidade e impropriedade em observações SAR complexas e avaliar correções possíveis para estimadores sob hipóteses explícitas.",
-            "en": "Study consequences of circularity and impropriety in complex SAR observations and assess candidate estimator corrections under explicit assumptions."
-        },
-        "requirements": {
-            "pt": "Probabilidade multivariada, variáveis complexas, verossimilhança e simulação.",
-            "en": "Multivariate probability, complex variables, likelihood and simulation."
-        },
-        "status": "proposal"
+    "status": "proposal"
+  },
+  {
+    "id": "ic-agricultural-boundaries",
+    "area": "sar",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Delineamento de áreas agrícolas em imagens SAR",
+      "en": "Delineating agricultural areas in SAR imagery"
     },
-    {
-        "id": "msc-local-influence",
-        "area": "geometry",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Influência local em modelos SAR com perturbações de verossimilhança",
-            "en": "Local influence in SAR models under likelihood perturbations"
-        },
-        "description": {
-            "pt": "Definir esquemas de perturbação e derivar Hessianas e curvaturas normais para diagnósticos de influência; verificar regularidade e estabilidade numérica.",
-            "en": "Specify perturbation schemes and derive perturbed Hessians and normal curvature for influence diagnostics; verify regularity and numerical stability."
-        },
-        "requirements": {
-            "pt": "Cálculo matricial, inferência por verossimilhança e otimização.",
-            "en": "Matrix calculus, likelihood inference and optimization."
-        },
-        "status": "proposal"
+    "description": {
+      "pt": "Comparar procedimentos estabelecidos de análise de imagens para identificar limites de parcelas e avaliar seus resultados com referências geográficas.",
+      "en": "Compare established image-analysis procedures to identify field boundaries and evaluate their results using georeferenced data."
     },
-    {
-        "id": "msc-distribution-families",
-        "area": "sar",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Novas famílias de distribuições para observáveis SAR",
-            "en": "New distribution families for SAR observables"
-        },
-        "description": {
-            "pt": "Investigar transformações probabilísticas motivadas por observáveis SAR/PolSAR, seu suporte, normalização, identificabilidade e propriedades de momentos. A construção exata depende da formulação ainda não divulgada.",
-            "en": "Investigate distributions motivated by SAR/PolSAR observables, including support, normalization, identifiability and moments. The precise construction depends on a formulation not yet publicly specified."
-        },
-        "requirements": {
-            "pt": "Cálculo de probabilidades, transformações, álgebra matricial e inferência.",
-            "en": "Probability transformations, matrix algebra and inference."
-        },
-        "status": "proposal"
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
     },
-    {
-        "id": "msc-penalized-ggarma",
-        "area": "spatial-models",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Estimação penalizada para modelos gama generalizada ARMA",
-            "en": "Penalized generalized-gamma ARMA estimation"
-        },
-        "description": {
-            "pt": "Comparar penalizações e estudar condições de identificação, matrizes de informação e possíveis resultados assintóticos em um submodelo delimitado.",
-            "en": "Compare penalties and study identification, information matrices and possible asymptotic results for a clearly defined submodel."
-        },
-        "requirements": {
-            "pt": "Modelos ARMA, otimização restrita e teoria assintótica básica.",
-            "en": "ARMA models, constrained optimization and introductory asymptotics."
-        },
-        "status": "proposal"
+    "status": "proposal"
+  },
+  {
+    "id": "ic-complex-radar-simulation",
+    "area": "sar",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Simulação estatística para dados de radar complexos",
+      "en": "Statistical simulation for complex radar data"
     },
-    {
-        "id": "msc-entropy-influence",
-        "area": "theory",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Diagnósticos de influência baseados em entropia e divergências",
-            "en": "Influence diagnostics based on entropy and divergence"
-        },
-        "description": {
-            "pt": "Definir medidas de perturbação e estudar sua interpretação, robustez e sensibilidade em modelos bem especificados.",
-            "en": "Define perturbation measures and study their interpretation, robustness and sensitivity in specified statistical models."
-        },
-        "requirements": {
-            "pt": "Entropia, divergências, estimação e simulações.",
-            "en": "Entropy, divergences, estimation and simulation."
-        },
-        "status": "proposal"
+    "description": {
+      "pt": "Explorar, por simulação, propriedades de modelos probabilísticos para observações complexas e aprender a avaliar estimadores.",
+      "en": "Use simulation to explore probability models for complex-valued observations and learn how to evaluate estimators."
     },
-    {
-        "id": "msc-enl-mixtures",
-        "area": "sar",
-        "levels": [
-            "masters"
-        ],
-        "title": {
-            "pt": "Estimação de ENL em misturas com dependência espacial",
-            "en": "ENL estimation in mixtures with spatial dependence"
-        },
-        "description": {
-            "pt": "Avaliar se misturas de processos condicionais gama generalizada permitem um estimador identificável de ENL; delimitar componentes homogêneos e testar viés e variância por simulação.",
-            "en": "Assess whether mixtures of conditional generalized-gamma processes yield an identifiable ENL estimator; define homogeneous components and test bias and variance by simulation."
-        },
-        "requirements": {
-            "pt": "Distribuições de mistura, dependência espacial, inferência e R.",
-            "en": "Mixture distributions, spatial dependence, inference and R."
-        },
-        "status": "proposal"
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
     },
-    {
-        "id": "phd-geodesic-circularity",
-        "area": "geometry",
-        "levels": [
-            "phd"
-        ],
-        "title": {
-            "pt": "Testes de circularidade com ferramentas da geometria da informação",
-            "en": "Geometry-informed circularity tests for complex data"
-        },
-        "description": {
-            "pt": "Definir a hipótese de circularidade/propriedade em um modelo complexo e investigar se distância geodésica ou outra estrutura geométrica conduz a testes calibráveis.",
-            "en": "Specify a circularity/propriety null for a complex statistical model and investigate whether geodesic distance or another geometric quantity yields calibratable tests."
-        },
-        "requirements": {
-            "pt": "Geometria diferencial, inferência assintótica e distribuições complexas.",
-            "en": "Differential geometry, asymptotic inference and complex distributions."
-        },
-        "status": "proposal"
+    "status": "proposal"
+  },
+  {
+    "id": "ic-likelihood-visualization",
+    "area": "spatial-models",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Visualização de verossimilhança em modelos dependentes",
+      "en": "Likelihood visualization in dependent-data models"
     },
-    {
-        "id": "phd-manifold-influence",
-        "area": "geometry",
-        "levels": [
-            "phd"
-        ],
-        "title": {
-            "pt": "Curvatura e influência em variedades estatísticas",
-            "en": "Curvature and influence on statistical manifolds"
-        },
-        "description": {
-            "pt": "Investigar relações rigorosamente definidas entre diagnósticos globais/locais e curvatura seccional; identificar primeiro o funcional de influência e a conexão geométrica apropriada.",
-            "en": "Investigate precisely defined links between global/local influence diagnostics and sectional curvature, first specifying an influence functional and suitable geometric connection."
-        },
-        "requirements": {
-            "pt": "Geometria riemanniana, derivadas de ordem superior e teoria da influência.",
-            "en": "Riemannian geometry, higher-order derivatives and influence theory."
-        },
-        "status": "proposal"
+    "description": {
+      "pt": "Visualizar perfis de verossimilhança e estudar o comportamento de algoritmos de estimação em modelos conhecidos para dados dependentes.",
+      "en": "Visualize likelihood profiles and study estimation algorithms in established models for dependent observations."
     },
-    {
-        "id": "phd-pol-sar-matrix-family",
-        "area": "sar",
-        "levels": [
-            "phd"
-        ],
-        "title": {
-            "pt": "Famílias matriciais para observáveis PolSAR",
-            "en": "Matrix-variate families for PolSAR observables"
-        },
-        "description": {
-            "pt": "Propor e validar uma generalização matricial para dados polarimétricos, com suporte, normalização, invariância, limites e modelo de amostragem explicitamente definidos.",
-            "en": "Propose and validate a matrix-variate family for polarimetric data, explicitly specifying support, normalization, invariance, limits and sampling model."
-        },
-        "requirements": {
-            "pt": "Distribuições matriciais, probabilidade complexa, álgebra de matrizes e inferência.",
-            "en": "Matrix distributions, complex probability, matrix algebra and inference."
-        },
-        "status": "proposal"
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
     },
-    {
-        "id": "phd-geodesic-regularization",
-        "area": "geometry",
-        "levels": [
-            "phd"
-        ],
-        "title": {
-            "pt": "Seleção de modelos com regularização geométrica",
-            "en": "Model selection with geometric regularization"
-        },
-        "description": {
-            "pt": "Estudar penalizações construídas a partir de uma métrica na variedade de parâmetros e comparar consistência, invariância e comportamento computacional com penalizações convencionais.",
-            "en": "Study penalties built from a parameter-manifold metric and compare selection consistency, invariance and computation with conventional penalties."
-        },
-        "requirements": {
-            "pt": "Otimização, geometria da informação, estatística assintótica e regularização.",
-            "en": "Optimization, information geometry, asymptotic statistics and regularization."
-        },
-        "status": "proposal"
+    "status": "proposal"
+  },
+  {
+    "id": "ic-outlier-diagnostics",
+    "area": "theory",
+    "levels": [
+      "undergraduate"
+    ],
+    "title": {
+      "pt": "Avaliação de métodos para detectar observações atípicas",
+      "en": "Evaluating methods for outlier detection"
     },
-    {
-        "id": "phd-robust-divergence",
-        "area": "theory",
-        "levels": [
-            "phd"
-        ],
-        "title": {
-            "pt": "Estimação robusta por divergência de potência de densidade",
-            "en": "Robust estimation via density power divergence"
-        },
-        "description": {
-            "pt": "Desenvolver e estudar estimadores MDPDE para submodelos multiplicativos específicos, verificando identificabilidade, robustez, influência e propriedades assintóticas sob dependência.",
-            "en": "Develop MDPDE estimators for specified multiplicative submodels, examining identifiability, robustness, influence and asymptotic properties under dependence."
-        },
-        "requirements": {
-            "pt": "Inferência robusta, divergências, teoria assintótica e modelos SAR.",
-            "en": "Robust inference, divergences, asymptotic theory and SAR models."
-        },
-        "status": "proposal"
-    }
+    "description": {
+      "pt": "Comparar diagnósticos conhecidos sob cenários controlados de contaminação e discutir erros de detecção e estabilidade.",
+      "en": "Compare established diagnostics under controlled contamination scenarios and discuss detection errors and stability."
+    },
+    "requirements": {
+      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
+      "en": "Introductory probability, R or Python, and an interest in simulation."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "msc-complex-radar-inference",
+    "area": "sar",
+    "levels": [
+      "masters"
+    ],
+    "title": {
+      "pt": "Inferência para observações de radar complexas",
+      "en": "Inference for complex radar observations"
+    },
+    "description": {
+      "pt": "Investigar propriedades inferenciais de modelos para observações complexas e avaliar estimadores em experimentos reproduzíveis.",
+      "en": "Study inferential properties of models for complex-valued observations and evaluate estimators in reproducible experiments."
+    },
+    "requirements": {
+      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
+      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "msc-radar-model-diagnostics",
+    "area": "geometry",
+    "levels": [
+      "masters"
+    ],
+    "title": {
+      "pt": "Diagnóstico de modelos estatísticos para imagens SAR",
+      "en": "Model diagnostics for SAR image models"
+    },
+    "description": {
+      "pt": "Estudar como hipóteses de modelagem e observações individuais afetam a qualidade de ajustes estatísticos a dados de radar.",
+      "en": "Study how modeling assumptions and individual observations affect statistical model fit for radar data."
+    },
+    "requirements": {
+      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
+      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "msc-regularized-dependent-inference",
+    "area": "spatial-models",
+    "levels": [
+      "masters"
+    ],
+    "title": {
+      "pt": "Estimação regularizada para dados dependentes",
+      "en": "Regularized estimation for dependent observations"
+    },
+    "description": {
+      "pt": "Investigar procedimentos de regularização em modelos estatísticos estabelecidos, com atenção a estabilidade e incerteza.",
+      "en": "Investigate regularization in established statistical models, with attention to stability and uncertainty."
+    },
+    "requirements": {
+      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
+      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "msc-robust-diagnostics",
+    "area": "theory",
+    "levels": [
+      "masters"
+    ],
+    "title": {
+      "pt": "Diagnóstico robusto para dados correlacionados",
+      "en": "Robust diagnostics for correlated data"
+    },
+    "description": {
+      "pt": "Comparar a sensibilidade de procedimentos de diagnóstico sob desvios controlados das hipóteses do modelo.",
+      "en": "Compare the sensitivity of diagnostic procedures under controlled deviations from model assumptions."
+    },
+    "requirements": {
+      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
+      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "msc-radar-distributional-inference",
+    "area": "sar",
+    "levels": [
+      "masters"
+    ],
+    "title": {
+      "pt": "Distribuições e incerteza em dados de radar",
+      "en": "Statistical distributions and uncertainty in radar data"
+    },
+    "description": {
+      "pt": "Estudar modelos probabilísticos de observações SAR e como a dependência afeta estimação e quantificação da incerteza.",
+      "en": "Study probability models for SAR observations and how dependence affects estimation and uncertainty quantification."
+    },
+    "requirements": {
+      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
+      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "phd-information-geometry-inference",
+    "area": "geometry",
+    "levels": [
+      "phd"
+    ],
+    "title": {
+      "pt": "Geometria da informação e inferência estatística",
+      "en": "Information geometry and statistical inference"
+    },
+    "description": {
+      "pt": "Explorar estruturas geométricas de famílias estatísticas e suas relações com questões gerais de inferência e avaliação de modelos.",
+      "en": "Explore geometric structures of statistical families and their links to general questions in inference and model evaluation."
+    },
+    "requirements": {
+      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
+      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "phd-polsar-statistical-theory",
+    "area": "sar",
+    "levels": [
+      "phd"
+    ],
+    "title": {
+      "pt": "Teoria estatística para dados PolSAR",
+      "en": "Statistical theory for PolSAR data"
+    },
+    "description": {
+      "pt": "Investigar fundamentos probabilísticos e questões inferenciais motivadas por observações de radar polarimétrico.",
+      "en": "Investigate probabilistic foundations and inferential questions motivated by polarimetric radar observations."
+    },
+    "requirements": {
+      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
+      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+    },
+    "status": "proposal"
+  },
+  {
+    "id": "phd-robust-dependent-inference",
+    "area": "theory",
+    "levels": [
+      "phd"
+    ],
+    "title": {
+      "pt": "Inferência robusta sob dependência",
+      "en": "Robust inference under dependence"
+    },
+    "description": {
+      "pt": "Estudar a validade e a sensibilidade de procedimentos inferenciais para dados dependentes e modelos sujeitos a especificação imperfeita.",
+      "en": "Study the validity and sensitivity of inference for dependent data and potentially misspecified statistical models."
+    },
+    "requirements": {
+      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
+      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+    },
+    "status": "proposal"
+  }
 ],
-  /* Exploratory author-led/collaborative research ideas, not advertised student positions. */
+  /* Broad collaboration themes; detailed research programs belong in an access-controlled workspace. */
   researchIdeas: [
-    {
-        "id": "sar-epidemiology",
-        "type": "applied",
-        "area": "sar",
-        "title": {
-            "pt": "Covariáveis derivadas de SAR para modelos epidemiológicos",
-            "en": "SAR-derived covariates for epidemiological models"
-        },
-        "description": {
-            "pt": "Investigar se atributos SAR processados podem complementar modelos epidemiológicos em períodos de nebulosidade ou chuva, com validação temporal e espacial das variáveis de exposição.",
-            "en": "Investigate whether processed SAR features can complement epidemiological models during cloudy or rainy periods, with careful temporal and spatial validation of exposure proxies."
-        },
-        "caveat": {
-            "pt": "SAR mede retroespalhamento, não desfechos epidemiológicos; a utilidade das covariáveis deve ser demonstrada.",
-            "en": "SAR measures backscatter, not epidemiological outcomes; the usefulness of derived covariates must be demonstrated."
-        }
+  {
+    "id": "collab-remote-sensing-applications",
+    "type": "applied",
+    "area": "sar",
+    "title": {
+      "pt": "Sensoriamento remoto em estudos ambientais e de saúde",
+      "en": "Remote sensing in environmental and health studies"
     },
-    {
-        "id": "bayes-sar-applications",
-        "type": "applied",
-        "area": "sar",
-        "title": {
-            "pt": "Modelos hierárquicos bayesianos para fenômenos observados por SAR",
-            "en": "Bayesian hierarchical models for SAR-observed phenomena"
-        },
-        "description": {
-            "pt": "Avaliar verossimilhanças para dados positivos de amplitude/intensidade e campos espaciais latentes em estudos de inundação, queimada ou mudança de cobertura, conforme a variável resposta e os dados disponíveis.",
-            "en": "Assess likelihoods for positive amplitude/intensity data and latent spatial fields in flooding, burned-area or land-cover studies, conditional on the response variable and available data."
-        },
-        "caveat": {
-            "pt": "A adequação de uma família gama generalizada depende do observável, da calibração e do mecanismo de aquisição.",
-            "en": "The suitability of a generalized-gamma family depends on the observable, calibration and acquisition mechanism."
-        }
+    "description": {
+      "pt": "Interesse em colaborações que combinem dados de sensoriamento remoto, análise espacial e conhecimento especializado sobre fenômenos ambientais ou populacionais.",
+      "en": "Interest in collaborations combining remote-sensing data, spatial analysis, and domain expertise on environmental or population-level questions."
     },
-    {
-        "id": "poisson-spatial-epidemio",
-        "type": "theory",
-        "area": "spatial-models",
-        "title": {
-            "pt": "Modelos de contagem com dependência espacial e efeitos latentes",
-            "en": "Count models with spatial dependence and latent effects"
-        },
-        "description": {
-            "pt": "Explorar modelos com regressão de Poisson, dependência condicional espacial e efeitos latentes para mapeamento epidemiológico; estudar construção conjunta, identificação e inferência.",
-            "en": "Explore Poisson regression with conditional spatial dependence and latent effects for disease mapping; study joint-model construction, identifiability and inference."
-        },
-        "caveat": {
-            "pt": "Dependência condicional e campo latente podem competir pela mesma variação; a identificabilidade precisa ser estudada.",
-            "en": "Conditional dependence and a latent field may compete to explain the same variation; identifiability needs careful study."
-        }
-    },
-    {
-        "id": "spacetime-exp-family",
-        "type": "theory",
-        "area": "spatial-models",
-        "title": {
-            "pt": "Regressão espaço-temporal com dependência condicional e campos latentes",
-            "en": "Spatio-temporal regression with conditional dependence and latent fields"
-        },
-        "description": {
-            "pt": "Investigar uma classe restrita de modelos da família exponencial com covariáveis, dependência condicional espacial e termos latentes espaço-temporais, incluindo interação quando identificável.",
-            "en": "Investigate a restricted exponential-family model with covariates, conditional spatial dependence and spatio-temporal latent terms, including interactions when identifiable."
-        },
-        "caveat": {
-            "pt": "Programa teórico amplo: começar por um submodelo e verificar normalização, existência, estabilidade e identificabilidade.",
-            "en": "Broad theoretical program: begin with a tractable submodel and verify normalization, existence, stability and identifiability."
-        }
-    },
-    {
-        "id": "rinla-mcmc-package",
-        "type": "computational",
-        "area": "spatial-models",
-        "title": {
-            "pt": "Software R para inferência aproximada em modelos espaciais condicionais",
-            "en": "R software for approximate inference in conditional spatial models"
-        },
-        "description": {
-            "pt": "Planejar interfaces e testes para submodelos identificáveis; avaliar INLA dentro de MCMC somente quando a estrutura condicional satisfizer os requisitos de modelos gaussianos latentes.",
-            "en": "Design interfaces and tests for identifiable submodels; consider INLA-within-MCMC only where the conditional structure meets latent-Gaussian requirements."
-        },
-        "caveat": {
-            "pt": "O uso de R-INLA não é automaticamente válido para qualquer verossimilhança ou efeito ARMA. Comparar métodos alternativos e validar a inferência.",
-            "en": "R-INLA is not automatically suitable for every likelihood or ARMA effect. Compare alternative methods and validate inference."
-        },
-        "reference": "https://doi.org/10.1007/s11222-017-9778-y"
+    "caveat": {
+      "pt": "A pergunta, os dados e a viabilidade metodológica precisam ser definidos com os colaboradores.",
+      "en": "The question, data, and methodological feasibility would be defined with collaborators."
     }
+  },
+  {
+    "id": "collab-dependent-data-methods",
+    "type": "theory",
+    "area": "spatial-models",
+    "title": {
+      "pt": "Modelagem e inferência para dados espaciais e espaço-temporais",
+      "en": "Modeling and inference for spatial and spatio-temporal data"
+    },
+    "description": {
+      "pt": "Interesse em questões metodológicas ligadas à dependência, construção de modelos coerentes e quantificação da incerteza.",
+      "en": "Interest in methodological questions involving dependence, coherent model construction, and uncertainty quantification."
+    },
+    "caveat": {
+      "pt": "Possíveis projetos dependem de uma formulação científica e de hipóteses verificáveis.",
+      "en": "Any project depends on a well-defined scientific formulation and verifiable assumptions."
+    }
+  },
+  {
+    "id": "collab-computational-statistics",
+    "type": "computational",
+    "area": "spatial-models",
+    "title": {
+      "pt": "Computação científica para inferência espacial",
+      "en": "Scientific computing for spatial inference"
+    },
+    "description": {
+      "pt": "Interesse em software reproduzível e comparação crítica de métodos computacionais para modelos estatísticos espaciais.",
+      "en": "Interest in reproducible software and critical comparisons of computational methods for spatial statistical models."
+    },
+    "caveat": {
+      "pt": "Métodos e detalhes de implementação serão definidos conforme o modelo e a equipe.",
+      "en": "Methods and implementation details would depend on the model and the team."
+    }
+  }
 ],
   /* Public names and academic roles only. Confirm consent for public listing with each student. */
   students: [

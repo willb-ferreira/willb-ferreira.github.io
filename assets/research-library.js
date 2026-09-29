@@ -83,8 +83,8 @@
       {
         "type": "extension",
         "text": {
-          "en": "A plausible extension is to characterize parameter restrictions ensuring compatible conditional non-Gaussian spatial models; this is not claimed to be an unresolved literature-wide problem.",
-          "pt": "Uma extensão plausível é caracterizar restrições paramétricas que assegurem modelos espaciais condicionais não gaussianos compatíveis; não se afirma que seja problema aberto em toda a literatura."
+          "en": "A possible study direction is to examine when spatial model specifications yield valid probability models; this is not asserted to be an open problem.",
+          "pt": "Uma direção possível de estudo é examinar quando especificações espaciais definem modelos probabilísticos válidos; não se afirma que seja problema aberto."
         }
       },
       {
@@ -457,8 +457,8 @@
       {
         "type": "extension",
         "text": {
-          "en": "A plausible extension is a dependence-aware uncertainty procedure for ENL or a bounded PolSAR index; literature novelty needs a targeted search.",
-          "pt": "Uma extensão plausível é um procedimento de incerteza sensível à dependência para ENL ou índice PolSAR limitado; a novidade exige busca bibliográfica específica."
+          "en": "A possible study direction is to assess how dependence affects uncertainty in statistics derived from radar imagery; novelty requires a targeted literature review.",
+          "pt": "Uma possível direção de estudo é avaliar como a dependência afeta a incerteza em estatísticas derivadas de imagens de radar; a novidade exige revisão bibliográfica específica."
         }
       },
       {
@@ -810,8 +810,8 @@
       {
         "type": "extension",
         "text": {
-          "en": "A plausible extension is a residual diagnostic for a specified conditional non-Gaussian spatial-temporal ARMA model, with an explicit asymptotic regime.",
-          "pt": "Uma extensão plausível é um diagnóstico residual para modelo ARMA espaço-temporal condicional não gaussiano especificado, com regime assintótico explícito."
+          "en": "A possible study direction is to compare model-adequacy diagnostics for dependent observations under clearly stated assumptions.",
+          "pt": "Uma possível direção de estudo é comparar diagnósticos de adequação para observações dependentes sob hipóteses claramente definidas."
         }
       },
       {
@@ -997,8 +997,8 @@
       {
         "type": "extension",
         "text": {
-          "en": "A plausible extension is to characterize the induced information metric of a constrained SAR index distribution after checking regularity.",
-          "pt": "Uma extensão plausível é caracterizar a métrica de informação induzida por distribuição restrita de índice SAR após conferir regularidade."
+          "en": "A possible study direction is to investigate geometric properties of statistical models used in remote sensing.",
+          "pt": "Uma possível direção de estudo é investigar propriedades geométricas de modelos estatísticos utilizados em sensoriamento remoto."
         }
       },
       {
