@@ -68,8 +68,8 @@
   theory.crosslink = {
     target:"geometry",
     label:b(
-      "Continue in Information Geometry: Fisher–Rao distance, geodesics and geometric tests",
-      "Continue em Geometria da Informação: distância de Fisher–Rao, geodésicas e testes geométricos"
+      "Continue in Information Geometry: Fisher–Rao distance and the geodesic tests of Menéndez, Morales, Pardo and Salicrú",
+      "Continue em Geometria da Informação: distância de Fisher–Rao e os testes geodésicos de Menéndez, Morales, Pardo e Salicrú"
     )
   };
   const theoryIds = new Map([
@@ -117,8 +117,8 @@
     "Como a geometria dos modelos estatísticos pode produzir distâncias intrínsecas, estimadores e testes de hipóteses?"
   );
   geometry.entry = b(
-    "Information geometry equips statistical models with Fisher–Rao metrics, connections, divergences and geodesic distances. Besides geometric descriptions, these objects can motivate estimation and testing; a proposed geodesic statistic still requires a valid null distribution and a justified model.",
-    "A geometria da informação equipa modelos estatísticos com métricas de Fisher–Rao, conexões, divergências e distâncias geodésicas. Além da descrição geométrica, esses objetos podem fundamentar estimação e testes; uma estatística geodésica proposta ainda exige distribuição nula válida e modelo justificado."
+    "Information geometry equips statistical models with Fisher–Rao metrics, connections, divergences and geodesic distances. Geodesic-distance tests are an established research direction, but their null distributions and computation must be justified for each model.",
+    "A geometria da informação equipa modelos estatísticos com métricas de Fisher–Rao, conexões, divergências e distâncias geodésicas. Testes por distâncias geodésicas são uma linha de pesquisa publicada, mas suas distribuições sob a hipótese nula e seu cálculo exigem justificativa para cada modelo."
   );
   geometry.path = [
     b(
@@ -126,8 +126,8 @@
       "Comece pela informação de Fisher como métrica e diferencie divergências locais de distância geodésica global."
     ),
     b(
-      "Study Amari–Nagaoka, then read a published geodesic-test construction alongside Pardo's divergence-based inference.",
-      "Estude Amari–Nagaoka e depois leia uma construção publicada de teste geodésico em paralelo à inferência por divergências de Pardo."
+      "Read Burbea–del Castillo for geodesic submanifolds, Menéndez–Morales–Pardo–Salicrú (1995) for geodesic-distance tests, and their 1997 extension to (h,Φ)-entropy metrics.",
+      "Leia Burbea–del Castillo sobre subvariedades geodésicas, Menéndez–Morales–Pardo–Salicrú (1995) sobre testes por distâncias geodésicas e a extensão de 1997 a métricas de entropia (h,Φ)."
     )
   ];
   geometry.crosslink = {
@@ -153,7 +153,45 @@
       "A complementary inferential approach: divergence-based estimators and tests, not a claim that every divergence equals geodesic distance.",
       "Abordagem inferencial complementar: estimadores e testes por divergências, sem identificar toda divergência à distância geodésica.", "next")
   );
+  // The original geodesic-testing paper is the core inferential reading here.
+  // Bibliographic metadata was checked against the university publication index;
+  // the summary of the statistical contribution was checked separately.
+  geometry.references.push(
+    {
+      ...reference("menendez-morales-pardo-salicru-1995",
+        "María Luisa Menéndez; Domingo Morales; Leandro Pardo; Miquel Salicrú",
+        "Statistical tests based on geodesic distances",1995,
+        "https://doi.org/10.1016/0893-9659(94)00112-P",
+        "Develops hypothesis tests based on geodesic distances and derives asymptotic test-statistic distributions under the paper's assumptions.",
+        "Desenvolve testes de hipóteses baseados em distâncias geodésicas e deduz distribuições assintóticas das estatísticas sob as hipóteses do artigo.","seminal"),
+      venue:"Applied Mathematics Letters, 8(1), 65–69",
+      doi:"10.1016/0893-9659(94)00112-P",
+      verification:"institutional-index-and-author-shared-abstract"
+    },
+    {
+      ...reference("menendez-morales-pardo-salicru-1997",
+        "María Luisa Menéndez; Domingo Morales; Leandro Pardo; Miquel Salicrú",
+        "(h, Φ)-entropy differential metric",1997,
+        "https://doi.org/10.1023/A:1022214326758",
+        "Extends the geometric route to entropy-induced Riemannian metrics and illustrates geodesic testing for a Pareto family; its metric need not be Fisher–Rao.",
+        "Estende a abordagem geométrica a métricas riemannianas induzidas por entropias e ilustra testes geodésicos na família Pareto; a métrica não precisa ser a de Fisher–Rao.","next"),
+      venue:"Applications of Mathematics, 42(2), 81–98",
+      doi:"10.1023/A:1022214326758",
+      verification:"mathematical-library-abstract-and-metadata"
+    }
+  );
+  // The Pardo (2006) divergence-inference book remains in the underlying
+  // bibliography and is foregrounded in Topic 2, avoiding repetition here.
   geometry.visibleReferences = [
-    "amari-2016","amari-nagaoka","burbea-del-castillo-1992","pardo-geometry"
+    "amari-2016","amari-nagaoka","burbea-del-castillo-1992",
+    "menendez-morales-pardo-salicru-1995",
+    "menendez-morales-pardo-salicru-1997"
   ];
+  geometry.relatedGuides = [{
+    target:"spatial-models",
+    label:b(
+      "Dependent-data models: Fisher information and test calibration under spatial or temporal dependence",
+      "Modelos para dados dependentes: informação de Fisher e calibração de testes sob dependência espacial ou temporal"
+    )
+  }];
 })();

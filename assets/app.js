@@ -345,6 +345,7 @@
       </div>
       <div class="reading-path"><h3>${tx("readingPath")}</h3><ol>${(g.path||[]).slice(0,2).map(step=>`<li>${e(t(step))}</li>`).join("")}</ol></div>
       ${g.crosslink?`<p class="reading-crosslink"><a href="#${e(g.crosslink.target)}">${e(t(g.crosslink.label))} ↗</a></p>`:""}
+      ${(g.relatedGuides||[]).map(item=>`<p class="reading-crosslink"><a href="#${e(item.target)}">${e(t(item.label))} ↗</a></p>`).join("")}
       <div class="reading-bibliography reading-bibliography-short"><h3>${tx("readingReferences")}</h3><ol>${refs.map(r=>compactReference(r,false)).join("")}</ol></div>
       <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
     </article>`;
