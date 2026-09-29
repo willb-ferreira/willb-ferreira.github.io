@@ -1,0 +1,65 @@
+{
+  "publications": {
+    "10.1109/jstars.2026.3680479": {
+      "id": "doi-10-1109-jstars-2026-3680479",
+      "title": "A GAMLSS Framework for Crop Discrimination Using Geodesic Polarimetric SAR Parameters",
+      "authors": "Willams B. F. da Silva; Avik Bhattacharya; Abraão D. C. Nascimento; Alejandro C. Frery",
+      "year": 2026,
+      "venue": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing, 19",
+      "type": "article",
+      "doi": "10.1109/JSTARS.2026.3680479",
+      "url": "https://doi.org/10.1109/JSTARS.2026.3680479",
+      "pdf": "",
+      "code": "",
+      "data": "",
+      "bibtex": "",
+      "featured": true,
+      "tags": [
+        "PolSAR",
+        "GAMLSS",
+        "Remote sensing"
+      ]
+    },
+    "10.1002/env.2816": {
+      "id": "doi-10-1002-env-2816",
+      "title": "Generalized gamma ARMA process for synthetic aperture radar amplitude and intensity data",
+      "authors": "Willams B. F. da Silva; Pedro M. Almeida-Junior; Abraão D. C. Nascimento",
+      "year": 2023,
+      "venue": "Environmetrics, 34(7), e2816",
+      "type": "article",
+      "doi": "10.1002/env.2816",
+      "url": "https://doi.org/10.1002/env.2816",
+      "pdf": "",
+      "code": "",
+      "data": "",
+      "bibtex": "",
+      "featured": true,
+      "tags": [
+        "ARMA",
+        "SAR",
+        "Generalized gamma"
+      ]
+    },
+    "10.3390/math9233108": {
+      "id": "doi-10-3390-math9233108",
+      "title": "An Extended log-Lindley-G Family: Properties and Experiments in Repairable Data",
+      "authors": "Ahmed M. T. Abd El-Bar; Willams B. F. da Silva; Abraão D. C. Nascimento",
+      "year": 2021,
+      "venue": "Mathematics, 9(23), 3108",
+      "type": "article",
+      "doi": "10.3390/math9233108",
+      "url": "https://doi.org/10.3390/math9233108",
+      "pdf": "",
+      "code": "",
+      "data": "",
+      "bibtex": "",
+      "featured": true,
+      "tags": [
+        "Probability distributions",
+        "Reliability",
+        "Inference"
+      ]
+    }
+  },
+  "software": {}
+}

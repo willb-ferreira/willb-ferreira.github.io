@@ -1,0 +1,35 @@
+{
+  "contact_email": "willams.bfsilva@ufpe.br",
+  "orcid": "0000-0002-3680-6212",
+  "github_username": "willb-ferreira",
+  "publications": [
+    {
+      "doi": "10.1109/JSTARS.2026.3680479",
+      "featured": true,
+      "tags": [
+        "PolSAR",
+        "GAMLSS",
+        "Remote sensing"
+      ]
+    },
+    {
+      "doi": "10.1002/env.2816",
+      "featured": true,
+      "tags": [
+        "ARMA",
+        "SAR",
+        "Generalized gamma"
+      ]
+    },
+    {
+      "doi": "10.3390/math9233108",
+      "featured": true,
+      "tags": [
+        "Probability distributions",
+        "Reliability",
+        "Inference"
+      ]
+    }
+  ],
+  "github_repos": []
+}
