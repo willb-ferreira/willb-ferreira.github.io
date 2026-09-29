@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
+spatial = (ROOT / 'assets/spatial-guide.js').read_text(encoding='utf-8')
 auto = (ROOT / 'assets/auto-content.js').read_text(encoding='utf-8')
 app = (ROOT / 'assets/app.js').read_text(encoding='utf-8')
 
@@ -27,6 +28,7 @@ with sync_playwright() as p:
         tab.set_content(stripped, wait_until='load')
         tab.add_script_tag(content=content)
         tab.add_script_tag(content=library)
+        tab.add_script_tag(content=spatial)
         tab.add_script_tag(content=auto)
         tab.add_script_tag(content=app)
         tab.locator('main h1').wait_for(timeout=5000)
