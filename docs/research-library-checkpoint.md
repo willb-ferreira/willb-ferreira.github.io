@@ -20,7 +20,7 @@
 - The bilingual notes have matching editorial coverage; a native-language scientific copy edit remains recommended. The current original guide was retained, and only the six existing areas received added sections; the original entries are not rewritten as a formal systematic review.
 
 ## Technical audit
-- Pull-request workflow `.github/workflows/validate-library.yml` runs static prerendering, Playwright site/browser tests (including language and mobile navigation), and academic synchronization tests. Do not claim successful test completion before checking the run's conclusion.
+- Pull-request workflow `.github/workflows/validate-library.yml` runs static prerendering, Playwright site/browser tests (including language and mobile navigation), and academic synchronization tests. Validation run [36516069547](https://github.com/willb-ferreira/willb-ferreira.github.io/actions/runs/36516069547) completed successfully for commit `9cc74786f9f71afb23726a8b7027f4393e3099a6`: page prerender, Playwright site tests (eight guides, 69 references, language switching and mobile navigation), and publication-sync tests. This does **not** verify bibliographic identifiers or live Pages deployment.
 - Existing `.github/workflows/deploy.yml` and `.github/workflows/sync-academic.yml` were not changed.
 - GitHub Pages still deploys only from `main`. A green PR validation is not a live publication.
 - Inspect the pull-request CI run and `reading.html` at narrow mobile width before merging. After merging, verify the separate Pages deployment job and the published URL.
