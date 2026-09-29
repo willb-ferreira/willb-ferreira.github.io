@@ -1,6 +1,6 @@
 # Site acadêmico · Willams Batista
 
-Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://willamsferreira.com/ via GitHub Pages (após a ativação do domínio). A versão do site reflete o perfil, as publicações, o ensino e os vínculos acadêmicos informados pelo titular. Os arquivos HTML são regenerados pelo workflow de publicação; a fonte editorial principal fica em `assets/content.js`.
+Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://willamsferreira.com/ via GitHub Pages. A versão do site reflete o perfil, as publicações, o ensino e os vínculos acadêmicos informados pelo titular. Os arquivos HTML são regenerados pelo workflow de publicação; a fonte editorial principal fica em `assets/content.js`.
 
 ## Onde atualizar cada informação
 
@@ -13,7 +13,7 @@ Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://will
 | Arquivo fotográfico autorizado | `assets/portrait.webp` |
 | Publicações importadas por DOI | `assets/auto-content.js` e `data/sync-cache.json` — **não editar manualmente** |
 
-Para atualizar o texto, abra `assets/content.js` no GitHub, clique em **Edit** (lápis), faça a mudança e salve em **Commit changes** na branch `main`. Mantenha os campos `pt` e `en` em ambas as línguas. O workflow `Deploy academic website` recria os HTML e publica a versão nova automaticamente. Se alterar conteúdo, evite editar diretamente as nove páginas HTML: elas serão regeneradas.
+Para atualizar o texto, abra `assets/content.js` no GitHub, clique em **Edit** (lápis), faça a mudança e salve em **Commit changes** na branch `main`. Mantenha os campos `pt` e `en` em ambas as línguas. O workflow `Deploy academic website` recria os HTML e publica a versão nova automaticamente. Se alterar conteúdo, evite editar diretamente as dez páginas HTML: elas serão regeneradas.
 
 A lista `students` usa `name`, `level:{pt,en}`, `role:{pt,en}`, `project` e `url`. Os registros atuais informam apenas nome e vínculo de orientação. **Confirme a autorização dos estudantes antes de manter seus nomes em publicação pública.** Não envie informações pessoais, emails nem fotos sem autorização.
 
@@ -27,7 +27,7 @@ A lista de DOI explicitamente autorizados está em `data/sources.json`. Para acr
 
 ## Domínio próprio e infraestrutura
 
-O endereço principal é `https://willamsferreira.com/` (sem www). O DNS fica no Cloudflare Free; a hospedagem e o HTTPS ficam no GitHub Pages. `scripts/site_config.py` centraliza a URL de produção e as dez rotas; o prerender gera metadados canônicos e Open Graph, e `scripts/generate_sitemap.py` mantém sitemap e robots sincronizados nos dois workflows de publicação. A ativação de Cloudflare DNS, GitHub Pages, HTTPS e Google Search Console está detalhada em `docs/custom-domain-activation.md`. **Não mescle o PR antes de o domínio estar operacional em HTTPS.**
+O endereço principal é `https://willamsferreira.com/` (sem www). O DNS fica no Cloudflare Free; a hospedagem e o HTTPS ficam no GitHub Pages. `scripts/site_config.py` centraliza a URL de produção e as dez rotas; o prerender gera metadados canônicos e Open Graph, e `scripts/generate_sitemap.py` mantém sitemap e robots sincronizados nos dois workflows de publicação. A configuração de Cloudflare DNS, GitHub Pages, HTTPS e Google Search Console está detalhada em `docs/custom-domain-activation.md`. O GitHub Pages redireciona a variante `www` e o antigo endereço `willb-ferreira.github.io` para o domínio principal. Para verificar publicamente os redirecionamentos e o certificado, execute `python scripts/check_live_domain.py` com acesso à Internet ou o workflow manual **Verify public domain redirects**.
 
 ## Implantação e verificação
 
