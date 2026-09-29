@@ -108,7 +108,7 @@ with sync_playwright() as p:
             assert 'Inferência estatística bayesiana' in tab.locator('#inference-track-bayesian').inner_text()
             assert 'Inferência por divergências' in tab.locator('#inference-track-information').inner_text() or 'inferência por divergências' in tab.locator('#inference-track-information').inner_text()
             assert 'testes de hipóteses' in tab.locator('#geometry').inner_text().lower()
-            assert 'testes geodésicos' in tab.locator('#geometry').inner_text().lower()
+            assert 'testes por distâncias geodésicas' in tab.locator('#geometry').inner_text().lower()
             assert 'Modelos para dados dependentes' in tab.locator('#geometry .reading-crosslink').last.inner_text()
             assert len(tab.locator('#geometry').inner_text()) < 5300
             print('CONTENT six concise bilingual guides, six inference/spatial tracks and 27 selected references: PASS')
