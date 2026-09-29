@@ -1,6 +1,6 @@
 # Site acadêmico · Willams Batista
 
-Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://willb-ferreira.github.io/ via GitHub Pages. A versão do site reflete o perfil, as publicações, o ensino e os vínculos acadêmicos informados pelo titular. Os arquivos HTML são regenerados pelo workflow de publicação; a fonte editorial principal fica em `assets/content.js`.
+Portfólio acadêmico bilíngue em HTML/CSS/JavaScript publicado em https://willamsferreira.com/ via GitHub Pages (após a ativação do domínio). A versão do site reflete o perfil, as publicações, o ensino e os vínculos acadêmicos informados pelo titular. Os arquivos HTML são regenerados pelo workflow de publicação; a fonte editorial principal fica em `assets/content.js`.
 
 ## Onde atualizar cada informação
 
@@ -25,6 +25,10 @@ A lista de DOI explicitamente autorizados está em `data/sources.json`. Para acr
 
 **Lattes não é importado automaticamente.** O link para o currículo existe no perfil, mas atualizações de orientação, estudantes, cursos, formação ou publicações feitas no Lattes devem ser incorporadas separadamente ao site. O ORCID não realiza descoberta/publicação automática na configuração atual. Repositórios privados não são publicados: a lista `github_repos` em `data/sources.json` permanece vazia até haver autorização explícita.
 
+## Domínio próprio e infraestrutura
+
+O endereço principal é `https://willamsferreira.com/` (sem www). O DNS fica no Cloudflare Free; a hospedagem e o HTTPS ficam no GitHub Pages. `scripts/site_config.py` centraliza a URL de produção e as dez rotas; o prerender gera metadados canônicos e Open Graph, e `scripts/generate_sitemap.py` mantém sitemap e robots sincronizados nos dois workflows de publicação. A ativação de Cloudflare DNS, GitHub Pages, HTTPS e Google Search Console está detalhada em `docs/custom-domain-activation.md`. **Não mescle o PR antes de o domínio estar operacional em HTTPS.**
+
 ## Implantação e verificação
 
 `main` aciona o workflow `.github/workflows/deploy.yml`: instala o navegador de renderização, gera HTML estático atualizado e publica no GitHub Pages. A sincronização semanal também gera HTML e publica a nova versão. Acompanhe os resultados em `https://github.com/willb-ferreira/willb-ferreira.github.io/actions`.
@@ -32,7 +36,9 @@ A lista de DOI explicitamente autorizados está em `data/sources.json`. Para acr
 Para validar localmente, instale Playwright e Chromium e execute:
 
 ```bash
+python scripts/generate_sitemap.py
 python scripts/prerender.py
+python scripts/test_domain.py
 python scripts/test_site.py
 python scripts/test_sync_academic.py
 ```
