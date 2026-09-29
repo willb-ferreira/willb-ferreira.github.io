@@ -83,7 +83,11 @@ with sync_playwright() as p:
     courses.locator('#course-search').fill('')
     courses.locator('#course-year').select_option('2026')
     assert courses.locator('.course-entry').count()==4
-    print('TEACHING distinct four courses, year filter and search: PASS')
+    assert courses.locator('.course-level[data-level="undergraduate"]').count()==1
+    assert courses.locator('.course-level[data-level="postgraduate"]').count()==0
+    assert courses.locator('.course-entry p').count()==0
+    assert courses.locator('.course-entry .course-meta').first.inner_text().startswith('UFPE · 2026.')
+    print('TEACHING four concise undergraduate records, year filter and search: PASS')
     courses.close()
 
     mock='''window.PORTFOLIO.courses.push({id:"new-offering",title:{en:"Probability II",pt:"Probabilidade 2"},institution:"UFPE",offerings:["2027.2","2026.1"],description:{en:"Later teaching",pt:"Oferta posterior"}});
@@ -102,6 +106,39 @@ with sync_playwright() as p:
     assert course_history.locator('.course-entry').count()==1
     print('TEACHING repeated offerings deduplicated, ordered, archived, filtered: PASS')
     course_history.close()
+
+    graduate_mock='''window.PORTFOLIO.courses.push({id:"graduate-probability",title:{en:"Probability II",pt:"Probabilidade 2"},institution:"UFPE",level:"postgraduate",offerings:["2027.2"],description:{en:"Graduate description must not show",pt:"Legenda que não deve aparecer"}});
+      window.PORTFOLIO.courses.push({id:"graduate-methods",title:{en:"Statistical Methods I",pt:"Métodos Estatísticos 1"},institution:"UFPE",level:"Postgraduate",offerings:["2027.1"]});'''
+    graduate=load(browser,'teaching',extra=graduate_mock)
+    assert graduate.locator('.course-level').count()==2
+    assert graduate.locator('.course-level[data-level="undergraduate"] .course-entry').count()==4
+    assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry').count()==2
+    assert graduate.locator('.course-level[data-level="undergraduate"] .course-entry h3').all_inner_texts().count('Probability II')==1
+    assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry h3').all_inner_texts().count('Probability II')==1
+    assert graduate.locator('.course-entry p').count()==0
+    assert 'Graduate description must not show' not in graduate.locator('main').inner_text()
+    graduate.locator('#course-year').select_option('2027')
+    assert graduate.locator('.course-level[data-level="undergraduate"]').count()==0
+    assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry').count()==2
+    graduate.locator('#language-toggle').click()
+    assert graduate.locator('.course-level[data-level="postgraduate"] h2').inner_text()=='Pós-graduação'
+    assert graduate.locator('.course-level[data-level="undergraduate"]').count()==0
+    print('TEACHING graduate and undergraduate sections, bilingual, distinct levels, concise rows and filtering: PASS')
+    graduate.close()
+
+    wide=load(browser,'teaching',width=1920)
+    width=wide.locator('.shell').first.evaluate('(el)=>el.getBoundingClientRect().width')
+    assert 1370<=width<=1381, width
+    assert wide.evaluate('getComputedStyle(document.body).fontSize')=='17px'
+    assert wide.locator('.course-entry').count()==4
+    wide.close()
+    phone_course=load(browser,'teaching',width=390,extra=graduate_mock)
+    assert phone_course.locator('.course-level').count()==2
+    assert phone_course.locator('.course-entry').count()==6
+    assert phone_course.evaluate('getComputedStyle(document.body).fontSize')=='16px'
+    assert not phone_course.evaluate('document.documentElement.scrollWidth > window.innerWidth')
+    phone_course.close()
+    print('LAYOUT 1920px wider container, desktop reading size and 390px course layout: PASS')
 
     mock_people='''for(let i=0;i<9;i++)window.PORTFOLIO.students.push({id:"student-test-"+i,name:"Test Student "+i,levelId:"undergraduate",relation:"supervisor",status:i<2?"alumnus":"active",start:i<2?"2020.1":"2025.2"});'''
     alumni=load(browser,'people',extra=mock_people)

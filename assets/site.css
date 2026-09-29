@@ -312,7 +312,7 @@ details.faq p { padding:0 0 20px;font-size:13px }
   --ink:#22302d; --muted:#5a6864; --line:#d9ddd7;
   --accent:#2c554a; --accent-soft:#e8efea; --forest:#32584b;
   --mint:#dbe9dc; --orange:#976a52;
-  --shadow:none; --radius:3px; --max:1140px;
+  --shadow:none; --radius:3px; --max:1380px;
 }
 html[data-theme="dark"] {
   --bg:#161d1c; --surface:#1b2422; --surface-alt:#24302c;
@@ -652,3 +652,20 @@ p {color:var(--muted)}
 .causal-guide .reading-related>a:focus-visible,.causal-guide .reading-track-links a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 .causal-guide .reading-reference-compact{scroll-margin-top:95px}
 @media(max-width:620px){.causal-guide .reading-related{grid-template-columns:1fr}}
+
+/* 2026-09-29: more generous desktop canvas; retain readable text measures in research guides. */
+body{font-size:17px}
+.section-heading p,.research-card .card-content p,.project-card .card-content p,.topic-card p{font-size:15px}
+.prose p,.reading-area .reading-intro>p{font-size:16px}
+.reading-note,.reading-area .reading-shared p{font-size:15px}
+.reading-track p,.reading-reference p,.reading-reference-compact p{font-size:14px;line-height:1.7}
+.course-entry .course-meta{font-size:14px;line-height:1.55;font-variant-numeric:tabular-nums}
+.course-level{margin-bottom:42px}
+.course-level:last-child{margin-bottom:0}
+.course-level .directory-heading{margin-bottom:15px}
+.course-level .course-entry>div:first-child{gap:8px}
+@media(max-width:700px){
+  body{font-size:16px}
+  .course-level{margin-bottom:32px}
+  .course-level .directory-heading{margin-bottom:10px}
+}
