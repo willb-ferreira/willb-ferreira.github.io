@@ -29,8 +29,23 @@ def fake_http(url, *, token='', data=None, email=''):
             'doi': 'https://doi.org/10.1234/test-article',
             'cited_by_count': 7,
             'open_access': {'is_oa': True, 'oa_status': 'gold', 'oa_url': 'https://example.org/open'},
-            'best_oa_location': {'landing_page_url': 'https://example.org/article', 'pdf_url': 'https://example.org/article.pdf'}
+            'best_oa_location': {'landing_page_url': 'https://example.org/article', 'pdf_url': None}
         }]}
+    if url.startswith('https://api.unpaywall.org/v2/10.1234/test-article?'):
+        return {
+            'doi': '10.1234/test-article', 'is_oa': True, 'oa_status': 'gold',
+            'doi_url': 'https://doi.org/10.1234/test-article',
+            'best_oa_location': {
+                'url_for_landing_page': 'https://publisher.example/article',
+                'url_for_pdf': None, 'version': 'publishedVersion', 'host_type': 'publisher'
+            },
+            'oa_locations': [
+                {'url_for_pdf':'https://repository.example/accepted.pdf',
+                 'version':'acceptedVersion','host_type':'repository'},
+                {'url_for_pdf':'https://publisher.example/published.pdf',
+                 'version':'publishedVersion','host_type':'publisher'}
+            ]
+        }
     if url == 'https://api.github.com/repos/verified-user/mypackage':
         return {'private': False, 'archived': False, 'disabled': False,
                 'full_name': 'verified-user/mypackage', 'name': 'mypackage',
@@ -73,6 +88,9 @@ class SyncTests(unittest.TestCase):
             self.assertIn('"citations":7', raw)
             self.assertIn('"citation_source":"OpenAlex"', raw)
             self.assertIn('"open_access":true', raw)
+            self.assertIn('"oa_pdf":"https://publisher.example/published.pdf"', raw)
+            self.assertIn('"oa_pdf_source":"Unpaywall"', raw)
+            self.assertIn('"oa_pdf_version":"publishedVersion"', raw)
             self.assertIn('"venue_metrics":{"source":"SCImago"', raw)
             self.assertNotIn('10.5678/new-paper', raw)
             pending = json.loads((self.root / 'data/pending-dois.json').read_text())

@@ -150,6 +150,61 @@ def openalex_metadata(doi: str) -> dict:
         "oa_status": plain(access.get("oa_status")),
         "oa_url": safe_link(location.get("landing_page_url") or access.get("oa_url")),
         "oa_pdf": safe_link(location.get("pdf_url")),
+        "oa_pdf_source": "OpenAlex" if safe_link(location.get("pdf_url")) else "",
+    }
+
+
+def unpaywall_pdf(doi: str, email: str) -> dict:
+    """Return a legally open PDF location when Unpaywall exposes one."""
+    if not email or not re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", email):
+        return {}
+    uri = (
+        "https://api.unpaywall.org/v2/"
+        + urllib.parse.quote(doi, safe="/")
+        + "?"
+        + urllib.parse.urlencode({"email": email})
+    )
+    work = http_json(uri, email=email)
+    returned_doi = valid_doi(work.get("doi"))
+    if returned_doi and returned_doi != doi:
+        raise ValueError(f"DOI inesperado no Unpaywall: {returned_doi} (esperado: {doi})")
+    if not work.get("is_oa"):
+        return {}
+
+    def safe_link(value):
+        u = str(value or "").strip()
+        return u if u.startswith("https://") or u.startswith("http://") else ""
+
+    locations = []
+    best = work.get("best_oa_location") or {}
+    if best:
+        locations.append(best)
+    locations.extend(x for x in (work.get("oa_locations") or []) if isinstance(x, dict))
+
+    def score(loc):
+        version = str(loc.get("version") or "")
+        host = str(loc.get("host_type") or "")
+        return (
+            2 if version == "publishedVersion" else 1 if version == "acceptedVersion" else 0,
+            1 if host == "publisher" else 0,
+        )
+
+    pdf_locations = [loc for loc in locations if safe_link(loc.get("url_for_pdf"))]
+    pdf_location = max(pdf_locations, key=score) if pdf_locations else {}
+    landing = safe_link(
+        (best or {}).get("url_for_landing_page")
+        or (best or {}).get("url")
+        or work.get("doi_url")
+    )
+    pdf = safe_link(pdf_location.get("url_for_pdf"))
+    return {
+        "open_access": True,
+        "oa_status": plain(work.get("oa_status")),
+        "oa_url": landing,
+        "oa_pdf": pdf,
+        "oa_pdf_source": "Unpaywall" if pdf else "",
+        "oa_pdf_version": plain(pdf_location.get("version")),
+        "oa_pdf_host": plain(pdf_location.get("host_type")),
     }
 
 
@@ -219,10 +274,30 @@ def main() -> int:
                 previous = cached.get("publications", {}).get(doi, {})
                 if previous.get("citation_source") == "OpenAlex":
                     for key in ("citations", "citation_source", "citation_updated", "openalex_id",
-                                "open_access", "oa_status", "oa_url", "oa_pdf"):
+                                "open_access", "oa_status", "oa_url", "oa_pdf", "oa_pdf_source",
+                                "oa_pdf_version", "oa_pdf_host"):
                         if key in previous:
                             record[key] = previous[key]
                 print(f"WARNING: OpenAlex {doi}: {exc}", file=sys.stderr)
+
+            # OpenAlex is the primary OA signal. When it confirms OA but does not
+            # expose a direct PDF, Unpaywall is used as a specialized legal full-text
+            # resolver. This remains supplementary and never removes a known PDF.
+            if record.get("open_access") and not record.get("oa_pdf"):
+                try:
+                    resolved = unpaywall_pdf(doi, email)
+                    if resolved.get("oa_pdf"):
+                        record.update({k: v for k, v in resolved.items() if v not in ("", None)})
+                        print("Unpaywall PDF OK:", doi)
+                    else:
+                        print("Unpaywall: no direct OA PDF:", doi)
+                except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
+                    previous = cached.get("publications", {}).get(doi, {})
+                    if previous.get("oa_pdf"):
+                        for key in ("oa_pdf", "oa_pdf_source", "oa_pdf_version", "oa_pdf_host"):
+                            if key in previous:
+                                record[key] = previous[key]
+                    print(f"WARNING: Unpaywall {doi}: {exc}", file=sys.stderr)
             pubs[doi] = record
         except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
             failed.append(f"Crossref {doi}: {exc}")
