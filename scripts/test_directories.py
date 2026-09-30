@@ -83,8 +83,9 @@ with sync_playwright() as p:
     research.locator('details.idea-group').first.locator('summary').click()
     assert research.locator('details.idea-group').first.evaluate('(el)=>el.open')
     research.locator('#language-toggle').click()
-    assert 'COLABORAÇÃO' in research.locator('main').inner_text().upper()
-    print('RESEARCH three broad collaboration themes, collapsed and bilingual: PASS')
+    assert 'CONVERSAS DE PESQUISA' in research.locator('main').inner_text().upper()
+    assert 'TRABALHOS EM CONJUNTO' in research.locator('main').inner_text().upper()
+    print('RESEARCH three broad conversation/collaboration themes, collapsed and bilingual: PASS')
     research.close()
 
     courses=load(browser,'teaching')

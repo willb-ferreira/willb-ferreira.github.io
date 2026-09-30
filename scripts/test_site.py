@@ -79,13 +79,15 @@ with sync_playwright() as p:
         overflow=tab.evaluate('document.documentElement.scrollWidth > innerWidth')
         print(f'PAGE {page_name}: H1={heading[:67]} | nav={link_count} | overflow={overflow}')
         if page_name=='index':
-            assert tab.locator('.audience-route').count()==3
-            assert tab.locator('.audience-route').nth(0).locator('h3').inner_text() == 'Undergraduate research'
-            assert tab.locator('.audience-route').nth(1).locator('h3').inner_text() == "Master's and Ph.D."
-            assert tab.locator('.audience-route').nth(2).locator('h3').inner_text() == 'Researchers and collaborators'
-            assert tab.locator('a[href="supervision.html#level-undergraduate"]').count()==1
-            assert tab.locator('a[href="supervision.html#level-masters"]').count()==1
-            assert tab.locator('a[href="supervision.html#level-phd"]').count()==1
+            assert tab.locator('.explore-route').count()==3
+            assert tab.locator('.explore-route').nth(0).locator('h3').inner_text() == 'Research and publications'
+            assert tab.locator('.explore-route').nth(1).locator('h3').inner_text() == 'Reading and supervision'
+            assert tab.locator('.explore-route').nth(2).locator('h3').inner_text() == 'Academic conversations'
+            assert tab.locator('.explore-route a[href="research.html"]').count()==1
+            assert tab.locator('.explore-route a[href="publications.html"]').count()==1
+            assert tab.locator('.explore-route a[href="reading.html"]').count()==1
+            assert tab.locator('.explore-route a[href="supervision.html"]').count()==1
+            assert tab.locator('.explore-route a[href="contact.html"]').count()==1
             assert tab.locator('a[href="research.html#research-notebook"]').count()==1
             assert tab.evaluate("""() => {
                 const pubs=document.querySelector('#home-publications');
@@ -100,9 +102,9 @@ with sync_playwright() as p:
             assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('window.PORTFOLIO.seo.index.description.pt')
             assert tab.locator('meta[property="og:title"]').get_attribute('content') == tab.title()
             assert tab.locator('h1').inner_text().startswith('Willams Batista')
-            assert tab.locator('.audience-route').nth(0).locator('h3').inner_text() == 'Iniciação científica'
-            assert tab.locator('.audience-route').nth(1).locator('h3').inner_text() == 'Mestrado e doutorado'
-            assert tab.locator('.audience-route').nth(2).locator('h3').inner_text() == 'Pesquisadores e colaboradores'
+            assert tab.locator('.explore-route').nth(0).locator('h3').inner_text() == 'Pesquisa e publicações'
+            assert tab.locator('.explore-route').nth(1).locator('h3').inner_text() == 'Leituras e orientação'
+            assert tab.locator('.explore-route').nth(2).locator('h3').inner_text() == 'Conversas acadêmicas'
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
@@ -399,10 +401,9 @@ with sync_playwright() as p:
             assert 'Probability II for Actuarial Science' in tab.locator('main').inner_text()
             print('CONTENT actuarial probability course: PASS')
         if page_name=='contact':
-            assert tab.locator('.contact-grid-three .contact-card').count()==3
-            assert tab.locator('.contact-grid-three .contact-card').nth(0).locator('h3').inner_text() == 'Undergraduate research'
-            assert tab.locator('.contact-grid-three .contact-card').nth(1).locator('h3').inner_text() == "Master's or Ph.D."
-            assert tab.locator('.contact-grid-three .contact-card').nth(2).locator('h3').inner_text() == 'Research collaboration'
+            assert tab.locator('.contact-grid .contact-card').count()==2
+            assert tab.locator('.contact-grid .contact-card').nth(0).locator('h3').inner_text() == 'Supervision inquiry'
+            assert tab.locator('.contact-grid .contact-card').nth(1).locator('h3').inner_text() == 'Research collaboration'
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
             assert tab.locator('#pub-results article').count()==4

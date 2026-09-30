@@ -759,25 +759,22 @@ body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
 .dependent-guide .reading-related>a:focus-visible,.inference-guide .reading-related>a:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:3px}
 @media(max-width:620px){.dependent-guide .reading-related,.inference-guide .reading-related{grid-template-columns:1fr}}
 
-/* Audience routes: a quiet academic wayfinding layer for students and collaborators. */
-.audience-section{padding-block:58px 64px}
-.audience-section .section-heading{margin-bottom:24px}
-.audience-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,44px)}
-.audience-route{border-top:1px solid var(--line);padding:20px 0 4px;display:flex;flex-direction:column;min-width:0}
-.audience-index{font-size:11px;font-weight:650;color:var(--accent);letter-spacing:.08em;font-variant-numeric:tabular-nums}
-.audience-route h3{font-size:clamp(21px,2vw,25px);line-height:1.28;margin-top:9px}
-.audience-route p{font-size:14px;line-height:1.72;margin-top:10px;max-width:42ch}
-.audience-links{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:auto;padding-top:18px}
-.audience-links .secondary-link{color:var(--muted)}
-.contact-grid-three{grid-template-columns:repeat(3,minmax(0,1fr))}
-.contact-grid-three .contact-symbol{font-size:11px;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+/* Gentle wayfinding: organize the site without presenting visitors as audience segments. */
+.explore-section{padding-block:56px 62px}
+.explore-section .section-heading{margin-bottom:24px}
+.explore-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(24px,3vw,44px)}
+.explore-route{border-top:1px solid var(--line);padding:21px 0 4px;display:flex;flex-direction:column;min-width:0}
+.explore-route h3{font-size:clamp(21px,2vw,25px);line-height:1.28}
+.explore-route p{font-size:14px;line-height:1.72;margin-top:10px;max-width:44ch}
+.explore-links{display:flex;flex-wrap:wrap;gap:10px 20px;margin-top:auto;padding-top:18px}
+.explore-links .secondary-link{color:var(--muted)}
 @media(max-width:1000px){
-  .audience-grid,.contact-grid-three{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .audience-route:last-child,.contact-grid-three .contact-card:last-child{grid-column:1/-1}
+  .explore-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .explore-route:last-child{grid-column:1/-1}
 }
 @media(max-width:700px){
-  .audience-section{padding-block:42px 48px}
-  .audience-grid,.contact-grid-three{grid-template-columns:minmax(0,1fr)}
-  .audience-route:last-child,.contact-grid-three .contact-card:last-child{grid-column:auto}
-  .audience-route p{max-width:none}
+  .explore-section{padding-block:40px 46px}
+  .explore-grid{grid-template-columns:minmax(0,1fr)}
+  .explore-route:last-child{grid-column:auto}
+  .explore-route p{max-width:none}
 }
