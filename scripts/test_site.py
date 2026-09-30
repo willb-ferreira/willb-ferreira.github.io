@@ -48,6 +48,24 @@ def load(tab, page_name, initial_hash=None):
 
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_BIN') or None,headless=True,args=['--no-sandbox'])
+
+    # With no saved override, the site follows the browser/OS color-scheme preference,
+    # including live preference changes. Once the visitor toggles the theme, that manual
+    # choice takes precedence over later system changes.
+    theme_tab=browser.new_page(viewport={'width':1365,'height':860}, color_scheme='dark')
+    theme_tab.on('pageerror', lambda err: errors.append(str(err)))
+    load(theme_tab,'index')
+    assert theme_tab.locator('html').get_attribute('data-theme') == 'dark'
+    theme_tab.emulate_media(color_scheme='light')
+    theme_tab.wait_for_function("document.documentElement.dataset.theme === 'light'")
+    theme_tab.locator('#theme-toggle').click()
+    assert theme_tab.locator('html').get_attribute('data-theme') == 'dark'
+    theme_tab.emulate_media(color_scheme='dark')
+    theme_tab.emulate_media(color_scheme='light')
+    assert theme_tab.locator('html').get_attribute('data-theme') == 'dark'
+    theme_tab.close()
+    print('THEME system preference and manual override: PASS')
+
     for page_name in PAGES:
         tab=browser.new_page(viewport={'width':1365,'height':860}, device_scale_factor=1)
         tab.on('pageerror', lambda err: errors.append(str(err)))

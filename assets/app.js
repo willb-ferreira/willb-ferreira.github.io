@@ -9,8 +9,12 @@
   const href = name => name === "index" ? homeHref : `${name}.html`;
   const getPref = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
   const setPref = (key, value) => { try { localStorage.setItem(key, value); } catch { /* file:// privacy settings */ } };
+  const systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
+  const systemTheme = () => systemThemeQuery?.matches ? "dark" : "light";
   let lang = getPref("wb-lang", "en") === "pt" ? "pt" : "en";
-  let theme = getPref("wb-theme", "light") === "dark" ? "dark" : "light";
+  const storedTheme = getPref("wb-theme", "");
+  let followsSystemTheme = storedTheme !== "light" && storedTheme !== "dark";
+  let theme = followsSystemTheme ? systemTheme() : storedTheme;
   let selectedPublicationType = "all";
   let publicationSearch = "";
   let publicationYear = "all";
@@ -257,12 +261,22 @@
     const navHtml = routes.map(r=>`<a href="${href(r)}" ${r===page?'class="active" aria-current="page"':''}>${tx(r)}</a>`).join("");
     document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="${href("index")}" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
     document.getElementById("language-toggle").addEventListener("click",()=>{lang=lang==="pt"?"en":"pt";setPref("wb-lang",lang);render();});
-    document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";setPref("wb-theme",theme);renderHeader();renderFooter();});
+    document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";followsSystemTheme=false;setPref("wb-theme",theme);renderHeader();renderFooter();});
     const btn=document.getElementById("menu-toggle"), menu=document.getElementById("main-nav");
     btn.addEventListener("click",()=>{const open=menu.classList.toggle("open");btn.setAttribute("aria-expanded",String(open));btn.setAttribute("aria-label",tx(open?"closeMenu":"openMenu"));btn.innerHTML=icon(open?"close":"menu");});
     document.querySelector(".site-header")?.classList.toggle("scrolled",window.scrollY>5);
   };
   window.addEventListener("scroll",()=>document.querySelector(".site-header")?.classList.toggle("scrolled",window.scrollY>5),{passive:true});
+  const syncSystemTheme = () => {
+    if(!followsSystemTheme)return;
+    const nextTheme=systemTheme();
+    if(nextTheme===theme)return;
+    theme=nextTheme;
+    renderHeader();
+    renderFooter();
+  };
+  if(systemThemeQuery?.addEventListener)systemThemeQuery.addEventListener("change",syncSystemTheme);
+  else systemThemeQuery?.addListener?.(syncSystemTheme);
   const renderFooter = () => {
     const footerLinks=["research","publications","supervision","people","teaching","software"];
     const social=profileLinks();

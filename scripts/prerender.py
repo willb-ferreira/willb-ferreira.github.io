@@ -107,6 +107,16 @@ with sync_playwright() as p:
         person['url'] = SITE_URL + '/'
         structured_json = json.dumps(person, ensure_ascii=False, separators=(',', ':')).replace('<', '\\u003c')
         html = html[:person_match.start(2)] + structured_json + html[person_match.end(2):]
+        # Static HTML follows the visitor's browser/OS preference before deferred JS runs.
+        # JavaScript then resolves the effective theme and preserves any manual override.
+        html, theme_count = re.subn(
+            r'(<html\\b[^>]*\\bdata-theme=")(?:light|dark|system)(")',
+            r'\\1system\\2',
+            html,
+            count=1,
+        )
+        if theme_count != 1:
+            raise RuntimeError(f'{name}: expected exactly one html data-theme attribute')
         path.write_text(html, encoding='utf-8')
         print(f'PRERENDER {path.name}: {len(main)} main HTML chars')
     browser.close()
