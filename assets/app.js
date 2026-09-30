@@ -298,7 +298,7 @@
     <div class="ticker"><div class="shell ticker-row"><span class="ticker-title">${tx("focusAreas")}</span><p>${e(lang === "pt" ? "Inferência · Estatística espacial · Séries temporais · Imagens SAR" : "Inference · Spatial statistics · Time series · SAR imagery")}</p></div></div>
     ${renderExploreRoutes()}
     <section class="section" id="home-research"><div class="shell">${sectionTitle(tx("research"),tx("researchTagline"),tx("researchIntro"),`<a class="inline-link" href="research.html">${tx("allResearch")} ${icon("arrow")}</a>`)}<div class="cards-4">${D.research.slice(0,4).map(researchCard).join("")}</div></div></section>
-    <section class="section" id="home-publications"><div class="shell">${sectionTitle(tx("publications"),tx("papersHome"),tx("papersHomeDesc"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}${papers.length?`<div class="publication-list">${papers.map(pubCard).join("")}</div>`:empty("↗",tx("papersHome"),tx("noPapersHome"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}</div></section>
+    <section class="section" id="home-publications"><div class="shell">${sectionTitle(tx("publications"),tx("papersHome"),tx("papersHomeDesc"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}${papers.length?`<div class="publication-list">${papers.map(p=>pubCard(p,false)).join("")}</div>`:empty("↗",tx("papersHome"),tx("noPapersHome"),`<a class="inline-link" href="publications.html">${tx("seePublications")} ${icon("arrow")}</a>`)}</div></section>
     <section class="section tight" id="home-projects"><div class="shell">${sectionTitle(tx("activeProjects"),tx("activeProjects"),tx("projectDesc"),`<a class="inline-link" href="research.html">${tx("seeAllProjects")} ${icon("arrow")}</a>`)}<div class="cards-3">${featured.map(projectCard).join("")}</div></div></section>
     ${D.news.length?`<section class="section tight"><div class="shell">${sectionTitle(tx("news"),tx("news"),tx("newsDesc"))}<div class="cards-3">${D.news.slice(0,3).map(n=>`<article class="project-card"><span class="small muted">${e(n.date)}</span><h3>${e(t(n.title))}</h3><p>${e(t(n.description))}</p>${link(n.url,tx("readMore"))}</article>`).join("")}</div></div></section>`:""}${banner()}`;
   };
@@ -680,7 +680,7 @@
   };
   const labelType = type => ({article:tx("articles"),preprint:tx("preprints"),conference:tx("conferences"),other:tx("others")})[type]||tx("others");
   const citeText = p => `${p.authors||""} (${p.year||""}). ${p.title||""}. ${p.venue||""}.${p.doi?` https://doi.org/${p.doi.replace(/^https?:\/\/doi\.org\//,"")}`:""}`;
-  const pubCard = p => {
+  const pubCard = (p,showScholarly=true) => {
     const doiUrl=p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"";
     const candidates=[[doiUrl,tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
     const seen=new Set(),resources=candidates.filter(([u])=>{const clean=safe(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
@@ -695,7 +695,7 @@
     if(safe(p.data))indicators.push(`<span class="publication-indicator">${tx("dataAvailable")}</span>`);
     const vm=p.venue_metrics||{};
     const venueContext=vm.source&&vm.year?`<details class="venue-context"><summary>${tx("venueContext")}</summary><p>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</p></details>`:"";
-    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${venueContext}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
+    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
   };
   const filteredPublications = () => {
     const query=publicationSearch.toLocaleLowerCase(lang === "pt"?"pt-BR":"en-US");
