@@ -67,6 +67,8 @@
       noMatches:"Nenhum resultado corresponde aos filtros selecionados.",searchPlaceholder:"Pesquisar por título, autor, palavra-chave...",
       all:"Todos",articles:"Artigos",preprints:"Preprints",conferences:"Congressos",others:"Outros",year:"Ano",records:"registros",record:"registro",exportBib:"Exportar BibTeX",
       readMore:"Saiba mais",cite:"Copiar referência",code:"Código",data:"Dados",pdf:"PDF",doi:"DOI",website:"Página",copyDone:"Referência copiada",exportDone:"Arquivo BibTeX gerado",
+      citedBy:"Citado por",openAccess:"Acesso aberto",codeAvailable:"Código disponível",dataAvailable:"Dados disponíveis",venueContext:"Contexto do periódico",
+      scholarlyNote:"Contagens de citação são indicadores bibliográficos e podem variar entre bases. O OpenAlex é usado quando disponível; o contexto do periódico usa dados anuais do SCImago revisados manualmente.",
       supervisionTitle:"Temas de orientação",supervisionLead:"Temas potenciais de iniciação científica, mestrado e doutorado, com escopos ajustáveis à formação e aos interesses do estudante.",
       advisory:"Os temas abaixo são propostas de pesquisa, não anúncios de vagas ou garantia de disponibilidade de orientação.",
       topics:"Temas para orientação",topicsDesc:"Cada tema pode ser refinado em uma pergunta específica e um plano de trabalho realista.",
@@ -144,6 +146,8 @@
       noMatches:"No results match the selected filters.",searchPlaceholder:"Search by title, author, keyword...",
       all:"All",articles:"Articles",preprints:"Preprints",conferences:"Conferences",others:"Other",year:"Year",records:"records",record:"record",exportBib:"Export BibTeX",
       readMore:"Learn more",cite:"Copy citation",code:"Code",data:"Data",pdf:"PDF",doi:"DOI",website:"Website",copyDone:"Citation copied",exportDone:"BibTeX file created",
+      citedBy:"Cited by",openAccess:"Open access",codeAvailable:"Code available",dataAvailable:"Data available",venueContext:"Venue context",
+      scholarlyNote:"Citation counts are bibliographic indicators and may differ across databases. OpenAlex is used when available; venue context uses manually reviewed annual SCImago data.",
       supervisionTitle:"Supervision topics",supervisionLead:"Potential undergraduate, master's, and PhD topics, with scope tailored to students' backgrounds and interests.",
       advisory:"These are potential topics, not advertised vacancies or a guarantee of supervision availability.",
       topics:"Supervision topics",topicsDesc:"Each topic can be refined into a specific question and a realistic work plan.",
@@ -677,8 +681,21 @@
   const labelType = type => ({article:tx("articles"),preprint:tx("preprints"),conference:tx("conferences"),other:tx("others")})[type]||tx("others");
   const citeText = p => `${p.authors||""} (${p.year||""}). ${p.title||""}. ${p.venue||""}.${p.doi?` https://doi.org/${p.doi.replace(/^https?:\/\/doi\.org\//,"")}`:""}`;
   const pubCard = p => {
-    const resources=[[p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"",tx("doi")],[p.pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
-    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p><div class="links">${resources.map(([u,l])=>safe(u)?`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`:"").join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
+    const doiUrl=p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"";
+    const candidates=[[doiUrl,tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
+    const seen=new Set(),resources=candidates.filter(([u])=>{const clean=safe(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
+    const citationCount=Number.isFinite(Number(p.citations))?Math.max(0,Number(p.citations)):0;
+    const indicators=[];
+    if(citationCount>0)indicators.push(`<span class="publication-indicator" title="${e(p.citation_source||"")}">${tx("citedBy")} ${e(String(citationCount))}${p.citation_source?` · ${e(p.citation_source)}`:""}</span>`);
+    if(p.open_access){
+      const oa=safe(p.oa_url);
+      indicators.push(oa?`<a class="publication-indicator" href="${oa}" target="_blank" rel="noopener noreferrer">${tx("openAccess")} ↗</a>`:`<span class="publication-indicator">${tx("openAccess")}</span>`);
+    }
+    if(safe(p.code))indicators.push(`<span class="publication-indicator">${tx("codeAvailable")}</span>`);
+    if(safe(p.data))indicators.push(`<span class="publication-indicator">${tx("dataAvailable")}</span>`);
+    const vm=p.venue_metrics||{};
+    const venueContext=vm.source&&vm.year?`<details class="venue-context"><summary>${tx("venueContext")}</summary><p>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</p></details>`:"";
+    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${venueContext}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
   };
   const filteredPublications = () => {
     const query=publicationSearch.toLocaleLowerCase(lang === "pt"?"pt-BR":"en-US");
@@ -695,7 +712,7 @@
   };
   const renderPublications = () => {
     const years=[...new Set((D.publications||[]).map(p=>String(p.year)).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count"></span></div><div class="publication-list" id="pub-results"></div></div></section>${banner()}`;
+    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count"></span></div><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
   };
   const topicCard = x => `<article class="topic-card"><div class="level-tags">${x.levels.map(y=>tag(tx(y),"tinted")).join("")}${x.area&&D.research.find(a=>a.id===x.area)?`<a class="topic-area" href="reading.html#${e(x.area)}">${e(t(D.research.find(a=>a.id===x.area).title))} ↗</a>`:""}</div><div class="card-content"><h3>${e(t(x.title))}</h3><p>${e(t(x.description))}</p></div><div class="requirements"><b>${tx("requirements")}</b><p>${e(t(x.requirements))}</p></div></article>`;
   const topicResults = () => D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).map(topicCard).join("");

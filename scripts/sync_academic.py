@@ -102,7 +102,54 @@ def crossref_record(doi: str, entry: dict, email: str) -> dict:
         "pdf": safe_link(entry.get("pdf")), "code": safe_link(entry.get("code")),
         "data": safe_link(entry.get("data")),
         "bibtex": "", "featured": bool(entry.get("featured", False)),
-        "tags": [plain(v) for v in entry.get("tags", []) if plain(v)]
+        "tags": [plain(v) for v in entry.get("tags", []) if plain(v)],
+        # Crossref offers a conservative citation fallback. OpenAlex enrichment,
+        # when available, replaces this count below.
+        "citations": max(0, int(work.get("is-referenced-by-count") or 0)),
+        "citation_source": "Crossref",
+        "citation_updated": datetime.now(timezone.utc).date().isoformat(),
+        "venue_metrics": entry.get("venue_metrics") if isinstance(entry.get("venue_metrics"), dict) else {},
+        "open_access": bool(entry.get("open_access", False)),
+        "oa_status": plain(entry.get("oa_status")),
+        "oa_url": safe_link(entry.get("oa_url")),
+        "oa_pdf": safe_link(entry.get("oa_pdf")),
+    }
+
+
+def openalex_metadata(doi: str) -> dict:
+    """Best-effort bibliometric/OA enrichment for one approved DOI."""
+    params = {
+        "filter": f"doi:https://doi.org/{doi}",
+        "per_page": "1",
+        "select": "id,doi,cited_by_count,open_access,best_oa_location",
+    }
+    api_key = os.environ.get("OPENALEX_API_KEY", "").strip()
+    if api_key:
+        params["api_key"] = api_key
+    payload = http_json("https://api.openalex.org/works?" + urllib.parse.urlencode(params))
+    results = payload.get("results") or []
+    if len(results) != 1:
+        raise ValueError(f"OpenAlex retornou {len(results)} registros para {doi}")
+    work = results[0]
+    returned_doi = valid_doi(work.get("doi"))
+    if returned_doi != doi:
+        raise ValueError(f"DOI inesperado no OpenAlex: {returned_doi} (esperado: {doi})")
+    access = work.get("open_access") or {}
+    location = work.get("best_oa_location") or {}
+
+    def safe_link(value):
+        u = str(value or "").strip()
+        return u if u.startswith("https://") or u.startswith("http://") else ""
+
+    return {
+        "citations": max(0, int(work.get("cited_by_count") or 0)),
+        "citation_source": "OpenAlex",
+        "citation_updated": datetime.now(timezone.utc).date().isoformat(),
+        "openalex_id": safe_link(work.get("id")),
+        "open_access": bool(access.get("is_oa", False)),
+        "oa_status": plain(access.get("oa_status")),
+        "oa_url": safe_link(location.get("landing_page_url") or access.get("oa_url")),
+        "oa_pdf": safe_link(location.get("pdf_url")),
     }
 
 
@@ -161,8 +208,22 @@ def main() -> int:
             raise ValueError("DOI duplicado na allowlist: " + doi)
         configured_dois.add(doi)
         try:
-            pubs[doi] = crossref_record(doi, entry, email)
+            record = crossref_record(doi, entry, email)
             print("Crossref OK:", doi)
+            try:
+                record.update(openalex_metadata(doi))
+                print("OpenAlex OK:", doi)
+            except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
+                # Bibliometrics are supplementary: preserve the last good OpenAlex
+                # values when possible, otherwise keep Crossref's citation fallback.
+                previous = cached.get("publications", {}).get(doi, {})
+                if previous.get("citation_source") == "OpenAlex":
+                    for key in ("citations", "citation_source", "citation_updated", "openalex_id",
+                                "open_access", "oa_status", "oa_url", "oa_pdf"):
+                        if key in previous:
+                            record[key] = previous[key]
+                print(f"WARNING: OpenAlex {doi}: {exc}", file=sys.stderr)
+            pubs[doi] = record
         except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
             failed.append(f"Crossref {doi}: {exc}")
             if doi in cached.get("publications", {}):

@@ -2,6 +2,12 @@ name: Sync public academic metadata
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'data/sources.json'
+      - 'scripts/sync_academic.py'
+      - '.github/workflows/sync-academic.yml'
   schedule:
     # Monday, 06:17 Recife (UTC-3); avoid the busy start of the hour.
     - cron: '17 9 * * 1'
@@ -32,6 +38,7 @@ jobs:
       - name: Update metadata for explicitly approved DOIs and public repos
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENALEX_API_KEY: ${{ secrets.OPENALEX_API_KEY }}
         run: python scripts/sync_academic.py
       - name: Rebuild public static HTML for indexing
         run: |

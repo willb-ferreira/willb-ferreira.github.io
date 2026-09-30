@@ -10,7 +10,17 @@
         "PolSAR",
         "GAMLSS",
         "Remote sensing"
-      ]
+      ],
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 1.452,
+        "quartile": "Q1",
+        "category": {
+          "en": "Computers in Earth Sciences",
+          "pt": "Computação em Ciências da Terra"
+        }
+      }
     },
     {
       "doi": "10.1002/env.2816",
@@ -19,7 +29,17 @@
         "ARMA",
         "SAR",
         "Generalized gamma"
-      ]
+      ],
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 0.639,
+        "quartile": "Q2",
+        "category": {
+          "en": "Statistics and Probability",
+          "pt": "Estatística e Probabilidade"
+        }
+      }
     },
     {
       "doi": "10.3390/math9233108",
@@ -28,7 +48,17 @@
         "Probability distributions",
         "Reliability",
         "Inference"
-      ]
+      ],
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 0.497,
+        "quartile": "Q2",
+        "category": {
+          "en": "Mathematics (miscellaneous)",
+          "pt": "Matemática (diversos)"
+        }
+      }
     }
   ],
   "github_repos": []

@@ -23,6 +23,14 @@ def fake_http(url, *, token='', data=None, email=''):
             'published': {'date-parts': [[2026, 9, 1]]},
             'type': 'journal-article'
         }}
+    if url.startswith('https://api.openalex.org/works?'):
+        return {'results': [{
+            'id': 'https://openalex.org/WTEST',
+            'doi': 'https://doi.org/10.1234/test-article',
+            'cited_by_count': 7,
+            'open_access': {'is_oa': True, 'oa_status': 'gold', 'oa_url': 'https://example.org/open'},
+            'best_oa_location': {'landing_page_url': 'https://example.org/article', 'pdf_url': 'https://example.org/article.pdf'}
+        }]}
     if url == 'https://api.github.com/repos/verified-user/mypackage':
         return {'private': False, 'archived': False, 'disabled': False,
                 'full_name': 'verified-user/mypackage', 'name': 'mypackage',
@@ -48,7 +56,9 @@ class SyncTests(unittest.TestCase):
         (self.root / 'data/sources.json').write_text(json.dumps({
             'contact_email': 'academic@example.org', 'orcid': '0000-0002-1234-567X',
             'github_username': 'verified-user',
-            'publications': [{'doi': '10.1234/test-article', 'featured': True, 'tags': ['Spatial']}],
+            'publications': [{'doi': '10.1234/test-article', 'featured': True, 'tags': ['Spatial'],
+                              'venue_metrics': {'source':'SCImago','year':2025,'sjr':1.234,'quartile':'Q1',
+                                                'category': {'en':'Statistics','pt':'Estatística'}}}],
             'github_repos': [{'repo': 'mypackage', 'tags': ['R']}]
         }))
 
@@ -60,6 +70,10 @@ class SyncTests(unittest.TestCase):
             self.assertIn('A verified title', raw)
             self.assertNotIn('<i>', raw)
             self.assertIn('mypackage', raw)
+            self.assertIn('"citations":7', raw)
+            self.assertIn('"citation_source":"OpenAlex"', raw)
+            self.assertIn('"open_access":true', raw)
+            self.assertIn('"venue_metrics":{"source":"SCImago"', raw)
             self.assertNotIn('10.5678/new-paper', raw)
             pending = json.loads((self.root / 'data/pending-dois.json').read_text())
             self.assertEqual([p['doi'] for p in pending], ['10.5678/new-paper'])
