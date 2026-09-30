@@ -36,7 +36,8 @@
       "oa_status": "gold",
       "oa_url": "https://doi.org/10.1109/jstars.2026.3680479",
       "oa_pdf": "",
-      "openalex_id": "https://openalex.org/W7148633106"
+      "openalex_id": "https://openalex.org/W7148633106",
+      "oa_pdf_source": ""
     },
     "10.1002/env.2816": {
       "id": "doi-10-1002-env-2816",
@@ -74,7 +75,8 @@
       "oa_status": "closed",
       "oa_url": "",
       "oa_pdf": "",
-      "openalex_id": "https://openalex.org/W4380152942"
+      "openalex_id": "https://openalex.org/W4380152942",
+      "oa_pdf_source": ""
     },
     "10.3390/math9233108": {
       "id": "doi-10-3390-math9233108",
@@ -112,7 +114,8 @@
       "oa_status": "gold",
       "oa_url": "https://doi.org/10.3390/math9233108",
       "oa_pdf": "https://www.mdpi.com/2227-7390/9/23/3108/pdf?version=1640223396",
-      "openalex_id": "https://openalex.org/W3217606604"
+      "openalex_id": "https://openalex.org/W3217606604",
+      "oa_pdf_source": "OpenAlex"
     }
   },
   "software": {}
