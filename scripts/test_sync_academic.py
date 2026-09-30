@@ -21,8 +21,7 @@ def fake_http(url, *, token='', data=None, email=''):
             'author': [{'given': 'A.', 'family': 'Researcher'}],
             'container-title': ['Statistics Journal'],
             'published': {'date-parts': [[2026, 9, 1]]},
-            'type': 'journal-article',
-            'link': [{'URL':'https://publisher.example/crossref.pdf','content-type':'application/pdf'}]
+            'type': 'journal-article'
         }}
     if url.startswith('https://api.openalex.org/works?'):
         return {'results': [{
@@ -42,6 +41,12 @@ def fake_http(url, *, token='', data=None, email=''):
             },
             'oa_locations': [
             ]
+        }
+    if url.startswith('https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234/test-article?'):
+        return {
+            'externalIds': {'DOI':'10.1234/test-article'},
+            'isOpenAccess': True,
+            'openAccessPdf': {'url':'https://public.example/article.pdf'}
         }
     if url == 'https://api.github.com/repos/verified-user/mypackage':
         return {'private': False, 'archived': False, 'disabled': False,
@@ -85,9 +90,9 @@ class SyncTests(unittest.TestCase):
             self.assertIn('"citations":7', raw)
             self.assertIn('"citation_source":"OpenAlex"', raw)
             self.assertIn('"open_access":true', raw)
-            self.assertIn('"oa_pdf":"https://publisher.example/crossref.pdf"', raw)
-            self.assertIn('"oa_pdf_source":"Crossref"', raw)
-            self.assertIn('"oa_pdf_version":"publishedVersion"', raw)
+            self.assertIn('"oa_pdf":"https://public.example/article.pdf"', raw)
+            self.assertIn('"oa_pdf_source":"Semantic Scholar"', raw)
+            self.assertIn('"oa_pdf_version":"publicVersion"', raw)
             self.assertIn('"venue_metrics":{"source":"SCImago"', raw)
             self.assertNotIn('10.5678/new-paper', raw)
             pending = json.loads((self.root / 'data/pending-dois.json').read_text())

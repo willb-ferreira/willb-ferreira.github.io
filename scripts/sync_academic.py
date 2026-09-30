@@ -220,6 +220,30 @@ def unpaywall_pdf(doi: str, email: str) -> dict:
     }
 
 
+def semantic_scholar_pdf(doi: str) -> dict:
+    """Return a public PDF exposed by Semantic Scholar for the exact DOI."""
+    paper_id = urllib.parse.quote("DOI:" + doi, safe=":")
+    fields = urllib.parse.urlencode({"fields": "externalIds,isOpenAccess,openAccessPdf"})
+    work = http_json(f"https://api.semanticscholar.org/graph/v1/paper/{paper_id}?{fields}")
+    external = work.get("externalIds") or {}
+    returned_doi = valid_doi(external.get("DOI"))
+    if returned_doi != doi:
+        raise ValueError(f"DOI inesperado no Semantic Scholar: {returned_doi} (esperado: {doi})")
+    if not work.get("isOpenAccess"):
+        return {}
+    pdf = work.get("openAccessPdf") or {}
+    url = str(pdf.get("url") or "").strip()
+    if not (url.startswith("https://") or url.startswith("http://")):
+        return {}
+    return {
+        "open_access": True,
+        "oa_pdf": url,
+        "oa_pdf_source": "Semantic Scholar",
+        "oa_pdf_version": "publicVersion",
+        "oa_pdf_host": plain(urllib.parse.urlparse(url).netloc),
+    }
+
+
 def github_record(user: str, repo: str, entry: dict, token: str) -> dict:
     path = "/".join(urllib.parse.quote(part, safe="") for part in [user, repo])
     info = http_json(f"https://api.github.com/repos/{path}", token=token)
@@ -319,6 +343,22 @@ def main() -> int:
                 record["oa_pdf_version"] = "publishedVersion"
                 record["oa_pdf_host"] = "publisher"
                 print("Crossref OA PDF OK:", doi)
+
+            if record.get("open_access") and not record.get("oa_pdf"):
+                try:
+                    resolved = semantic_scholar_pdf(doi)
+                    if resolved.get("oa_pdf"):
+                        record.update(resolved)
+                        print("Semantic Scholar PDF OK:", doi)
+                    else:
+                        print("Semantic Scholar: no public PDF:", doi)
+                except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
+                    previous = cached.get("publications", {}).get(doi, {})
+                    if previous.get("oa_pdf"):
+                        for key in ("oa_pdf", "oa_pdf_source", "oa_pdf_version", "oa_pdf_host"):
+                            if key in previous:
+                                record[key] = previous[key]
+                    print(f"WARNING: Semantic Scholar {doi}: {exc}", file=sys.stderr)
 
             record.pop("crossref_pdf", None)
             pubs[doi] = record
