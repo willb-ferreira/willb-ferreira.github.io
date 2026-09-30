@@ -19,7 +19,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: deploy-pages
+  group: sync-public-academic-metadata
   cancel-in-progress: false
 
 jobs:
