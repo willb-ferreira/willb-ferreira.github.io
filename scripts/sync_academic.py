@@ -90,6 +90,17 @@ def crossref_record(doi: str, entry: dict, email: str) -> dict:
     def safe_link(value):
         u = str(value or "").strip()
         return u if u.startswith("https://") or u.startswith("http://") else ""
+
+    crossref_pdf = ""
+    for link in work.get("link", []) or []:
+        if not isinstance(link, dict):
+            continue
+        content_type = str(link.get("content-type") or "").lower()
+        candidate = safe_link(link.get("URL"))
+        if candidate and content_type == "application/pdf":
+            crossref_pdf = candidate
+            break
+
     return {
         "id": "doi-" + re.sub(r"[^a-z0-9]+", "-", doi).strip("-"),
         "title": title,
@@ -113,6 +124,7 @@ def crossref_record(doi: str, entry: dict, email: str) -> dict:
         "oa_status": plain(entry.get("oa_status")),
         "oa_url": safe_link(entry.get("oa_url")),
         "oa_pdf": safe_link(entry.get("oa_pdf")),
+        "crossref_pdf": crossref_pdf,
     }
 
 
@@ -298,6 +310,17 @@ def main() -> int:
                             if key in previous:
                                 record[key] = previous[key]
                     print(f"WARNING: Unpaywall {doi}: {exc}", file=sys.stderr)
+
+            # Crossref sometimes exposes an official publisher PDF through its
+            # link metadata. Use it only after OA has been independently confirmed.
+            if record.get("open_access") and not record.get("oa_pdf") and record.get("crossref_pdf"):
+                record["oa_pdf"] = record["crossref_pdf"]
+                record["oa_pdf_source"] = "Crossref"
+                record["oa_pdf_version"] = "publishedVersion"
+                record["oa_pdf_host"] = "publisher"
+                print("Crossref OA PDF OK:", doi)
+
+            record.pop("crossref_pdf", None)
             pubs[doi] = record
         except (urllib.error.URLError, TimeoutError, ValueError, KeyError, OSError) as exc:
             failed.append(f"Crossref {doi}: {exc}")

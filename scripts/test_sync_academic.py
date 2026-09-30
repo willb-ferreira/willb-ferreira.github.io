@@ -21,7 +21,8 @@ def fake_http(url, *, token='', data=None, email=''):
             'author': [{'given': 'A.', 'family': 'Researcher'}],
             'container-title': ['Statistics Journal'],
             'published': {'date-parts': [[2026, 9, 1]]},
-            'type': 'journal-article'
+            'type': 'journal-article',
+            'link': [{'URL':'https://publisher.example/crossref.pdf','content-type':'application/pdf'}]
         }}
     if url.startswith('https://api.openalex.org/works?'):
         return {'results': [{
@@ -40,10 +41,6 @@ def fake_http(url, *, token='', data=None, email=''):
                 'url_for_pdf': None, 'version': 'publishedVersion', 'host_type': 'publisher'
             },
             'oa_locations': [
-                {'url_for_pdf':'https://repository.example/accepted.pdf',
-                 'version':'acceptedVersion','host_type':'repository'},
-                {'url_for_pdf':'https://publisher.example/published.pdf',
-                 'version':'publishedVersion','host_type':'publisher'}
             ]
         }
     if url == 'https://api.github.com/repos/verified-user/mypackage':
@@ -88,8 +85,8 @@ class SyncTests(unittest.TestCase):
             self.assertIn('"citations":7', raw)
             self.assertIn('"citation_source":"OpenAlex"', raw)
             self.assertIn('"open_access":true', raw)
-            self.assertIn('"oa_pdf":"https://publisher.example/published.pdf"', raw)
-            self.assertIn('"oa_pdf_source":"Unpaywall"', raw)
+            self.assertIn('"oa_pdf":"https://publisher.example/crossref.pdf"', raw)
+            self.assertIn('"oa_pdf_source":"Crossref"', raw)
             self.assertIn('"oa_pdf_version":"publishedVersion"', raw)
             self.assertIn('"venue_metrics":{"source":"SCImago"', raw)
             self.assertNotIn('10.5678/new-paper', raw)
