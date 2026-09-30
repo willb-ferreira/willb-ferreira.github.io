@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="system">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -25,14 +25,366 @@
   <script src="assets/causal-library.js" defer></script>
   <script src="assets/auto-content.js" defer></script>
   <script src="assets/app.js" defer></script>
-<script id="person-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Willams Batista","jobTitle":"Assistant Professor of Statistics","worksFor":{"@type":"CollegeOrUniversity","name":"Universidade Federal de Pernambuco","alternateName":"UFPE"},"description":"I am a professor in the Department of Statistics at UFPE. My research covers statistical inference, models for dependent data, and statistical methods for SAR and PolSAR imagery, combining theory, simulation, and remote-sensing applications.","knowsAbout":["Spatial and spatio-temporal statistics","Statistical inference and asymptotic theory","Statistical image processing","Regression and generalized estimating equations","Time series and stochastic processes","Information geometry","Statistical computing"],"sameAs":["https://orcid.org/0000-0002-3680-6212","https://scholar.google.com.br/citations?user=k5t98ZIAAAAJ&hl=pt-BR&oi=ao","https://github.com/willb-ferreira","http://lattes.cnpq.br/4598185947247904"],"email":"willams.bfsilva@ufpe.br","alternateName":"Willams B. F. da Silva","url":"https://willamsferreira.com/"}</script>
+<script id="person-jsonld" type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Willams Batista","jobTitle":"Assistant Professor of Statistics","worksFor":{"@type":"CollegeOrUniversity","name":"Universidade Federal de Pernambuco","alternateName":"UFPE"},"description":"I am a professor in the Department of Statistics at UFPE. My research covers statistical inference, models for dependent data, and statistical methods for SAR and PolSAR imagery, combining theory, simulation, and remote-sensing applications.","knowsAbout":["Time Series and Spatial Statistics","Statistical inference and asymptotic theory","Statistical Image Processing","Regression Models and Estimating Equations","Information geometry","Causal inference"],"sameAs":["https://orcid.org/0000-0002-3680-6212","https://scholar.google.com.br/citations?user=k5t98ZIAAAAJ&hl=pt-BR&oi=ao","https://github.com/willb-ferreira","http://lattes.cnpq.br/4598185947247904"],"alternateName":"Willams B. F. da Silva","url":"https://willamsferreira.com/","email":"willams.bfsilva@ufpe.br"}</script>
   <meta property="og:image" content="https://willamsferreira.com/assets/portrait.webp" />
   <meta name="twitter:card" content="summary" />
 </head>
 <body data-page="reading">
   <a class="skip-link" href="#main">Skip to content</a>
   <div id="site-header"><header class="site-header"><div class="shell header-inner"><a class="brand" href="/" aria-label="Willams Batista — Home"><span class="brand-mark" aria-hidden="true">W.</span><span>Willams Batista</span></a><nav class="nav" id="main-nav" aria-label="Navigation"><a href="research.html">Research</a><a href="publications.html">Publications</a><a href="supervision.html">Supervision</a><a href="people.html">People</a><a href="teaching.html">Teaching</a><a href="software.html">Code &amp; Data</a><a href="about.html">About</a><a href="contact.html">Contact</a></nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="Mudar idioma para português" aria-label="Mudar idioma para português">PT</button><button class="icon-btn" id="theme-toggle" type="button" title="Toggle color theme" aria-label="Toggle color theme"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.9 13a9 9 0 0 1-9.9-9.9A9 9 0 1 0 20.9 13Z"></path></svg></button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"></path></svg></button></div></div></header></div>
-  <main id="main" tabindex="-1"><h1>Research reading guides</h1><p>Content is updated when the page scripts load.</p></main>
+  <main id="main" tabindex="-1"><section class="page-hero"><div class="shell"><div class="page-head reveal"><div class="breadcrumb"><a href="/">Home</a><span class="sep">/</span><span>Research</span></div><span class="eyebrow">Research</span><h1>A starting point for each research area</h1><p class="lead">Six concise introductions with starting questions and a few essential readings for each area.</p></div></div></section><section class="section reading-section" id="top">
+    <div class="shell"><div class="reading-note"><strong>How to use these guides.</strong> Choose a path and follow the suggested readings. These are entry points, not comprehensive literature reviews.</div>
+    <div class="reading-layout"><nav class="reading-index" aria-label="Research guides"><span class="eyebrow">Research guides</span><a href="#spatial-models" data-reading-guide="spatial-models" aria-controls="spatial-models" aria-current="location"><span class="reading-nav-number" aria-hidden="true">01</span><span class="reading-nav-title">Time Series and Spatial Statistics</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a><a href="#theory" data-reading-guide="theory" aria-controls="theory"><span class="reading-nav-number" aria-hidden="true">02</span><span class="reading-nav-title">Statistical inference and asymptotic theory</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a><a href="#sar" data-reading-guide="sar" aria-controls="sar"><span class="reading-nav-number" aria-hidden="true">03</span><span class="reading-nav-title">Statistical Image Processing</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a><a href="#regression" data-reading-guide="regression" aria-controls="regression"><span class="reading-nav-number" aria-hidden="true">04</span><span class="reading-nav-title">Regression Models and Estimating Equations</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a><a href="#geometry" data-reading-guide="geometry" aria-controls="geometry"><span class="reading-nav-number" aria-hidden="true">05</span><span class="reading-nav-title">Information geometry</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a><a href="#causal" data-reading-guide="causal" aria-controls="causal"><span class="reading-nav-number" aria-hidden="true">06</span><span class="reading-nav-title">Causal inference</span><span class="reading-nav-arrow" aria-hidden="true">↗</span></a></nav>
+      <div class="reading-main"><div class="reading-mobile-picker"><label for="reading-guide-select">Choose a research area</label><select id="reading-guide-select" aria-controls="reading-guides"><option value="spatial-models">01 · Time Series and Spatial Statistics</option><option value="theory">02 · Statistical inference and asymptotic theory</option><option value="sar">03 · Statistical Image Processing</option><option value="regression">04 · Regression Models and Estimating Equations</option><option value="geometry">05 · Information geometry</option><option value="causal">06 · Causal inference</option></select></div>
+        <p class="reading-status" id="reading-guide-status" role="status" aria-live="polite" aria-atomic="true">Time Series and Spatial Statistics</p>
+        <div class="reading-guides" id="reading-guides"><article class="reading-area reading-area-intro dependent-guide" id="spatial-models" aria-labelledby="read-spatial-models">
+    <span id="time-series" class="reading-anchor-alias" aria-hidden="true"></span>
+    <div class="reading-intro">
+      <span class="eyebrow">01 / 06 · Research library</span>
+      <h2 id="read-spatial-models">Time Series and Spatial Statistics</h2>
+      <p class="reading-question">How does dependence change when observations are indexed by time, space or both?</p>
+      <p>Time series and spatial statistics share probabilistic tools for dependence, but temporal ordering, spatial neighbourhoods and space–time indexing require different modelling assumptions. The three short routes below introduce these connections.</p>
+      <p class="reading-prereq"><strong>Recommended background:</strong> Probability, regression and introductory mathematical statistics; linear algebra for covariance and conditional models.</p>
+    </div>
+    <section class="reading-shared" id="spatial-foundations" aria-labelledby="reading-shared-title">
+      <h3 id="reading-shared-title">Shared foundations</h3><p>Start with random variables and fields, stationarity, covariance, conditional distributions and inference under dependence. These ideas are shared; their existence, ordering and asymptotic assumptions are not interchangeable.</p>
+    </section>
+    <section class="reading-tracks" aria-labelledby="reading-tracks-title">
+      <h3 id="reading-tracks-title">Three ways to explore</h3>
+      <div class="reading-track-grid"><article class="reading-track" id="intro-track-temporal">
+        <h4>Time series</h4><p>ARMA, temporal dependence, innovations, forecasting and diagnostics, including non-Gaussian extensions. Time provides a natural chronological ordering.</p>
+        <div class="reading-track-links"><strong>Start with:</strong> <a href="#intro-ref-brockwell-davis">Peter J. Brockwell (2016)</a></div>
+      </article><article class="reading-track" id="spatial-track-b">
+        <h4>Spatial and spatio-temporal statistics</h4><p>Random fields, geostatistics, covariance and kriging, space–time models and Bayesian hierarchies. Lattice observations, point-referenced data and event locations have different sampling structures.</p>
+        <div class="reading-track-links"><strong>Start with:</strong> <a href="#intro-ref-cressie">Noel A. C. Cressie (1993)</a> · <a href="#intro-ref-diggle-ribeiro">Peter J. Diggle (2007)</a> · <a href="#intro-ref-rue-held">Håvard Rue (2005)</a></div>
+      </article><article class="reading-track" id="spatial-track-a">
+        <h4>The ARMA bridge: from time to two-dimensional lattices</h4><p>My methodological research connects conditional regression with two-dimensional spatial ARMA dependence. Moving from temporal recursion to spatial neighbourhoods requires explicit ordering, compatible conditional laws and model-specific inference.</p>
+        <div class="reading-track-links"><strong>Start with:</strong> <a href="#intro-ref-besag">Julian Besag (1974)</a> · <a href="#intro-ref-tjostheim">Dag Tjøstheim (1978)</a></div>
+      </article></div>
+    </section>
+    <nav class="reading-related" aria-label="Connections with other areas">
+      <strong>Connections with other areas:</strong>
+      <a href="#theory">Statistical Inference: estimation, uncertainty and asymptotics under dependent sampling ↗</a><a href="#sar">Statistical Image Processing: spatial dependence, SAR speckle and pixel-based inference ↗</a><a href="#regression">Regression and Estimating Equations: marginal dependence, spatial random effects and conditional models ↗</a><a href="#causal">Causal Inference: environmental time series and spatial dependence require separate identification assumptions ↗</a>
+    </nav>
+    <section class="reading-bibliography reading-bibliography-short" aria-labelledby="reading-ref-title">
+      <h3 id="reading-ref-title">Six starting references</h3><ol><li class="reading-reference reading-reference-compact" id="intro-ref-brockwell-davis"><h4><a href="https://doi.org/10.1007/978-3-319-29854-2" target="_blank" rel="noopener noreferrer">Introduction to Time Series and Forecasting, 3rd ed. ↗</a></h4><p class="reading-authors">Peter J. Brockwell; Richard A. Davis · 2016</p><p>An accessible route into temporal dependence, ARMA and forecasting.</p></li><li class="reading-reference reading-reference-compact" id="intro-ref-cressie"><h4><a href="https://doi.org/10.1002/9781119115151" target="_blank" rel="noopener noreferrer">Statistics for Spatial Data ↗</a></h4><p class="reading-authors">Noel A. C. Cressie · 1993</p><p>A common foundation for geostatistics, lattice models and spatial prediction.</p></li><li class="reading-reference reading-reference-compact" id="intro-ref-besag"><h4><a href="https://doi.org/10.1111/j.2517-6161.1974.tb00999.x" target="_blank" rel="noopener noreferrer">Spatial Interaction and the Statistical Analysis of Lattice Systems ↗</a></h4><p class="reading-authors">Julian Besag · 1974</p><p>An original source on lattice interactions and conditional-model compatibility.</p></li><li class="reading-reference reading-reference-compact" id="intro-ref-tjostheim"><h4><a href="https://doi.org/10.2307/1426722" target="_blank" rel="noopener noreferrer">Statistical Spatial Series Modelling ↗</a></h4><p class="reading-authors">Dag Tjøstheim · 1978</p><p>A specialized bridge to unilateral spatial series and multidimensional ARMA structure.</p></li><li class="reading-reference reading-reference-compact" id="intro-ref-diggle-ribeiro"><h4><a href="https://doi.org/10.1007/978-0-387-48536-2" target="_blank" rel="noopener noreferrer">Model-based Geostatistics ↗</a></h4><p class="reading-authors">Peter J. Diggle; Paulo J. Ribeiro Jr. · 2007</p><p>Model-based spatial inference and prediction with geostatistical data.</p></li><li class="reading-reference reading-reference-compact" id="intro-ref-rue-held"><h4><a href="https://www.routledge.com/Gaussian-Markov-Random-Fields-Theory-and-Applications/Rue-Held/p/book/9781584884323" target="_blank" rel="noopener noreferrer">Gaussian Markov Random Fields: Theory and Applications ↗</a></h4><p class="reading-authors">Håvard Rue; Leonhard Held · 2005</p><p>Conditional independence, sparse precision and a route to Bayesian spatial modelling.</p></li></ol>
+    </section>
+    <a class="reading-back" href="#top">↑ Back to guide start</a>
+  </article><article class="reading-area reading-area-intro inference-guide" id="theory" aria-labelledby="read-theory" hidden="">
+      <div class="reading-intro">
+        <span class="eyebrow">02 / 06 · Research library</span>
+        <h2 id="read-theory">Statistical inference and asymptotic theory</h2>
+        <p class="reading-question">How do model assumptions, information measures and asymptotic theory justify estimation and hypothesis testing?</p>
+        <p>Classical and Bayesian inference answer related but distinct questions about evidence and uncertainty. Divergences can construct estimators and tests in several inferential frameworks; they are mathematical tools, not a separate school of inference.</p>
+        <p class="reading-prereq"><strong>Recommended background:</strong> Probability, likelihood, mathematical statistics and calculus; real analysis for advanced asymptotics.</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="inference-foundations-title">
+        <h3 id="inference-foundations-title">Shared foundations</h3><p>Identifiability, regularity, information and uncertainty are common concerns. Consistency, limiting laws, robustness and test calibration must be established for the specified model and sampling regime; dependent observations may require different asymptotics.</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="inference-tracks-title">
+        <h3 id="inference-tracks-title">Three introductory routes</h3>
+        <div class="reading-track-grid"><article class="reading-track" id="inference-track-classical">
+          <h4>Classical statistical inference</h4><p>Point estimation, likelihood and estimating equations; confidence intervals and likelihood-ratio, Wald and score tests. Study their assumptions, efficiency and finite- or large-sample validity.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#inference-ref-lehmann-casella">E. L. Lehmann (1998)</a> · <a href="#inference-ref-lehmann-romano">E. L. Lehmann (2005)</a></div>
+        </article><article class="reading-track" id="inference-track-bayesian">
+          <h4>Bayesian statistical inference</h4><p>Prior, likelihood and posterior; estimation, credible regions, posterior predictive assessment and model comparison. Bayes factors require suitable prior specifications, including care with improper priors.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#inference-ref-gelman-bda">Andrew Gelman (2013)</a> · <a href="#inference-ref-bernardo-smith">José M. Bernardo (1994)</a></div>
+        </article><article class="reading-track" id="inference-track-information">
+          <h4>Statistical information and divergence-based inference</h4><p>Fisher information, Kullback–Leibler, φ-divergences and density-power divergence can support estimation and hypothesis tests. Their robustness and null distributions are method- and model-specific; geodesic-distance tests form a related geometric bridge.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#inference-ref-pardo-2006">Leandro Pardo (2006)</a> · <a href="#inference-ref-basu-1998">Ayanendranath Basu (1998)</a> · <a href="#inference-ref-van-der-vaart">A. W. van der Vaart (1998)</a></div>
+        </article></div>
+      </section>
+      <nav class="reading-related" aria-label="Connections with other areas">
+        <strong>Connections with other areas:</strong>
+        <a href="#geometry">Continue in Information Geometry: Fisher–Rao distance and the geodesic tests of Menéndez, Morales, Pardo and Salicrú ↗</a><a href="#spatial-models">Time Series and Spatial Statistics: valid inference when observations are dependent ↗</a><a href="#regression">Regression and Estimating Equations: likelihood, GEE and robust standard errors ↗</a><a href="#causal">Causal Inference: identification assumptions and uncertainty for estimated intervention effects ↗</a>
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="inference-reference-title">
+        <h3 id="inference-reference-title">Seven selected readings</h3>
+        <ol><li class="reading-reference reading-reference-compact" id="inference-ref-lehmann-casella">
+          <h4><a href="https://doi.org/10.1007/b98854" target="_blank" rel="noopener noreferrer">Theory of Point Estimation, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">E. L. Lehmann; George Casella · 1998</p><p>A rigorous basis for estimation, optimality and decision-theoretic criteria.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-lehmann-romano">
+          <h4><a href="https://doi.org/10.1007/0-387-27605-X" target="_blank" rel="noopener noreferrer">Testing Statistical Hypotheses, 3rd ed. ↗</a></h4>
+          <p class="reading-authors">E. L. Lehmann; Joseph P. Romano · 2005</p><p>Develops test construction, optimality and large-sample testing.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-gelman-bda">
+          <h4><a href="https://www.routledge.com/link/link/p/book/9781439840955" target="_blank" rel="noopener noreferrer">Bayesian Data Analysis, 3rd ed. ↗</a></h4>
+          <p class="reading-authors">Andrew Gelman; John B. Carlin; Hal S. Stern; David B. Dunson; Aki Vehtari; Donald B. Rubin · 2013</p><p>A model-based introduction to posterior inference, computation and predictive checks.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-bernardo-smith">
+          <h4><a href="https://www.wiley-vch.de/en/areas-interest/mathematics-statistics/bayesian-theory-978-0-471-92416-6" target="_blank" rel="noopener noreferrer">Bayesian Theory ↗</a></h4>
+          <p class="reading-authors">José M. Bernardo; Adrian F. M. Smith · 1994</p><p>A mathematical route through Bayesian decision theory, prior specification and information.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-pardo-2006">
+          <h4><a href="https://www.routledge.com/Statistical-Inference-Based-on-Divergence-Measures/Pardo/p/book/9780429148521" target="_blank" rel="noopener noreferrer">Statistical Inference Based on Divergence Measures ↗</a></h4>
+          <p class="reading-authors">Leandro Pardo · 2006</p><p>Develops divergence-based estimation and hypothesis tests, especially through φ-divergences.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-basu-1998">
+          <h4><a href="https://doi.org/10.1093/biomet/85.3.549" target="_blank" rel="noopener noreferrer">Robust and efficient estimation by minimising a density power divergence ↗</a></h4>
+          <p class="reading-authors">Ayanendranath Basu; Ian R. Harris; Nils L. Hjort; M. C. Jones · 1998</p><p>An original route to robust estimation with a tunable efficiency–robustness trade-off.</p>
+        </li><li class="reading-reference reading-reference-compact" id="inference-ref-van-der-vaart">
+          <h4><a href="https://doi.org/10.1017/CBO9780511802256" target="_blank" rel="noopener noreferrer">Asymptotic Statistics ↗</a></h4>
+          <p class="reading-authors">A. W. van der Vaart · 1998</p><p>The mathematical bridge to M-estimation, efficiency and empirical processes.</p>
+        </li></ol>
+      </section>
+      <a class="reading-back" href="#top">↑ Back to guide start</a>
+    </article><article class="reading-area reading-area-intro image-guide" id="sar" aria-labelledby="read-sar" hidden="">
+      <div class="reading-intro">
+        <span class="eyebrow">03 / 06 · Research library</span>
+        <h2 id="read-sar">Statistical Image Processing</h2>
+        <p class="reading-question">How do acquisition physics, spatial dependence and uncertainty shape statistical methods across radar, optical and medical images?</p><p>Statistical image processing connects observation models with estimation, restoration, segmentation and image-derived inference. This guide offers three application routes with a shared mathematical foundation; expertise in SAR/PolSAR does not imply established work in optical or medical imaging.</p>
+        <p class="reading-prereq"><strong>Recommended background:</strong> Probability, statistical inference, regression, linear algebra and basic image formation; learn the acquisition and noise model of each modality.</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="imaging-shared-title">
+        <h3 id="imaging-shared-title">Shared foundations</h3><p>Start with image formation, noise and spatial dependence; then study inverse problems, statistical filtering, segmentation, classification, uncertainty and reproducible validation. Speckle in coherent radar, radiometric effects in optical imagery and modality-specific medical noise are not interchangeable. Evaluate images and predictions at the appropriate spatial, field, patient or acquisition level.</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="imaging-tracks-title">
+        <h3 id="imaging-tracks-title">Three application routes</h3>
+        <div class="reading-track-grid"><article class="reading-track" id="imaging-track-radar">
+          <span class="reading-track-status">Established research activity</span>
+          <h4>Radar imaging and SAR/PolSAR</h4><p>Model coherent backscatter, speckle, polarimetric covariance and spatial dependence. Connect statistical estimation and classification to crops, vegetation and environmental monitoring.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#imaging-ref-oliver-quegan">Chris Oliver (2004)</a> · <a href="#imaging-ref-lee-pottier">Jong-Sen Lee (2009)</a></div>
+        </article><article class="reading-track" id="imaging-track-optical">
+          <span class="reading-track-status">Developing research direction</span>
+          <h4>Optical remote sensing and environmental imaging</h4><p>Study multispectral and hyperspectral observations, radiometric correction, land cover, vegetation and environmental change. Passive optical satellite sensors differ from radar, while LiDAR uses active laser ranging; SAR–optical fusion requires explicit registration and uncertainty checks.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#imaging-ref-richards-2022">John A. Richards (2022)</a> · <a href="#imaging-ref-zhu-2017">Zhe Zhu (2017)</a></div>
+        </article><article class="reading-track" id="imaging-track-medical">
+          <span class="reading-track-status">Emerging research interest</span>
+          <h4>Medical and biomedical image analysis</h4><p>Explore statistical segmentation and uncertainty for MRI, CT, pathology and lesion or tumour images. Account for modality-specific artefacts, expert labels, patient-level validation and clinical domain shift; this is a methodological research interest, not a claim of clinical expertise.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#imaging-ref-pham-2000">Dzung L. Pham (2000)</a> · <a href="#imaging-ref-litjens-2017">Geert Litjens (2017)</a></div>
+        </article></div>
+      </section>
+      <nav class="reading-related" aria-label="Methodological connections">
+        <strong>Methodological connections:</strong>
+        <a href="#spatial-models">Time Series and Spatial Statistics: pixel dependence, environmental time series and spatial validation ↗</a><a href="#theory">Statistical Inference: estimation, uncertainty and hypothesis testing for image-derived measures ↗</a><a href="#regression">Regression and Estimating Equations: covariates, correlated outcomes and distributional image models ↗</a><a href="#geometry">Information Geometry: matrix-valued SAR models and statistical distances, not necessarily geodesics ↗</a>
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="imaging-references-title">
+        <h3 id="imaging-references-title">Seven selected readings</h3>
+        <ol><li class="reading-reference reading-reference-compact" id="imaging-ref-szeliski-2022">
+          <h4><a href="https://szeliski.org/Book/" target="_blank" rel="noopener noreferrer">Computer Vision: Algorithms and Applications, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">Richard Szeliski · 2022</p>
+          <p>A cross-domain foundation for image formation, estimation, restoration, registration and recognition.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-oliver-quegan">
+          <h4><a href="https://books.google.com/books?id=IeGKe40S77AC" target="_blank" rel="noopener noreferrer">Understanding Synthetic Aperture Radar Images ↗</a></h4>
+          <p class="reading-authors">Chris Oliver; Shaun Quegan · 2004</p>
+          <p>A practical and statistical introduction to SAR formation, noise and image analysis.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-lee-pottier">
+          <h4><a href="https://www.routledge.com/Polarimetric-Radar-Imaging-From-Basics-toApplications/Lee-Pottier/p/book/9781420054972" target="_blank" rel="noopener noreferrer">Polarimetric Radar Imaging: From Basics to Applications ↗</a></h4>
+          <p class="reading-authors">Jong-Sen Lee; Eric Pottier · 2009</p>
+          <p>Develops the polarimetric representation and relevant processing techniques.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-richards-2022">
+          <h4><a href="https://doi.org/10.1007/978-3-030-82327-6" target="_blank" rel="noopener noreferrer">Remote Sensing Digital Image Analysis, 6th ed. ↗</a></h4>
+          <p class="reading-authors">John A. Richards · 2022</p>
+          <p>Introduces optical remote-sensing image acquisition, spectral features and statistical classification.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-zhu-2017">
+          <h4><a href="https://doi.org/10.1016/j.isprsjprs.2017.06.013" target="_blank" rel="noopener noreferrer">Change detection using landsat time series: A review of frequencies, preprocessing, algorithms, and applications ↗</a></h4>
+          <p class="reading-authors">Zhe Zhu · 2017</p>
+          <p>Reviews radiometric preprocessing and approaches to environmental change detection with optical Landsat series.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-pham-2000">
+          <h4><a href="https://doi.org/10.1146/annurev.bioeng.2.1.315" target="_blank" rel="noopener noreferrer">Current methods in medical image segmentation ↗</a></h4>
+          <p class="reading-authors">Dzung L. Pham; Chenyang Xu; Jerry L. Prince · 2000</p>
+          <p>A foundational survey of segmentation methods and their assumptions for medical images.</p>
+        </li><li class="reading-reference reading-reference-compact" id="imaging-ref-litjens-2017">
+          <h4><a href="https://doi.org/10.1016/j.media.2017.07.005" target="_blank" rel="noopener noreferrer">A survey on deep learning in medical image analysis ↗</a></h4>
+          <p class="reading-authors">Geert Litjens et al. · 2017</p>
+          <p>Surveys learning-based classification, detection, segmentation and validation across medical imaging applications.</p>
+        </li></ol>
+      </section>
+      <a class="reading-back" href="#top">↑ Back to guide start</a>
+    </article><article class="reading-area reading-area-intro regression-guide" id="regression" aria-labelledby="read-regression" hidden="">
+      <div class="reading-intro">
+        <span class="eyebrow">04 / 06 · Research library</span>
+        <h2 id="read-regression">Regression Models and Estimating Equations</h2>
+        <p class="reading-question">When should regression target a marginal mean, conditional random effects, or several parameters of a response distribution?</p><p>Regression is broader than generalized estimating equations. GEE focuses on marginal mean models for clustered or repeated outcomes; mixed and hierarchical models explicitly represent latent effects; GAM and GAMLSS let regression functions or distributional parameters vary with covariates. These approaches can be connected, but their estimands and assumptions differ.</p>
+        <p class="reading-prereq"><strong>Recommended background:</strong> Linear models, GLMs, probability, likelihood and introductory inference; matrix calculus and conditional distributions for advanced work.</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="regression-shared-title">
+        <h3 id="regression-shared-title">Shared foundations</h3><p>Define the observational unit, response support, covariates, link and estimand before choosing an estimator. Distinguish within-cluster dependence from independent clusters, marginal from conditional coefficients, and model-based from robust uncertainty. A working correlation does not repair an incorrect mean model; ordinary GEE sandwich inference may be unreliable with few independent clusters.</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="regression-tracks-title">
+        <h3 id="regression-tracks-title">Three research pathways</h3>
+        <div class="reading-track-grid"><article class="reading-track" id="regression-track-gee">
+          <h4>Generalized Linear Models and GEE</h4><p>Start with GLM link and variance functions, then study marginal regression for repeated or clustered data, working correlation, estimating equations and sandwich uncertainty. GEE does not normally specify a full joint law; the target and number of independent clusters matter.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#regression-ref-liang-zeger-1986">Kung-Yee Liang (1986)</a> · <a href="#regression-ref-hardin-hilbe-2013">James W. Hardin (2013)</a> · <a href="#regression-ref-zeger-liang-albert-1988">Scott L. Zeger (1988)</a></div>
+        </article><article class="reading-track" id="regression-track-hierarchical">
+          <h4>Mixed-Effects and Hierarchical Regression</h4><p>GLMMs and hierarchical models specify variation through random or latent effects; estimation may be likelihood-based or Bayesian. Paula Moraga's geospatial-health work provides a Bayesian spatial example using supported INLA/SPDE constructions, not a GEE method.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#regression-ref-breslow-clayton-1993">Norman E. Breslow (1993)</a> · <a href="#regression-ref-moraga-2019">Paula Moraga (2019)</a></div>
+        </article><article class="reading-track" id="regression-track-distributional">
+          <h4>Flexible and Distributional Regression</h4><p>GAMs introduce smooth covariate effects, while GAMLSS can model location, scale and shape for non-Gaussian responses. This route connects to positive SAR measurements and environmental or biomedical outcomes; spatial dependence requires an explicit, validated extension.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#regression-ref-wood-2017">Simon N. Wood (2017)</a> · <a href="#regression-ref-rigby-stasinopoulos-2005">Robert A. Rigby (2005)</a></div>
+        </article></div>
+      </section>
+      <nav class="reading-related" aria-label="Connections with other areas">
+        <strong>Connections with other areas:</strong>
+        <a href="#spatial-models">Time Series and Spatial Statistics: dependent data, spatial regression and latent fields ↗</a><a href="#theory">Statistical Inference: estimating functions, robust variance and asymptotic theory ↗</a><a href="#sar">Statistical Image Processing: non-Gaussian SAR responses and structured image covariates ↗</a><a href="#causal">Causal Inference: GEE associations do not establish causal effects without identification assumptions ↗</a>
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="regression-references-title">
+        <h3 id="regression-references-title">Eight selected readings</h3>
+        <ol><li class="reading-reference reading-reference-compact" id="regression-ref-mccullagh-nelder-1989">
+          <h4><a href="https://www.stata.com/bookstore/generalized-linear-models/" target="_blank" rel="noopener noreferrer">Generalized Linear Models, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">P. McCullagh; J. A. Nelder · 1989</p>
+          <p>The core reference for the generalized linear model framework.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-liang-zeger-1986">
+          <h4><a href="https://doi.org/10.1093/biomet/73.1.13" target="_blank" rel="noopener noreferrer">Longitudinal data analysis using generalized linear models ↗</a></h4>
+          <p class="reading-authors">Kung-Yee Liang; Scott L. Zeger · 1986</p>
+          <p>Introduces generalized estimating equations for correlated responses.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-hardin-hilbe-2013">
+          <h4><a href="https://www.routledge.com/Generalized-Estimating-Equations/Hardin-Hilbe/p/book/9781439881132" target="_blank" rel="noopener noreferrer">Generalized Estimating Equations, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">James W. Hardin; Joseph M. Hilbe · 2013</p>
+          <p>A dedicated GEE textbook with working correlations, practical model comparisons, diagnostics and R examples.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-zeger-liang-albert-1988">
+          <h4><a href="https://doi.org/10.2307/2531734" target="_blank" rel="noopener noreferrer">Models for longitudinal data: a generalized estimating equation approach ↗</a></h4>
+          <p class="reading-authors">Scott L. Zeger; Kung-Yee Liang; Paul S. Albert · 1988</p>
+          <p>Compares population-averaged and subject-specific modelling for longitudinal responses; their coefficients need not coincide.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-breslow-clayton-1993">
+          <h4><a href="https://doi.org/10.1080/01621459.1993.10594284" target="_blank" rel="noopener noreferrer">Approximate Inference in Generalized Linear Mixed Models ↗</a></h4>
+          <p class="reading-authors">Norman E. Breslow; David G. Clayton · 1993</p>
+          <p>A foundational likelihood-based treatment of GLMMs with latent random effects and approximate inference.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-moraga-2019">
+          <h4><a href="https://www.paulamoraga.com/book-geospatial/" target="_blank" rel="noopener noreferrer">Geospatial Health Data: Modeling and Visualization with R-INLA and Shiny ↗</a></h4>
+          <p class="reading-authors">Paula Moraga · 2019</p>
+          <p>A reproducible applied route into Bayesian hierarchical spatial and spatio-temporal regression using INLA/SPDE for supported latent Gaussian models.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-rigby-stasinopoulos-2005">
+          <h4><a href="https://doi.org/10.1111/j.1467-9876.2005.00510.x" target="_blank" rel="noopener noreferrer">Generalized additive models for location, scale and shape ↗</a></h4>
+          <p class="reading-authors">Robert A. Rigby; D. Mikis Stasinopoulos · 2005</p>
+          <p>Introduces GAMLSS for several response-distribution parameters, including skewed and heavy-tailed families; independence is conditional on modelled effects.</p>
+        </li><li class="reading-reference reading-reference-compact" id="regression-ref-wood-2017">
+          <h4><a href="https://www.routledge.com/Generalized-Additive-Models-An-Introduction-with-R-Second-Edition/Wood/p/book/9781498728331" target="_blank" rel="noopener noreferrer">Generalized Additive Models: An Introduction with R, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">Simon N. Wood · 2017</p>
+          <p>Builds a practical and mathematical foundation for smooth regression effects and penalized-spline GAMs in R.</p>
+        </li></ol>
+      </section>
+      <a class="reading-back" href="#top">↑ Back to guide start</a>
+    </article><article class="reading-area reading-area-intro geometry-guide" id="geometry" aria-labelledby="read-geometry" hidden="">
+      <div class="reading-intro">
+        <span class="eyebrow">05 / 06 · Research library</span>
+        <h2 id="read-geometry">Information geometry</h2>
+        <p class="reading-question">How can the geometry of probability models support statistical inference and computation?</p><p>Information geometry studies statistical models through metrics, divergences and affine connections. Three linked routes lead from the geometry of probability distributions to geodesic estimation and testing, then to geometric computation for structured models. These are study and research directions, not claims of completed original contributions.</p>
+        <p class="reading-prereq"><strong>Recommended background:</strong> Probability, likelihood, multivariable calculus and linear algebra; differential geometry for advanced reading.</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="geometry-shared-title">
+        <h3 id="geometry-shared-title">Shared foundations</h3><p>Begin with Fisher information as a local metric and distinguish divergences, affine connections and global geodesic distance. All three routes require a specified model and justified regularity; a useful geometric distance does not automatically provide an estimator or a calibrated hypothesis test.</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="geometry-tracks-title">
+        <h3 id="geometry-tracks-title">Three research pathways</h3>
+        <div class="reading-track-grid"><article class="reading-track" id="geometry-track-foundations">
+          <h4>Statistical manifolds and dual geometry</h4><p>Study Fisher–Rao metrics, exponential families, divergences, dual affine connections and geodesics. Local information geometry and global distance answer different mathematical questions.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#geometry-ref-amari-2016">Shun-ichi Amari (2016)</a> · <a href="#geometry-ref-amari-nagaoka">Shun-ichi Amari (2000)</a></div>
+        </article><article class="reading-track" id="geometry-track-inference">
+          <h4>Geometric estimation and hypothesis testing</h4><p>Investigate estimators and tests constructed from divergences or geodesic distances. The papers of Menéndez, Morales, Pardo and Salicrú give published geodesic-test constructions; calibration, identifiability and limiting laws remain model-specific.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#geometry-ref-menendez-morales-pardo-salicru-1995">María Luisa Menéndez (1995)</a> · <a href="#geometry-ref-menendez-morales-pardo-salicru-1997">María Luisa Menéndez (1997)</a></div>
+        </article><article class="reading-track" id="geometry-track-computation">
+          <h4>Geometric computation and structured statistical models</h4><p>Learn natural-gradient optimization and numerical Fisher–Rao distances for multivariate Gaussian families. Matrix-valued models connect this route to imaging; published PolSAR classification by stochastic distances is related but is not automatically a Fisher–Rao geodesic method.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#geometry-ref-amari-natural-gradient-1998">Shun-ichi Amari (1998)</a> · <a href="#geometry-ref-nielsen-fisher-rao-2023">Frank Nielsen (2023)</a> · <a href="#geometry-ref-gomez-wishart-2015">Luis Gomez (2015)</a></div>
+        </article></div>
+      </section>
+      <nav class="reading-related" aria-label="Connections with other areas">
+        <strong>Connections with other areas:</strong>
+        <a href="#theory">Statistical Inference: divergence-based estimation, hypothesis tests and asymptotic calibration ↗</a><a href="#sar">Statistical Image Processing: SAR/PolSAR covariance models, classification and stochastic distances ↗</a><a href="#spatial-models">Time Series and Spatial Statistics: information and uncertainty for dependent observations ↗</a>
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="geometry-references-title">
+        <h3 id="geometry-references-title">Eight selected readings</h3>
+        <ol><li class="reading-reference reading-reference-compact" id="geometry-ref-amari-2016">
+          <h4><a href="https://doi.org/10.1007/978-4-431-55978-8" target="_blank" rel="noopener noreferrer">Information Geometry and Its Applications ↗</a></h4>
+          <p class="reading-authors">Shun-ichi Amari · 2016</p>
+          <p>A structured introduction with statistical and computational applications.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-amari-nagaoka">
+          <h4><a href="https://doi.org/10.1090/MMONO/191" target="_blank" rel="noopener noreferrer">Methods of Information Geometry ↗</a></h4>
+          <p class="reading-authors">Shun-ichi Amari; Hiroshi Nagaoka · 2000</p>
+          <p>Advanced treatment of the geometry of statistical models and dual connections.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-burbea-del-castillo-1992">
+          <h4><a href="https://doi.org/10.1016/0167-9473(92)90041-D" target="_blank" rel="noopener noreferrer">Geodesic submanifolds of statistical models with location parameters ↗</a></h4>
+          <p class="reading-authors">Jacob Burbea; Joan del Castillo · 1992</p>
+          <p>Published criteria for geodesic submanifolds and their application to tests based on information-geodesic distance.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-menendez-morales-pardo-salicru-1995">
+          <h4><a href="https://doi.org/10.1016/0893-9659(94)00112-P" target="_blank" rel="noopener noreferrer">Statistical tests based on geodesic distances ↗</a></h4>
+          <p class="reading-authors">María Luisa Menéndez; Domingo Morales; Leandro Pardo; Miquel Salicrú · 1995</p>
+          <p>Develops hypothesis tests based on geodesic distances and derives asymptotic test-statistic distributions under the paper's assumptions.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-menendez-morales-pardo-salicru-1997">
+          <h4><a href="https://doi.org/10.1023/A:1022214326758" target="_blank" rel="noopener noreferrer">(h, Φ)-entropy differential metric ↗</a></h4>
+          <p class="reading-authors">María Luisa Menéndez; Domingo Morales; Leandro Pardo; Miquel Salicrú · 1997</p>
+          <p>Extends the geometric route to entropy-induced Riemannian metrics and illustrates geodesic testing for a Pareto family; its metric need not be Fisher–Rao.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-amari-natural-gradient-1998">
+          <h4><a href="https://doi.org/10.1162/089976698300017746" target="_blank" rel="noopener noreferrer">Natural Gradient Works Efficiently in Learning ↗</a></h4>
+          <p class="reading-authors">Shun-ichi Amari · 1998</p>
+          <p>Introduces the natural gradient in parameter spaces with information-geometric structure, including learning and matrix models.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-nielsen-fisher-rao-2023">
+          <h4><a href="https://doi.org/10.3390/e25040654" target="_blank" rel="noopener noreferrer">A Simple Approximation Method for the Fisher–Rao Distance between Multivariate Normal Distributions ↗</a></h4>
+          <p class="reading-authors">Frank Nielsen · 2023</p>
+          <p>Approximates Fisher–Rao distance between multivariate normal distributions by discretizing curves and using local Jeffreys divergence; the approximation is not a generic closed form.</p>
+        </li><li class="reading-reference reading-reference-compact" id="geometry-ref-gomez-wishart-2015">
+          <h4><a href="https://doi.org/10.1098/rsta.2015.0118" target="_blank" rel="noopener noreferrer">Classification of complex Wishart matrices with a diffusion-reaction system guided by stochastic distances ↗</a></h4>
+          <p class="reading-authors">Luis Gomez; Luis Alvarez; Luis Mazorra; Alejandro C. Frery · 2015</p>
+          <p>An imaging bridge: PolSAR classification of complex Wishart matrices using stochastic distances and a diffusion–reaction system; no Fisher–Rao geodesic equivalence is claimed.</p>
+        </li></ol>
+      </section>
+      <a class="reading-back" href="#top">↑ Back to guide start</a>
+    </article><article class="reading-area reading-area-intro causal-guide" id="causal" aria-labelledby="read-causal" hidden="">
+      <div class="reading-intro">
+        <span class="eyebrow">06 / 06 · Research library</span>
+        <h2 id="read-causal">Causal inference</h2>
+        <p class="reading-question">Which intervention effect is identifiable, how should it be estimated, and what changes when observations interact across space or time?</p><p>Causal inference separates the target intervention effect and its identification assumptions from the statistical procedure used to estimate it. Three routes introduce causal design, robust and machine-learning-assisted estimation, and spatial or longitudinal interventions. Prediction or an observational association alone does not identify a causal effect.</p>
+        <p class="reading-prereq"><strong>Recommended background:</strong> Probability, regression, experimental design and statistical inference; directed graphs and semiparametric theory for advanced work.</p>
+      </div>
+      <section class="reading-shared" aria-labelledby="causal-shared-title">
+        <h3 id="causal-shared-title">Shared foundations</h3><p>State the intervention, unit, target population and estimand first; then assess consistency, exchangeability, positivity, treatment assignment and possible interference. Identification comes before estimation. A correct covariance model, Bayesian prior, GEE fit or accurate image-derived prediction cannot replace untestable causal assumptions.</p>
+      </section>
+      <section class="reading-tracks" aria-labelledby="causal-tracks-title">
+        <h3 id="causal-tracks-title">Three research pathways</h3>
+        <div class="reading-track-grid"><article class="reading-track" id="causal-track-identification">
+          <h4>Causal identification and research design</h4><p>Use potential outcomes and causal DAGs to define interventions and select adjustment sets. Compare experiments, observational assumptions, propensity-score designs and instrumental variables; check whether the desired estimand is identified before fitting a model.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#causal-ref-hernan-robins-2020">Miguel A. Hernán (2020)</a> · <a href="#causal-ref-imbens-rubin-2015">Guido W. Imbens (2015)</a> · <a href="#causal-ref-pearl-2009">Judea Pearl (2009)</a></div>
+        </article><article class="reading-track" id="causal-track-estimation">
+          <h4>Semiparametric estimation and causal machine learning</h4><p>After identification, study propensity scores, weighting, doubly robust estimators, influence functions and orthogonal-score machine learning. Robustness has specified model and rate conditions; cross-fitting does not automatically justify inference under spatial or clustered dependence.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#causal-ref-rosenbaum-rubin-1983">Paul R. Rosenbaum (1983)</a> · <a href="#causal-ref-bang-robins-2005">Heejung Bang (2005)</a> · <a href="#causal-ref-chernozhukov-2018">Victor Chernozhukov (2018)</a></div>
+        </article><article class="reading-track" id="causal-track-dependent">
+          <h4>Spatial and longitudinal causal inference</h4><p>Study treatments changing over time, modern difference-in-differences, spatial confounding and spillovers between locations. Environmental and SAR/optical imagery can measure outcomes and exposures, but valid causal identification must address interference, design and spatially dependent uncertainty.</p>
+          <div class="reading-track-links"><strong>Start with:</strong> <a href="#causal-ref-robins-hernan-brumback-2000">James M. Robins (2000)</a> · <a href="#causal-ref-callaway-santanna-2021">Brantly Callaway (2021)</a> · <a href="#causal-ref-reich-2021">Brian J. Reich (2021)</a></div>
+        </article></div>
+      </section>
+      <nav class="reading-related" aria-label="Connections with other areas">
+        <strong>Connections with other areas:</strong>
+        <a href="#spatial-models">Time Series and Spatial Statistics: environmental dependence; causal interference needs separate assumptions ↗</a><a href="#theory">Statistical Inference: influence functions, orthogonal scores and valid uncertainty ↗</a><a href="#regression">Regression and Estimating Equations: marginal models, causal estimands and robust variance ↗</a><a href="#sar">Statistical Image Processing: environmental outcomes measured by SAR and optical imagery ↗</a>
+      </nav>
+      <section class="reading-bibliography reading-bibliography-short" aria-labelledby="causal-references-title">
+        <h3 id="causal-references-title">Nine selected readings</h3>
+        <ol><li class="reading-reference reading-reference-compact" id="causal-ref-hernan-robins-2020">
+          <h4><a href="https://miguelhernan.org/whatifbook" target="_blank" rel="noopener noreferrer">Causal Inference: What If ↗</a></h4>
+          <p class="reading-authors">Miguel A. Hernán; James M. Robins · 2020</p>
+          <p>Connects target trials, observational identification and longitudinal methods.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-imbens-rubin-2015">
+          <h4><a href="https://doi.org/10.1017/CBO9781139025751" target="_blank" rel="noopener noreferrer">Causal Inference for Statistics, Social, and Biomedical Sciences ↗</a></h4>
+          <p class="reading-authors">Guido W. Imbens; Donald B. Rubin · 2015</p>
+          <p>Develops design- and potential-outcomes-based inference.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-pearl-2009">
+          <h4><a href="https://doi.org/10.1017/CBO9780511803161" target="_blank" rel="noopener noreferrer">Causality: Models, Reasoning, and Inference, 2nd ed. ↗</a></h4>
+          <p class="reading-authors">Judea Pearl · 2009</p>
+          <p>Develops structural causal models, intervention calculus and identification using graphs.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-rosenbaum-rubin-1983">
+          <h4><a href="https://doi.org/10.1093/biomet/70.1.41" target="_blank" rel="noopener noreferrer">The central role of the propensity score in observational studies for causal effects ↗</a></h4>
+          <p class="reading-authors">Paul R. Rosenbaum; Donald B. Rubin · 1983</p>
+          <p>Establishes balancing-score arguments under strong ignorability.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-bang-robins-2005">
+          <h4><a href="https://doi.org/10.1111/j.1541-0420.2005.00377.x" target="_blank" rel="noopener noreferrer">Doubly Robust Estimation in Missing Data and Causal Inference Models ↗</a></h4>
+          <p class="reading-authors">Heejung Bang; James M. Robins · 2005</p>
+          <p>Establishes doubly robust estimation under stated treatment and outcome-model assumptions, a methodological bridge to estimating equations.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-chernozhukov-2018">
+          <h4><a href="https://doi.org/10.1111/ectj.12097" target="_blank" rel="noopener noreferrer">Double/debiased machine learning for treatment and structural parameters ↗</a></h4>
+          <p class="reading-authors">Victor Chernozhukov et al. · 2018</p>
+          <p>Develops orthogonal-score estimation with flexible nuisance learners.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-robins-hernan-brumback-2000">
+          <h4><a href="https://doi.org/10.1097/00001648-200009000-00011" target="_blank" rel="noopener noreferrer">Marginal structural models and causal inference in epidemiology ↗</a></h4>
+          <p class="reading-authors">James M. Robins; Miguel A. Hernán; Babette Brumback · 2000</p>
+          <p>Addresses time-varying confounding through marginal structural models.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-callaway-santanna-2021">
+          <h4><a href="https://doi.org/10.1016/j.jeconom.2020.12.001" target="_blank" rel="noopener noreferrer">Difference-in-Differences with Multiple Time Periods ↗</a></h4>
+          <p class="reading-authors">Brantly Callaway; Pedro H. C. Sant’Anna · 2021</p>
+          <p>Provides identification and estimation with staggered timing and heterogeneous effects.</p>
+        </li><li class="reading-reference reading-reference-compact" id="causal-ref-reich-2021">
+          <h4><a href="https://doi.org/10.1111/insr.12452" target="_blank" rel="noopener noreferrer">A Review of Spatial Causal Inference Methods for Environmental and Epidemiological Applications ↗</a></h4>
+          <p class="reading-authors">Brian J. Reich et al. · 2021</p>
+          <p>Reviews spatial confounding, interference and space–time extensions in environmental and epidemiological causal studies.</p>
+        </li></ol>
+      </section>
+      <a class="reading-back" href="#top">↑ Back to guide start</a>
+    </article></div><nav class="reading-pagination" aria-label="Research guides"><span class="reading-page-placeholder" aria-hidden="true"></span><a class="reading-page-link next" href="#theory" aria-label="Next guide: Statistical inference and asymptotic theory"><span class="reading-page-direction">→ Next guide</span><span class="reading-page-title">Statistical inference and asymptotic theory</span></a></nav>
+      </div></div></div></section></main>
   <div id="site-footer"><footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="/"><span class="brand-mark" aria-hidden="true">W.</span><span>Willams Batista</span></a><p>Research in statistics, inference, and spatial data.</p><span class="tag dot-tag">Recife, Brazil</span></div><div class="footer-col"><h3>Navigation</h3><a href="research.html">Research</a><a href="publications.html">Publications</a><a href="supervision.html">Supervision</a><a href="people.html">People</a><a href="teaching.html">Teaching</a><a href="software.html">Code &amp; Data</a></div><div class="footer-col"><h3>Profiles</h3><a href="about.html">About</a><a href="contact.html">Contact</a><a href="https://orcid.org/0000-0002-3680-6212" target="_blank" rel="noopener noreferrer">ORCID</a><a href="https://scholar.google.com.br/citations?user=k5t98ZIAAAAJ&amp;hl=pt-BR&amp;oi=ao" target="_blank" rel="noopener noreferrer">Google Scholar</a><a href="https://github.com/willb-ferreira" target="_blank" rel="noopener noreferrer">GitHub</a><a href="http://lattes.cnpq.br/4598185947247904" target="_blank" rel="noopener noreferrer">Lattes</a></div></div><div class="footer-bottom"><span>© 2026 Willams Batista. Department of Statistics · UFPE.</span><a href="/">↑ Back to home</a></div></div></footer></div>
   <div id="toast" class="toast" role="status" aria-live="polite"></div>
 </body>

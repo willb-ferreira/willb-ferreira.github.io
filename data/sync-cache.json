@@ -18,7 +18,25 @@
         "PolSAR",
         "GAMLSS",
         "Remote sensing"
-      ]
+      ],
+      "citations": 0,
+      "citation_source": "OpenAlex",
+      "citation_updated": "2026-09-30",
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 1.452,
+        "quartile": "Q1",
+        "category": {
+          "en": "Computers in Earth Sciences",
+          "pt": "Computação em Ciências da Terra"
+        }
+      },
+      "open_access": true,
+      "oa_status": "gold",
+      "oa_url": "https://doi.org/10.1109/jstars.2026.3680479",
+      "oa_pdf": "",
+      "openalex_id": "https://openalex.org/W7148633106"
     },
     "10.1002/env.2816": {
       "id": "doi-10-1002-env-2816",
@@ -38,7 +56,25 @@
         "ARMA",
         "SAR",
         "Generalized gamma"
-      ]
+      ],
+      "citations": 4,
+      "citation_source": "OpenAlex",
+      "citation_updated": "2026-09-30",
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 0.639,
+        "quartile": "Q2",
+        "category": {
+          "en": "Statistics and Probability",
+          "pt": "Estatística e Probabilidade"
+        }
+      },
+      "open_access": false,
+      "oa_status": "closed",
+      "oa_url": "",
+      "oa_pdf": "",
+      "openalex_id": "https://openalex.org/W4380152942"
     },
     "10.3390/math9233108": {
       "id": "doi-10-3390-math9233108",
@@ -58,7 +94,25 @@
         "Probability distributions",
         "Reliability",
         "Inference"
-      ]
+      ],
+      "citations": 8,
+      "citation_source": "OpenAlex",
+      "citation_updated": "2026-09-30",
+      "venue_metrics": {
+        "source": "SCImago",
+        "year": 2025,
+        "sjr": 0.497,
+        "quartile": "Q2",
+        "category": {
+          "en": "Mathematics (miscellaneous)",
+          "pt": "Matemática (diversos)"
+        }
+      },
+      "open_access": true,
+      "oa_status": "gold",
+      "oa_url": "https://doi.org/10.3390/math9233108",
+      "oa_pdf": "https://www.mdpi.com/2227-7390/9/23/3108/pdf?version=1640223396",
+      "openalex_id": "https://openalex.org/W3217606604"
     }
   },
   "software": {}
