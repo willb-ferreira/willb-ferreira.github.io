@@ -180,12 +180,8 @@ a.project-card:hover .project-arrow { background:var(--accent);color:white }
 .publication-indicator { display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-weight:650 }
 .publication-indicator::before { content:"";width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.55;flex:0 0 auto }
 a.publication-indicator:hover { color:var(--accent) }
-.venue-context { width:max-content;max-width:100%;margin-top:1px }
-.venue-context summary { cursor:pointer;list-style:none;font-size:10.5px;color:var(--muted);font-weight:650;letter-spacing:.025em }
-.venue-context summary::-webkit-details-marker { display:none }
-.venue-context summary::after { content:" +";font-weight:500 }
-.venue-context[open] summary::after { content:" −" }
-.venue-context p { margin-top:6px;font-size:10.5px;line-height:1.5;color:var(--muted);font-style:normal }
+.venue-context { display:flex;flex-wrap:wrap;gap:4px 8px;margin-top:1px;font-size:10.5px!important;line-height:1.5!important;color:var(--muted);font-style:normal!important }
+.venue-context-label { color:var(--ink);font-weight:700;letter-spacing:.02em }
 .scholarly-note { margin-top:18px;max-width:82ch;font-size:10.5px;line-height:1.6;color:var(--muted) }
 .empty-state { background:var(--surface);border:1px dashed color-mix(in srgb,var(--muted) 40%,var(--line));border-radius:24px;padding:55px 28px;text-align:center;display:grid;justify-items:center;gap:12px }
 .empty-icon { display:grid;place-items:center;width:68px;height:68px;border-radius:20px;background:var(--accent-soft);color:var(--accent);font-size:27px;margin-bottom:8px }

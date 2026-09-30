@@ -67,6 +67,9 @@ with sync_playwright() as p:
     print('THEME system preference and manual override: PASS')
 
     for page_name in PAGES:
+        raw_html=(ROOT / f'{page_name}.html').read_text()
+        assert 'id="theme-bootstrap"' in raw_html, page_name
+        assert raw_html.index('id="theme-bootstrap"') < raw_html.index('href="assets/site.css"'), page_name
         tab=browser.new_page(viewport={'width':1365,'height':860}, device_scale_factor=1)
         tab.on('pageerror', lambda err: errors.append(str(err)))
         load(tab,page_name)
@@ -107,6 +110,8 @@ with sync_playwright() as p:
             assert tab.locator('.explore-route a[href="supervision.html"]').count()==1
             assert tab.locator('.explore-route a[href="contact.html"]').count()==1
             assert tab.locator('a[href="research.html#research-notebook"]').count()==1
+            assert tab.locator('.publication-indicators').count()==0
+            assert tab.locator('.venue-context').count()==0
             assert tab.evaluate("""() => {
                 const pubs=document.querySelector('#home-publications');
                 const projects=document.querySelector('#home-projects');
@@ -425,6 +430,12 @@ with sync_playwright() as p:
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
             assert tab.locator('#pub-results article').count()==4
+            jstars=tab.locator('#pub-results article').filter(has_text='A GAMLSS Framework').first
+            assert jstars.locator('.venue-context').count()==1
+            assert 'SCImago 2025' in jstars.locator('.venue-context').inner_text()
+            assert 'Q1' in jstars.locator('.venue-context').inner_text()
+            assert 'Computers in Earth Sciences' in jstars.locator('.venue-context').inner_text()
+            assert 'SJR 1.452' in jstars.locator('.venue-context').inner_text()
             tab.locator('button[data-type="article"]').click()
             assert tab.locator('#pub-results article').count()==3
             print('INTERACTION three journal papers, one conference record, BibTeX: PASS')

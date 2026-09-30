@@ -15,6 +15,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = list(PAGE_SLUGS)
+THEME_BOOTSTRAP = '''<script id="theme-bootstrap">(()=>{try{const saved=localStorage.getItem("wb-theme");const mode=saved==="light"||saved==="dark"?saved:"system";document.documentElement.dataset.theme=mode;const resolved=mode==="system"?(window.matchMedia?.("(prefers-color-scheme: dark)").matches?"dark":"light"):mode;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=resolved==="dark"?"#161d1c":"#f7f9f7"}catch{document.documentElement.dataset.theme="system"}})();</script>'''
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
@@ -117,6 +118,21 @@ with sync_playwright() as p:
         )
         if theme_count != 1:
             raise RuntimeError(f'{name}: expected exactly one html data-theme attribute')
+        if 'id="theme-bootstrap"' in html:
+            html = re.sub(
+                r'<script id="theme-bootstrap">.*?</script>',
+                lambda _: THEME_BOOTSTRAP,
+                html,
+                count=1,
+                flags=re.S,
+            )
+        else:
+            stylesheet = re.search(r'<link rel="stylesheet" href="assets/site\.css"\s*/>', html)
+            if not stylesheet:
+                raise RuntimeError(f'{name}: missing primary stylesheet link')
+            html = html[:stylesheet.start()] + THEME_BOOTSTRAP + '\n  ' + html[stylesheet.start():]
+        if html.index('id="theme-bootstrap"') > html.index('href="assets/site.css"'):
+            raise RuntimeError(f'{name}: theme bootstrap must run before the stylesheet')
         path.write_text(html, encoding='utf-8')
         print(f'PRERENDER {path.name}: {len(main)} main HTML chars')
     browser.close()

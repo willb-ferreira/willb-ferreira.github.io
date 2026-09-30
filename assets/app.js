@@ -694,7 +694,7 @@
     if(safe(p.code))indicators.push(`<span class="publication-indicator">${tx("codeAvailable")}</span>`);
     if(safe(p.data))indicators.push(`<span class="publication-indicator">${tx("dataAvailable")}</span>`);
     const vm=p.venue_metrics||{};
-    const venueContext=vm.source&&vm.year?`<details class="venue-context"><summary>${tx("venueContext")}</summary><p>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</p></details>`:"";
+    const venueContext=vm.source&&vm.year?`<p class="venue-context"><span class="venue-context-label">${tx("venueContext")}</span><span>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</span></p>`:"";
     return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
   };
   const filteredPublications = () => {
