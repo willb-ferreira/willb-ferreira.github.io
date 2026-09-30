@@ -7,6 +7,7 @@ on:
     paths:
       - 'data/sources.json'
       - 'scripts/sync_academic.py'
+      - 'scripts/prerender.py'
       - '.github/workflows/sync-academic.yml'
   schedule:
     # Monday, 06:17 Recife (UTC-3); avoid the busy start of the hour.

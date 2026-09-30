@@ -110,8 +110,8 @@ with sync_playwright() as p:
         # Static HTML follows the visitor's browser/OS preference before deferred JS runs.
         # JavaScript then resolves the effective theme and preserves any manual override.
         html, theme_count = re.subn(
-            r'(<html\\b[^>]*\\bdata-theme=")(?:light|dark|system)(")',
-            r'\\1system\\2',
+            r'(<html\b[^>]*\bdata-theme=")(?:light|dark|system)(")',
+            r'\1system\2',
             html,
             count=1,
         )
