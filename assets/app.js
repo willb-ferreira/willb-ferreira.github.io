@@ -223,8 +223,12 @@
     const target = safe(url); if (!target) return "";
     return `<a class="${klass}" href="${target}"${external ? ' target="_blank" rel="noopener noreferrer"' : ""}>${e(label)} ${icon("up",14)}</a>`;
   };
-  const sectionTitle = (eyebrow, heading, desc="", tail="") => `<div class="section-heading"><div><span class="eyebrow">${e(eyebrow)}</span><h2>${e(heading)}</h2>${desc?`<p>${e(desc)}</p>`:""}</div>${tail}</div>`;
-  const pageHero = (eyebrow, title, lead) => `<section class="page-hero"><div class="shell"><div class="page-head reveal"><div class="breadcrumb"><a href="${href("index")}">${tx("index")}</a><span class="sep">/</span><span>${e(eyebrow)}</span></div><span class="eyebrow">${e(eyebrow)}</span><h1>${e(title)}</h1><p class="lead">${e(lead)}</p></div></div></section>`;
+  const normalizeLabel = value => String(value||"").replace(/\s+/g," ").trim().toLocaleLowerCase(lang === "pt" ? "pt-BR" : "en-US");
+  const sectionTitle = (eyebrow, heading, desc="", tail="") => {
+    const showEyebrow=normalizeLabel(eyebrow)!==normalizeLabel(heading);
+    return `<div class="section-heading"><div>${showEyebrow?`<span class="eyebrow">${e(eyebrow)}</span>`:""}<h2>${e(heading)}</h2>${desc?`<p>${e(desc)}</p>`:""}</div>${tail}</div>`;
+  };
+  const pageHero = (eyebrow, title, lead) => `<section class="page-hero"><div class="shell"><div class="page-head reveal"><div class="breadcrumb"><a href="${href("index")}">${tx("index")}</a><span class="sep">/</span><span aria-current="page">${e(eyebrow)}</span></div><h1>${e(title)}</h1><p class="lead">${e(lead)}</p></div></div></section>`;
   const empty = (symbol, title, message, action="") => `<div class="empty-state"><span class="empty-icon" aria-hidden="true">${symbol}</span><h3>${e(title)}</h3><p>${e(message)}</p>${action}</div>`;
   const profileLinks = () => {
     const names = {orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:lang === "pt" ? "Currículo Lattes" : "Lattes CV",linkedin:"LinkedIn"};

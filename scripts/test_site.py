@@ -92,6 +92,16 @@ with sync_playwright() as p:
             assert 'Back to home' in tab.locator('#site-footer .footer-bottom a').inner_text()
         if tab.locator('.breadcrumb a').count():
             assert tab.locator('.breadcrumb a').first.get_attribute('href') == '/', page_name
+            assert tab.locator('.page-hero > .shell > .page-head > .eyebrow').count() == 0, page_name
+            assert tab.locator('.breadcrumb [aria-current="page"]').count() == 1, page_name
+        duplicate_section_labels = tab.evaluate("""() => [...document.querySelectorAll('.section-heading')].some(node => {
+          const eyebrow=node.querySelector(':scope > div > .eyebrow');
+          const heading=node.querySelector(':scope > div > h2');
+          if(!eyebrow || !heading) return false;
+          const norm=s=>s.replace(/\\s+/g,' ').trim().toLocaleLowerCase();
+          return norm(eyebrow.textContent)===norm(heading.textContent);
+        })""")
+        assert not duplicate_section_labels, page_name
         assert tab.title() == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].title.en', page_name), page_name
         assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('(slug) => window.PORTFOLIO.seo[slug].description.en', page_name), page_name
         assert tab.locator('meta[property="og:description"]').get_attribute('content') == tab.locator('meta[name="description"]').get_attribute('content'), page_name
