@@ -708,7 +708,7 @@
   const pubsResults = () => {
     const list=filteredPublications(), count=document.getElementById("pub-count"), dest=document.getElementById("pub-results");
     if(count) count.textContent=`${list.length} ${list.length===1?tx("record"):tx("records")}`;
-    if(dest) dest.innerHTML=list.length?list.map(pubCard).join(""):empty("⌕",tx("publications"),D.publications.length?tx("noMatches"):tx("noPapers"));
+    if(dest) dest.innerHTML=list.length?list.map(p=>pubCard(p,true)).join(""):empty("⌕",tx("publications"),D.publications.length?tx("noMatches"):tx("noPapers"));
   };
   const renderPublications = () => {
     const years=[...new Set((D.publications||[]).map(p=>String(p.year)).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
