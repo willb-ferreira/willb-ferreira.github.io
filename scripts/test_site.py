@@ -385,6 +385,18 @@ with sync_playwright() as p:
             tab.locator('button[data-type="article"]').click()
             assert tab.locator('#pub-results article').count()==3
             print('INTERACTION three journal papers, one conference record, BibTeX: PASS')
+        if page_name=='about':
+            timeline = tab.locator('.timeline')
+            assert 'Department of Statistics · UFPE' in timeline.inner_text()
+            assert 'Federal University of Pernambuco (UFPE)' in timeline.inner_text()
+            assert 'Universidade Federal de Pernambuco' not in timeline.inner_text()
+            assert 'Departamento de Estatística' not in timeline.inner_text()
+            tab.locator('#language-toggle').click()
+            assert 'Departamento de Estatística · UFPE' in timeline.inner_text()
+            assert 'Universidade Federal de Pernambuco (UFPE)' in timeline.inner_text()
+            assert 'Federal University of Pernambuco' not in timeline.inner_text()
+            tab.locator('#language-toggle').click()
+            print('CONTENT about academic path institutions localized EN/PT: PASS')
         if page_name in ('about', 'contact'):
             lattes = tab.locator('.profile-links a[href*="lattes.cnpq.br"]')
             assert lattes.count() == 1, page_name

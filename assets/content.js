@@ -1047,10 +1047,10 @@ window.PORTFOLIO = {
   /* Add dated news as { id, date:"2026-09-28", title:{pt,en}, description:{pt,en}, url:"" }. */
   news: [],
   experience: [
-    { year: { pt: "2026–atual", en: "2026–present" }, title: { pt: "Professor Assistente de Estatística", en: "Assistant Professor of Statistics" }, institution: "Departamento de Estatística · UFPE" },
-    { year: "2026", title: { pt: "Doutorado em Estatística", en: "Ph.D. in Statistics" }, institution: "Universidade Federal de Pernambuco" },
-    { year: "2022–2023", title: { pt: "Doutorado sanduíche", en: "Visiting Ph.D. researcher" }, institution: "Indian Institute of Technology Bombay · CNPq" },
-    { year: "2022", title: { pt: "Mestrado em Estatística", en: "M.Sc. in Statistics" }, institution: "Universidade Federal de Pernambuco" },
-    { year: "2019", title: { pt: "Bacharelado em Estatística", en: "B.Sc. in Statistics" }, institution: "Universidade Federal de Pernambuco" }
+    { year: { pt: "2026–atual", en: "2026–present" }, title: { pt: "Professor Assistente de Estatística", en: "Assistant Professor of Statistics" }, institution: { pt: "Departamento de Estatística · UFPE", en: "Department of Statistics · UFPE" } },
+    { year: "2026", title: { pt: "Doutorado em Estatística", en: "Ph.D. in Statistics" }, institution: { pt: "Universidade Federal de Pernambuco (UFPE)", en: "Federal University of Pernambuco (UFPE)" } },
+    { year: "2022–2023", title: { pt: "Doutorado sanduíche", en: "Visiting Ph.D. Researcher" }, institution: { pt: "Indian Institute of Technology Bombay · CNPq", en: "Indian Institute of Technology Bombay · CNPq" } },
+    { year: "2022", title: { pt: "Mestrado em Estatística", en: "M.Sc. in Statistics" }, institution: { pt: "Universidade Federal de Pernambuco (UFPE)", en: "Federal University of Pernambuco (UFPE)" } },
+    { year: "2019", title: { pt: "Bacharelado em Estatística", en: "B.Sc. in Statistics" }, institution: { pt: "Universidade Federal de Pernambuco (UFPE)", en: "Federal University of Pernambuco (UFPE)" } }
   ]
 };
