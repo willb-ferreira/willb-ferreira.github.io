@@ -79,6 +79,19 @@ with sync_playwright() as p:
         overflow=tab.evaluate('document.documentElement.scrollWidth > innerWidth')
         print(f'PAGE {page_name}: H1={heading[:67]} | nav={link_count} | overflow={overflow}')
         if page_name=='index':
+            assert tab.locator('.audience-route').count()==3
+            assert tab.locator('.audience-route').nth(0).locator('h3').inner_text() == 'Undergraduate research'
+            assert tab.locator('.audience-route').nth(1).locator('h3').inner_text() == "Master's and Ph.D."
+            assert tab.locator('.audience-route').nth(2).locator('h3').inner_text() == 'Researchers and collaborators'
+            assert tab.locator('a[href="supervision.html#level-undergraduate"]').count()==1
+            assert tab.locator('a[href="supervision.html#level-masters"]').count()==1
+            assert tab.locator('a[href="supervision.html#level-phd"]').count()==1
+            assert tab.locator('a[href="research.html#research-notebook"]').count()==1
+            assert tab.evaluate("""() => {
+                const pubs=document.querySelector('#home-publications');
+                const projects=document.querySelector('#home-projects');
+                return !!pubs && !!projects && !!(pubs.compareDocumentPosition(projects) & Node.DOCUMENT_POSITION_FOLLOWING);
+            }""")
             tab.screenshot(path=str(ROOT.parent/'willams-site-desktop.png'),full_page=True)
             assert tab.locator('html').get_attribute('lang')=='en'
             tab.locator('#language-toggle').click()
@@ -87,6 +100,9 @@ with sync_playwright() as p:
             assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('window.PORTFOLIO.seo.index.description.pt')
             assert tab.locator('meta[property="og:title"]').get_attribute('content') == tab.title()
             assert tab.locator('h1').inner_text().startswith('Willams Batista')
+            assert tab.locator('.audience-route').nth(0).locator('h3').inner_text() == 'Iniciação científica'
+            assert tab.locator('.audience-route').nth(1).locator('h3').inner_text() == 'Mestrado e doutorado'
+            assert tab.locator('.audience-route').nth(2).locator('h3').inner_text() == 'Pesquisadores e colaboradores'
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             print('INTERACTION language switch and dark mode: PASS')
@@ -360,6 +376,9 @@ with sync_playwright() as p:
             assert tab.locator('#project-results article').count()==2
             print('INTERACTION research filter: PASS')
         if page_name=='supervision':
+            assert tab.locator('#level-undergraduate').count()==1
+            assert tab.locator('#level-masters').count()==1
+            assert tab.locator('#level-phd').count()==1
             assert tab.locator('#topic-results article').count()==6
             tab.locator('button[data-level="undergraduate"]').click()
             assert tab.locator('#topic-results article').count()==6
@@ -379,6 +398,11 @@ with sync_playwright() as p:
             assert tab.locator('.course-entry').count()==4
             assert 'Probability II for Actuarial Science' in tab.locator('main').inner_text()
             print('CONTENT actuarial probability course: PASS')
+        if page_name=='contact':
+            assert tab.locator('.contact-grid-three .contact-card').count()==3
+            assert tab.locator('.contact-grid-three .contact-card').nth(0).locator('h3').inner_text() == 'Undergraduate research'
+            assert tab.locator('.contact-grid-three .contact-card').nth(1).locator('h3').inner_text() == "Master's or Ph.D."
+            assert tab.locator('.contact-grid-three .contact-card').nth(2).locator('h3').inner_text() == 'Research collaboration'
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
             assert tab.locator('#pub-results article').count()==4
@@ -410,6 +434,13 @@ with sync_playwright() as p:
             assert tab.locator('.profile-links a[href*="lattes.cnpq.br"]').inner_text().strip() == 'Lattes CV', page_name
             print(f'INTERACTION {page_name} Lattes localization and home URL: PASS')
         tab.close()
+    for level, expected in [('undergraduate',6),('masters',5),('phd',3)]:
+        direct=browser.new_page(viewport={'width':1365,'height':860})
+        load(direct,'supervision',initial_hash=f'#level-{level}')
+        assert direct.locator(f'#level-{level}').get_attribute('aria-pressed') == 'true'
+        assert direct.locator('#topic-results article').count()==expected,(level,expected)
+        direct.close()
+    print('NAVIGATION direct undergraduate/master/PhD supervision routes: PASS')
     phone=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(phone,'index')
     assert phone.locator('#menu-toggle').is_visible()
