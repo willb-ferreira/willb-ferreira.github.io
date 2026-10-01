@@ -42,7 +42,7 @@ def fake_http(url, *, token='', data=None, email=''):
             'oa_locations': [
             ]
         }
-    if url.startswith('https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234/test-article?'):
+    if url.startswith('https://api.semanticscholar.org/graph/v1/paper/DOI:10.1234%2Ftest-article?'):
         return {
             'externalIds': {'DOI':'10.1234/test-article'},
             'isOpenAccess': True,
