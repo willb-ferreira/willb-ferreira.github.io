@@ -51,6 +51,13 @@ with sync_playwright() as p:
         for width in WIDTHS:
             page.set_viewport_size({'width':width,'height':844})
             assert_fits(page,name,width)
+        for language in ['pt-BR','en']:
+            page.locator('#language-toggle').click()
+            assert page.locator('html').get_attribute('lang') == language
+            for width in [320,390]:
+                page.set_viewport_size({'width':width,'height':844})
+                page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+                assert_fits(page,name+' '+language,width)
         print(f'RESPONSIVE {name}: {len(WIDTHS)} widths, no overflow, correct menu: PASS')
         page.close()
 

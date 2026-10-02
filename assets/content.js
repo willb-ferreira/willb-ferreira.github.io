@@ -687,7 +687,17 @@ window.PORTFOLIO = {
       authors: "Willams B. F. da Silva; Abraão D. C. Nascimento; Francisco J. A. Cysneiros",
       year: 2024,
       venue: "IGARSS 2024 — IEEE International Geoscience and Remote Sensing Symposium, Athens",
-      type: "conference", doi: "", url: "", pdf: "", code: "", data: "",
+      // DOI, authors and pages verified against the Crossref record for this existing paper.
+      type: "conference", doi: "10.1109/IGARSS53475.2024.10641291", url: "https://doi.org/10.1109/IGARSS53475.2024.10641291", pdf: "", code: "", data: "",
+      bibtex: `@inproceedings{igarss2024LogSymmetric,
+  title = {{Analysis of Variance under Log-Symmetric Family for SAR Images}},
+  author = {da Silva, Willams B. F. and Nascimento, Abraão D. C. and Cysneiros, Francisco J. A.},
+  booktitle = {IGARSS 2024 - 2024 IEEE International Geoscience and Remote Sensing Symposium},
+  year = {2024},
+  pages = {9753--9757},
+  doi = {10.1109/IGARSS53475.2024.10641291},
+  url = {https://doi.org/10.1109/IGARSS53475.2024.10641291}
+}`,
       featured: false, tags: ["SAR", "ANOVA", "Log-symmetric"]
     }
   ],

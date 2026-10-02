@@ -243,7 +243,7 @@
     return `<${el} class="project-card"${linkProps}><div class="project-head"><span class="status">${tx("featuredProjects")}</span><span class="small muted">${e(p.year||"")}</span></div><div class="card-content"><h3>${e(t(p.title))}</h3><p>${e(t(p.description))}</p></div><div class="project-meta"><div class="card-footer">${(p.tags||[]).map(s=>tag(s)).join("")}</div>${url?`<span class="project-arrow">${icon("up")}</span>`:""}</div></${el}>`;
   };
   const researchCard = (r) => `<article class="research-card"><div class="card-topline"><span class="card-number">${e(r.number)}</span><span class="card-symbol" aria-hidden="true">${e(r.symbol)}</span></div><div class="card-content"><h3>${e(t(r.title))}</h3><p>${e(t(r.summary))}</p></div><div class="card-footer">${(r.keywords||[]).map(s=>tag(s)).join("")}</div><a class="reading-link" href="reading.html#${e(r.id)}">${tx("readingLink")} ${icon("arrow",15)}</a></article>`;
-  const banner = () => `<section class="section tight"><div class="shell"><aside class="feature-banner"><div><span class="eyebrow">${tx("supervision")}</span><h2>${tx("opportunityTitle")}</h2><p>${tx("opportunityDesc")}</p></div><a class="inline-link" href="supervision.html">${tx("opportunityBtn")} ${icon("arrow")}</a></aside></div></section>`;
+  const banner = () => `<section class="section tight"><div class="shell"><div class="feature-banner"><div><span class="eyebrow">${tx("supervision")}</span><h2>${tx("opportunityTitle")}</h2><p>${tx("opportunityDesc")}</p></div><a class="inline-link" href="supervision.html">${tx("opportunityBtn")} ${icon("arrow")}</a></div></div></section>`;
   const researchVisual = () => `<div class="signal-panel" role="img" aria-label="${e(tx("visualTitle"))}"><div class="signal-grid"></div><div class="panel-top"><span>${tx("visualHead")}</span><span class="panel-tag">● ${tx("visualStatus")}</span></div><svg class="signal-svg" viewBox="0 0 530 390" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet"><g stroke="#9ed9c9" stroke-width="1.25" opacity=".42"><path d="M68 205C132 95 242 119 293 200S431 282 475 147"/><path d="M68 205c64-65 100-10 165 0 73 11 160-98 242-58" stroke-dasharray="4 8"/><path d="M68 205C160 334 250 315 293 200c39-105 122-105 182-53" stroke-dasharray="2 8"/><path d="M147 100 293 200l96-77M147 100 165 280l128-80 110 82"/></g><g stroke="#c8f8df" stroke-width="1.4" opacity=".65"><circle cx="293" cy="200" r="93"/><circle cx="293" cy="200" r="138" stroke-dasharray="3 10"/><circle cx="293" cy="200" r="49"/></g><g fill="#b7f6d5"><circle cx="293" cy="200" r="11"/><circle cx="147" cy="100" r="6"/><circle cx="389" cy="123" r="5"/><circle cx="165" cy="280" r="6"/><circle cx="403" cy="282" r="6"/><circle cx="68" cy="205" r="4"/><circle cx="475" cy="147" r="4"/></g><g fill="#ecfff5" font-size="11" font-family="Inter,Arial,sans-serif" font-weight="650"><text x="263" y="161">INFERENCE</text><text x="87" y="85">SAR</text><text x="399" y="113">R</text><text x="95" y="306">MODELS</text><text x="409" y="309">DATA</text></g></svg><div class="floating-note"><span>${tx("visualNote")}</span>${tx("visualNoteDetail")}</div><div class="panel-bottom"><div><strong>${tx("visualTitle")}</strong><span>${tx("visualCaption")}</span></div><span class="panel-index">${tx("visualIndex")}</span></div></div>`;
 
   const portraitPanel = (context="home") => {
@@ -269,13 +269,18 @@
     document.querySelector(".skip-link").textContent = tx("skip");
     const navHtml = routes.map(r=>`<a href="${href(r)}" ${r===page?'class="active" aria-current="page"':''}>${tx(r)}</a>`).join("");
     document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="${href("index")}" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
-    document.getElementById("language-toggle").addEventListener("click",()=>{lang=lang==="pt"?"en":"pt";setPref("wb-lang",lang);render();});
-    document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";followsSystemTheme=false;setPref("wb-theme",theme);renderHeader();renderFooter();});
+    document.getElementById("language-toggle").addEventListener("click",()=>{lang=lang==="pt"?"en":"pt";setPref("wb-lang",lang);render();document.getElementById("language-toggle").focus({preventScroll:true});});
+    document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";followsSystemTheme=false;setPref("wb-theme",theme);renderHeader();renderFooter();document.getElementById("theme-toggle").focus({preventScroll:true});});
     const btn=document.getElementById("menu-toggle"), menu=document.getElementById("main-nav");
     btn.addEventListener("click",()=>{const open=menu.classList.toggle("open");btn.setAttribute("aria-expanded",String(open));btn.setAttribute("aria-label",tx(open?"closeMenu":"openMenu"));btn.innerHTML=icon(open?"close":"menu");});
     document.querySelector(".site-header")?.classList.toggle("scrolled",window.scrollY>5);
   };
   window.addEventListener("scroll",()=>document.querySelector(".site-header")?.classList.toggle("scrolled",window.scrollY>5),{passive:true});
+  document.addEventListener("keydown",ev=>{
+    if(ev.key!=="Escape" || !document.getElementById("main-nav")?.classList.contains("open"))return;
+    const button=document.getElementById("menu-toggle");
+    button.click();button.focus({preventScroll:true});ev.preventDefault();
+  });
   const syncSystemTheme = () => {
     if(!followsSystemTheme)return;
     const nextTheme=systemTheme();
@@ -289,7 +294,7 @@
   const renderFooter = () => {
     const footerLinks=["research","publications","supervision","people","teaching","software"];
     const social=profileLinks();
-    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="${href("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span></div><div class="footer-col"><h3>${tx("navigate")}</h3>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h3>${tx("follow")}</h3><a href="about.html">${tx("about")}</a><a href="contact.html">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="${page === "index" ? "#main" : href("index")}">↑ ${tx(page === "index" ? "backTop" : "backHome")}</a></div></div></footer>`;
+    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="${href("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span></div><div class="footer-col"><h2>${tx("navigate")}</h2>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h2>${tx("follow")}</h2><a href="about.html">${tx("about")}</a><a href="contact.html">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="${page === "index" ? "#main" : href("index")}">↑ ${tx(page === "index" ? "backTop" : "backHome")}</a></div></div></footer>`;
   };
   const renderExploreRoutes = () => `<section class="section explore-section" id="explore"><div class="shell">${sectionTitle(tx("exploreSite"),tx("exploreSiteTitle"),tx("exploreSiteDesc"))}<div class="explore-grid">
     <article class="explore-route"><h3>${tx("exploreResearch")}</h3><p>${tx("exploreResearchDesc")}</p><div class="explore-links"><a class="inline-link" href="research.html">${tx("exploreResearchAction")} ${icon("arrow",15)}</a><a class="inline-link secondary-link" href="publications.html">${tx("explorePapersAction")} ${icon("arrow",15)}</a></div></article>
@@ -617,7 +622,7 @@
     <div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav>
       <div class="reading-main"><div class="reading-mobile-picker"><label for="reading-guide-select">${tx("readingChoose")}</label><select id="reading-guide-select" aria-controls="reading-guides">${choices}</select></div>
         <p class="reading-status" id="reading-guide-status" role="status" aria-live="polite" aria-atomic="true"></p>
-        <div class="reading-guides" id="reading-guides">${articles}</div><nav class="reading-pagination" aria-label="${tx("readingIndex")}"></nav>
+        <div class="reading-guides" id="reading-guides">${articles}</div><nav class="reading-pagination" aria-label="${lang==="pt"?"Navegação entre guias":"Previous and next guides"}"></nav>
       </div></div></div></section>`;
 };
   const readingHashId=()=>{
@@ -686,12 +691,14 @@
   const labelType = type => ({article:tx("articles"),preprint:tx("preprints"),conference:tx("conferences"),other:tx("others")})[type]||tx("others");
   const citeText = p => `${p.authors||""} (${p.year||""}). ${p.title||""}. ${p.venue||""}.${p.doi?` https://doi.org/${p.doi.replace(/^https?:\/\/doi\.org\//,"")}`:""}`;
   const pubCard = (p,showScholarly=true) => {
+    const heading=page==="publications"?"h2":"h3";
     const doiUrl=p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"";
     const candidates=[[doiUrl,tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
     const seen=new Set(),resources=candidates.filter(([u])=>{const clean=safe(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
     const citationCount=Number.isFinite(Number(p.citations))?Math.max(0,Number(p.citations)):0;
     const indicators=[];
-    if(citationCount>0)indicators.push(`<span class="publication-indicator" title="${e(p.citation_source||"")}">${tx("citedBy")} ${e(String(citationCount))}${p.citation_source?` · ${e(p.citation_source)}`:""}</span>`);
+    const citationDate=/^\d{4}-\d{2}-\d{2}$/.test(p.citation_updated||"")?p.citation_updated:"";
+    if(citationCount>0)indicators.push(`<span class="publication-indicator" title="${e(p.citation_source||"")}">${tx("citedBy")} ${e(String(citationCount))}${p.citation_source?` · ${e(p.citation_source)}`:""}${citationDate?` · ${lang==="pt"?"Atualizado em":"Updated"} <time datetime="${e(citationDate)}">${e(citationDate)}</time>`:""}</span>`);
     if(p.open_access){
       const oa=safe(p.oa_url);
       indicators.push(oa?`<a class="publication-indicator" href="${oa}" target="_blank" rel="noopener noreferrer">${tx("openAccess")} ↗</a>`:`<span class="publication-indicator">${tx("openAccess")}</span>`);
@@ -700,7 +707,7 @@
     if(safe(p.data))indicators.push(`<span class="publication-indicator">${tx("dataAvailable")}</span>`);
     const vm=p.venue_metrics||{};
     const venueContext=vm.source&&vm.year?`<p class="venue-context"><span class="venue-context-label">${tx("venueContext")}</span><span>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</span></p>`:"";
-    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><h3>${e(p.title)}</h3><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
+    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><${heading}>${e(p.title)}</${heading}><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
   };
   const filteredPublications = () => {
     const query=publicationSearch.toLocaleLowerCase(lang === "pt"?"pt-BR":"en-US");
@@ -717,7 +724,7 @@
   };
   const renderPublications = () => {
     const years=[...new Set((D.publications||[]).map(p=>String(p.year)).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count"></span></div><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
+    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count" role="status" aria-live="polite"></span></div><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
   };
   const topicCard = x => `<article class="topic-card"><div class="level-tags">${x.levels.map(y=>tag(tx(y),"tinted")).join("")}${x.area&&D.research.find(a=>a.id===x.area)?`<a class="topic-area" href="reading.html#${e(x.area)}">${e(t(D.research.find(a=>a.id===x.area).title))} ↗</a>`:""}</div><div class="card-content"><h3>${e(t(x.title))}</h3><p>${e(t(x.description))}</p></div><div class="requirements"><b>${tx("requirements")}</b><p>${e(t(x.requirements))}</p></div></article>`;
   const topicResults = () => D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).map(topicCard).join("");
@@ -826,8 +833,8 @@
   const renderContact = () => {
     const email=emailHref(), links=profileLinks();
     return `${pageHero(tx("contact"),tx("contactTitle"),tx("contactLead"))}<section class="section"><div class="shell"><div class="contact-grid">
-      <article class="contact-card"><span class="contact-symbol">∑</span><h3>${tx("studentContact")}</h3><p>${tx("studentContactDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Interesse em pesquisa e orientação":"Research and supervision inquiry"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
-      <article class="contact-card"><span class="contact-symbol">↗</span><h3>${tx("collab")}</h3><p>${tx("collabDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Conversa sobre possível colaboração":"Possible research collaboration"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
+      <article class="contact-card"><span class="contact-symbol">∑</span><h2>${tx("studentContact")}</h2><p>${tx("studentContactDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Interesse em pesquisa e orientação":"Research and supervision inquiry"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
+      <article class="contact-card"><span class="contact-symbol">↗</span><h2>${tx("collab")}</h2><p>${tx("collabDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Conversa sobre possível colaboração":"Possible research collaboration"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
     </div></div></section><section class="section tight"><div class="shell split-section"><div><div class="prose"><span class="eyebrow">${tx("emailLabel")}</span><h2>${email?e(D.profile.email):tx("profiles")}</h2><p>${email?tx("contactGuideDesc"):tx("emailMissing")}</p>${email?`<a class="btn primary" href="${e(email)}">${icon("mail")} ${tx("openContact")}</a>`:""}</div></div><div class="prose"><span class="eyebrow">${tx("profiles")}</span><div class="profile-links">${links||`<p class="small muted">${tx("profilesMissing")}</p>`}</div><div class="note-box"><strong>${tx("contactGuide")}</strong><br>${tx("contactGuideDesc")}</div></div></div></section>`;
   };
   const copyText = async value => {
@@ -835,7 +842,14 @@
     catch { const input=document.createElement("textarea");input.value=value;input.style.position="fixed";input.style.opacity="0";document.body.append(input);input.select();const ok=document.execCommand("copy");input.remove();return ok; }
   };
   const showToast = message => { const el=document.getElementById("toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2500); };
-  const toBibtex = p => p.bibtex || `@${p.type==="article"?"article":"misc"}{${(p.id||"paper").replace(/[^a-zA-Z0-9_-]/g,"")},\n  title = {${p.title||""}},\n  author = {${p.authors||""}},\n  year = {${p.year||""}},\n  journal = {${p.venue||""}}${p.doi?`,\n  doi = {${p.doi}}`:""}\n}`;
+  const bibtexValue = value => String(value||"").replace(/[\\{}&%#_$]/g,char=>({"\\":"\\textbackslash{}","{":"\\{","}":"\\}","&":"\\&","%":"\\%","#":"\\#","_":"\\_","$":"\\$"})[char]);
+  const toBibtex = p => {
+    if(p.bibtex)return p.bibtex;
+    const kind=p.type==="article"?"article":p.type==="conference"?"inproceedings":"misc";
+    const venueKey=kind==="article"?"journal":kind==="inproceedings"?"booktitle":"howpublished";
+    const authors=String(p.authors||"").split(/\s*;\s*/).map(bibtexValue).join(" and ");
+    return `@${kind}{${(p.id||"paper").replace(/[^a-zA-Z0-9_-]/g,"")},\n  title = {{${bibtexValue(p.title)}}},\n  author = {${authors}},\n  year = {${bibtexValue(p.year)}},\n  ${venueKey} = {${bibtexValue(p.venue)}}${p.doi?`,\n  doi = {${bibtexValue(p.doi)}}`:""}\n}`;
+  };
   const attach = () => {
     if(page==="reading"){
       // Reveal a different guide before the browser attempts to scroll to a hidden anchor.
@@ -876,10 +890,6 @@
     });
     document.getElementById("publication-search")?.addEventListener("input",ev=>{publicationSearch=ev.target.value;pubsResults();});
     document.getElementById("publication-year")?.addEventListener("change",ev=>{publicationYear=ev.target.value;pubsResults();});
-    document.getElementById("pub-results")?.addEventListener("click",async ev=>{
-      const btn=ev.target.closest("[data-cite]");if(!btn)return;const pub=D.publications.find(x=>x.id===btn.dataset.cite);
-      if(pub && await copyText(citeText(pub)))showToast(tx("copyDone"));
-    });
     document.getElementById("export-bibtex")?.addEventListener("click",()=>{
       const text=D.publications.map(toBibtex).join("\n\n")+"\n";
       const url=URL.createObjectURL(new Blob([text],{type:"text/plain;charset=utf-8"}));
@@ -917,4 +927,10 @@
   }
   if(page==="reading")window.addEventListener("hashchange",()=>syncReadingSelection(true));
   render();
+  // The main element survives rerenders; one listener also covers homepage citations.
+  document.getElementById("main").addEventListener("click",async ev=>{
+    const btn=ev.target.closest("[data-cite]");if(!btn)return;
+    const pub=D.publications.find(x=>x.id===btn.dataset.cite);
+    if(pub && await copyText(citeText(pub)))showToast(tx("copyDone"));
+  });
 })();

@@ -170,7 +170,7 @@ a.project-card:hover .project-arrow { background:var(--accent);color:white }
 .publication { border:1px solid var(--line);background:var(--surface);border-radius:19px;padding:25px;display:grid;grid-template-columns:84px 1fr;gap:25px }
 .publication-year { font-size:13px;font-weight:800;letter-spacing:-.02em;color:var(--forest);padding-top:3px }
 .publication-content { display:grid;gap:9px }
-.publication h3 { font-size:20px;letter-spacing:-.04em;line-height:1.35 }
+.publication :is(h2,h3) { font-size:20px;letter-spacing:-.04em;line-height:1.35 }
 .publication .authors,.publication .venue { font-size:12px;line-height:1.5 }
 .publication .venue { font-style:italic }
 .publication .links { display:flex;flex-wrap:wrap;gap:9px;margin-top:5px }
@@ -218,7 +218,7 @@ a.publication-indicator:hover { color:var(--accent) }
 .contact-grid { display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px }
 .contact-card { display:grid;gap:15px;background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:28px;min-height:225px }
 .contact-card .contact-symbol { width:45px;height:45px;background:var(--accent-soft);color:var(--accent);border-radius:14px;display:grid;place-items:center;font-size:20px;font-weight:830 }
-.contact-card h3 { font-size:21px }
+.contact-card h2 { font-size:21px }
 .contact-card p { font-size:13px }
 .contact-card .inline-link { margin-top:auto }
 .profile-links { display:flex; flex-wrap:wrap;gap:9px }
@@ -237,7 +237,7 @@ details.faq p { padding:0 0 20px;font-size:13px }
 .footer-intro { display:grid;align-content:start;justify-items:start;gap:14px }
 .footer-intro p { max-width:300px;font-size:13px }
 .footer-col { display:grid;align-content:start;justify-items:start;gap:12px }
-.footer-col h3 { font-size:12px;font-weight:820;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px }
+.footer-col h2 { font-size:12px;font-weight:820;letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px }
 .footer-col a { font-size:13px;color:var(--muted) }
 .footer-col a:hover { color:var(--accent) }
 .footer-bottom { border-top:1px solid var(--line);padding-block:21px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:11px;color:var(--muted) }
@@ -424,7 +424,7 @@ p {color:var(--muted)}
 .publication .card-footer {gap:8px}
 .publication .card-footer .tag:not(.tinted) {display:none}
 .publication .card-footer .tag.tinted {padding:0;border:0;background:none;color:var(--accent);font-weight:600}
-.publication h3 {font-size:23px;line-height:1.25;letter-spacing:-.03em}
+.publication :is(h2,h3) {font-size:23px;line-height:1.25;letter-spacing:-.03em}
 .publication .authors,.publication .venue {font-size:13px}
 .publication .links {gap:14px}
 .publication .links a,.publication .links button {border:0;border-radius:0;border-bottom:1px solid var(--line);background:transparent;font-size:12px;font-weight:600;padding:3px 0;color:var(--accent)}
@@ -444,7 +444,7 @@ p {color:var(--muted)}
 .profile-links a {border-radius:0;background:transparent;font-weight:500}
 .footer {background:transparent;margin-top:70px}
 .footer-main {padding-block:44px;gap:55px}
-.footer-col h3 {font-weight:650;letter-spacing:.1em}
+.footer-col h2 {font-weight:650;letter-spacing:.1em}
 .footer-intro .brand {font-size:22px}
 .footer-intro .tag {border:0;padding:0}
 .btn {border-radius:2px;font-weight:600;box-shadow:none}
@@ -486,7 +486,7 @@ p {color:var(--muted)}
  .ticker-row p {margin-top:5px}
  .publication {grid-template-columns:53px 1fr;gap:9px;padding:22px 0}
  .publication-year {font-size:12px}
- .publication h3 {font-size:21px}
+ .publication :is(h2,h3) {font-size:21px}
  .person-entry,.course-entry {display:block}
  .course-meta {text-align:left;white-space:normal;margin-top:13px}
  .footer {margin-top:50px}
@@ -539,7 +539,7 @@ p {color:var(--muted)}
 .course-history>summary{cursor:pointer;color:var(--accent);font-weight:650}
 .course-history ul{list-style:none;border-left:1px solid var(--line);padding:0 0 0 17px;margin:13px 0 0;display:grid;gap:9px;font-variant-numeric:tabular-nums;color:var(--muted)}
 .spaced-intro{margin-top:43px}
-.filter-count{font-size:10px;margin-left:3px;opacity:.65;font-variant-numeric:tabular-nums}
+.filter-count{font-size:10px;margin-left:3px;opacity:1;font-variant-numeric:tabular-nums}
 .topic-card{gap:19px}
 .topic-card .card-content{gap:15px}
 .topic-card .card-content h3{line-height:1.32}
@@ -691,7 +691,7 @@ body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
 .cards-2,.contact-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
 .step-grid {grid-template-columns:repeat(auto-fit,minmax(min(100%,17rem),1fr))}
 .reading-area p {max-width:min(100%,76ch)}
-.reading-reference h4 a,.reading-track-links a,.publication h3,.research-card h3,
+.reading-reference h4 a,.reading-track-links a,.publication :is(h2,h3),.research-card h3,
 .project-card h3,.course-entry h3 {overflow-wrap:break-word}
 .reading-track p,.reading-reference-compact p {font-size:clamp(.875rem,calc(.82rem + .16vw),.94rem);line-height:1.7}
 @media (max-width:1180px) {
@@ -718,6 +718,13 @@ body {font-size:clamp(1rem,calc(.95rem + .13vw),1.0625rem)}
   .reading-track-grid {grid-template-columns:minmax(0,1fr)}
   .reading-index a,.filter-pill {min-height:44px}
   .reading-area p,.reading-track p,.reading-reference p {max-width:100%}
+}
+/* Keep the name and all three 44px controls inside narrow phone viewports. */
+body[data-page="contact"] .prose h2 {overflow-wrap:anywhere}
+@media (max-width:390px) {
+  .header-inner {gap:8px}
+  .site-header .brand {font-size:18px}
+  .header-actions {gap:0;flex-shrink:0}
 }
 @media print {
   .shell {width:100%}

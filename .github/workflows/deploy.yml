@@ -35,6 +35,12 @@ jobs:
           python scripts/prerender.py
       - name: Check published canonical URLs and SEO metadata
         run: python scripts/test_domain.py
+      - name: Validate functionality, publication sync, directories and responsive layouts
+        run: |
+          python scripts/test_site.py
+          python scripts/test_sync_academic.py
+          python scripts/test_directories.py
+          python scripts/test_responsive.py
       - name: Upload site
         uses: actions/upload-pages-artifact@v4
         with:

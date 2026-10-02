@@ -64,6 +64,26 @@ def fake_http(url, *, token='', data=None, email=''):
 
 
 class SyncTests(unittest.TestCase):
+    def test_bibtex_preserves_authors_and_separates_journal_fields(self):
+        work = {'author': [{'given':'Willams B. F.', 'family':'da Silva'},
+                           {'given':'Abraão D. C.', 'family':'Nascimento'}],
+                'container-title':['Statistics & Imaging'], 'volume':'19',
+                'issue':'2', 'page':'13234-13247'}
+        record = {'id':'verified-paper', 'title':'SAR and GAMLSS', 'year':2026,
+                  'type':'article', 'doi':'10.1234/verified', 'url':'https://doi.org/10.1234/verified'}
+        text = sync.publication_bibtex(record, work)
+        self.assertIn('author = {da Silva, Willams B. F. and Nascimento, Abraão D. C.}', text)
+        self.assertIn('title = {{SAR and GAMLSS}}', text)
+        self.assertIn(r'journal = {Statistics \& Imaging}', text)
+        self.assertIn('volume = {19}', text)
+        self.assertIn('number = {2}', text)
+        self.assertIn('pages = {13234--13247}', text)
+        record['type'] = 'conference'
+        conference = sync.publication_bibtex(record, work)
+        self.assertTrue(conference.startswith('@inproceedings{'))
+        self.assertIn('booktitle = ', conference)
+        self.assertNotIn('journal = ', conference)
+
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)

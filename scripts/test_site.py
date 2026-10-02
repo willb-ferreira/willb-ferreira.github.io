@@ -131,6 +131,7 @@ with sync_playwright() as p:
             assert tab.locator('html').get_attribute('lang')=='en'
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            assert tab.evaluate('document.activeElement.id') == 'language-toggle'
             assert tab.title() == tab.evaluate('window.PORTFOLIO.seo.index.title.pt')
             assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('window.PORTFOLIO.seo.index.description.pt')
             assert tab.locator('meta[property="og:title"]').get_attribute('content') == tab.title()
@@ -140,6 +141,22 @@ with sync_playwright() as p:
             assert tab.locator('.explore-route').nth(2).locator('h3').inner_text() == 'Conversas acadêmicas'
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
+            assert tab.evaluate('document.activeElement.id') == 'theme-toggle'
+            # Offline pages cannot use the real clipboard; capture the exact copied text.
+            tab.evaluate("""() => {
+                window.auditCopies=[];
+                Object.defineProperty(navigator,'clipboard',{configurable:true,value:{
+                    writeText:async value=>window.auditCopies.push(value)
+                }});
+            }""")
+            tab.locator('#home-publications [data-cite]').first.click()
+            tab.wait_for_function('window.auditCopies.length === 1')
+            assert 'A GAMLSS Framework' in tab.evaluate('window.auditCopies[0]')
+            assert '10.1109/jstars.2026.3680479' in tab.evaluate('window.auditCopies[0]')
+            tab.locator('#language-toggle').click()
+            tab.locator('#home-publications [data-cite]').first.click()
+            tab.wait_for_function('window.auditCopies.length === 2')
+            assert tab.locator('#toast').inner_text() == 'Citation copied'
             print('INTERACTION language switch and dark mode: PASS')
         if page_name=='reading':
             assert tab.locator('article.reading-area').count()==6
@@ -435,10 +452,22 @@ with sync_playwright() as p:
             print('CONTENT actuarial probability course: PASS')
         if page_name=='contact':
             assert tab.locator('.contact-grid .contact-card').count()==2
-            assert tab.locator('.contact-grid .contact-card').nth(0).locator('h3').inner_text() == 'Supervision inquiry'
-            assert tab.locator('.contact-grid .contact-card').nth(1).locator('h3').inner_text() == 'Research collaboration'
+            assert tab.locator('.contact-grid .contact-card').nth(0).locator('h2').inner_text() == 'Supervision inquiry'
+            assert tab.locator('.contact-grid .contact-card').nth(1).locator('h2').inner_text() == 'Research collaboration'
         if page_name=='publications':
             assert tab.locator('#export-bibtex').is_enabled()
+            assert tab.locator('#pub-results h2').count() == 4
+            assert tab.locator('a[href="https://doi.org/10.1109/IGARSS53475.2024.10641291"]').count() == 1
+            assert tab.locator('#pub-count').get_attribute('role') == 'status'
+            with tab.expect_download() as download_info:
+                tab.locator('#export-bibtex').click()
+            bib = Path(download_info.value.path()).read_text(encoding='utf-8')
+            assert bib.count('@article{') == 3 and bib.count('@inproceedings{') == 1
+            assert 'author = {da Silva, Willams B. F. and Bhattacharya, Avik and' in bib
+            assert 'journal = {Environmetrics}' in bib
+            assert 'volume = {34}' in bib and 'number = {7}' in bib
+            assert 'pages = {13234--13247}' in bib and 'pages = {9753--9757}' in bib
+            assert 'doi = {10.1109/IGARSS53475.2024.10641291}' in bib
             assert tab.locator('#pub-results article').count()==4
             jstars=tab.locator('#pub-results article').filter(has_text='A GAMLSS Framework').first
             assert jstars.locator('.venue-context').count()==1
@@ -487,7 +516,11 @@ with sync_playwright() as p:
     phone.locator('#menu-toggle').click()
     assert phone.locator('#main-nav').is_visible()
     assert not phone.evaluate('document.documentElement.scrollWidth > innerWidth')
-    phone.locator('#menu-toggle').click()
+    phone.locator('#main-nav a').first.focus()
+    phone.keyboard.press('Escape')
+    assert phone.locator('#main-nav').is_hidden()
+    assert phone.locator('#menu-toggle').get_attribute('aria-expanded') == 'false'
+    assert phone.evaluate('document.activeElement.id') == 'menu-toggle'
     phone.screenshot(path=str(ROOT.parent/'willams-site-mobile.png'),full_page=True)
     print('INTERACTION responsive mobile navigation and overflow: PASS')
     phone.close()

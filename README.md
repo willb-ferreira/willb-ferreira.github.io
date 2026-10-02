@@ -47,6 +47,10 @@ Os links para a página inicial usam `/` (domínio sem `/index.html`) em cabeça
 
 `main` aciona o workflow `.github/workflows/deploy.yml`: instala o navegador de renderização, gera HTML estático atualizado e publica no GitHub Pages. A sincronização semanal também gera HTML e publica a nova versão. Acompanhe os resultados em `https://github.com/willb-ferreira/willb-ferreira.github.io/actions`.
 
+Os dois publicadores compartilham a fila `deploy-pages` e executam as cinco suítes antes de publicar: domínio/SEO, funcionamento, sincronização, diretórios e responsividade. Isso evita publicações concorrentes e impede que uma versão com testes reprovados vá ao ar. A suíte de responsividade inclui 17 larguras, EN/PT em telas estreitas e navegação em paisagem.
+
+O BibTeX dos artigos é gerado com os campos originais do Crossref: autores separados por `and`, periódico, volume, fascículo, páginas e DOI. A referência já cadastrada do IGARSS 2024 tem DOI e BibTeX conferidos; permanece no conteúdo editorial, sem ampliar a lista de importação automática. As contagens de citação exibem a data da consulta quando disponível.
+
 Para validar localmente, instale Playwright e Chromium e execute:
 
 ```bash
@@ -55,6 +59,8 @@ python scripts/prerender.py
 python scripts/test_domain.py
 python scripts/test_site.py
 python scripts/test_sync_academic.py
+python scripts/test_directories.py
+python scripts/test_responsive.py
 ```
 
 Nunca publique senhas, tokens, dados pessoais de alunos ou conteúdo de repositórios privados no GitHub Pages. O site é público.

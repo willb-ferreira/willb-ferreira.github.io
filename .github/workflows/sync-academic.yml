@@ -19,7 +19,7 @@ permissions:
   id-token: write
 
 concurrency:
-  group: sync-public-academic-metadata
+  group: deploy-pages
   cancel-in-progress: false
 
 jobs:
@@ -49,6 +49,12 @@ jobs:
           python scripts/prerender.py
       - name: Check published canonical URLs and SEO metadata
         run: python scripts/test_domain.py
+      - name: Validate functionality, publication sync, directories and responsive layouts
+        run: |
+          python scripts/test_site.py
+          python scripts/test_sync_academic.py
+          python scripts/test_directories.py
+          python scripts/test_responsive.py
       - name: Commit checked outputs, if changed
         run: |
           if [[ -n "$(git status --porcelain)" ]]; then

@@ -12,7 +12,7 @@
       "pdf": "",
       "code": "",
       "data": "",
-      "bibtex": "",
+      "bibtex": "@article{doi-10-1109-jstars-2026-3680479,\n  title = {{A GAMLSS Framework for Crop Discrimination Using Geodesic Polarimetric SAR Parameters}},\n  author = {da Silva, Willams B. F. and Bhattacharya, Avik and Nascimento, Abraão D. C. and Frery, Alejandro C.},\n  year = {2026},\n  journal = {IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing},\n  volume = {19},\n  pages = {13234--13247},\n  doi = {10.1109/jstars.2026.3680479},\n  url = {https://doi.org/10.1109/jstars.2026.3680479}\n}",
       "featured": true,
       "tags": [
         "PolSAR",
@@ -21,7 +21,7 @@
       ],
       "citations": 0,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-09-30",
+      "citation_updated": "2026-10-02",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,
@@ -51,7 +51,7 @@
       "pdf": "",
       "code": "",
       "data": "",
-      "bibtex": "",
+      "bibtex": "@article{doi-10-1002-env-2816,\n  title = {{Generalized gamma ARMA process for synthetic aperture radar amplitude and intensity data}},\n  author = {da Silva, Willams B. F. and Almeida‐Junior, Pedro M. and Nascimento, Abraão D. C.},\n  year = {2023},\n  journal = {Environmetrics},\n  volume = {34},\n  number = {7},\n  pages = {e2816},\n  doi = {10.1002/env.2816},\n  url = {https://doi.org/10.1002/env.2816}\n}",
       "featured": true,
       "tags": [
         "ARMA",
@@ -60,7 +60,7 @@
       ],
       "citations": 4,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-09-30",
+      "citation_updated": "2026-10-02",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,
@@ -90,7 +90,7 @@
       "pdf": "",
       "code": "",
       "data": "",
-      "bibtex": "",
+      "bibtex": "@article{doi-10-3390-math9233108,\n  title = {{An Extended log-Lindley-G Family: Properties and Experiments in Repairable Data}},\n  author = {Abd El-Bar, Ahmed and da Silva, Willams and Nascimento, Abraão},\n  year = {2021},\n  journal = {Mathematics},\n  volume = {9},\n  number = {23},\n  pages = {3108},\n  doi = {10.3390/math9233108},\n  url = {https://doi.org/10.3390/math9233108}\n}",
       "featured": true,
       "tags": [
         "Probability distributions",
@@ -99,7 +99,7 @@
       ],
       "citations": 8,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-09-30",
+      "citation_updated": "2026-10-02",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,

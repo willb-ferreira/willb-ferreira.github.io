@@ -68,6 +68,34 @@ def year_of(work):
     return None
 
 
+def bibtex_value(value):
+    """Escape literal metadata without dropping accents or changing author names."""
+    escapes = {'\\': r'\textbackslash{}', '{': r'\{', '}': r'\}',
+               '&': r'\&', '%': r'\%', '#': r'\#', '_': r'\_', '$': r'\$'}
+    return ''.join(escapes.get(char, char) for char in str(value or ''))
+
+
+def publication_bibtex(record, work):
+    """Keep journal, volume, issue and pages separate in the downloadable record."""
+    authors = []
+    for author in work.get('author', []):
+        family, given = plain(author.get('family')), plain(author.get('given'))
+        name = ', '.join(filter(None, [family, given])) if family else plain(author.get('name')) or given
+        if name:
+            authors.append(bibtex_value(name))
+    kind = 'inproceedings' if record['type'] == 'conference' else 'article' if record['type'] == 'article' else 'misc'
+    venue_key = 'booktitle' if kind == 'inproceedings' else 'journal' if kind == 'article' else 'howpublished'
+    fields = [('title', '{' + bibtex_value(record['title']) + '}'),
+              ('author', ' and '.join(authors)), ('year', record['year']),
+              (venue_key, bibtex_value(plain((work.get('container-title') or [''])[0]))),
+              ('volume', bibtex_value(plain(work.get('volume')))),
+              ('number', bibtex_value(plain(work.get('issue')))),
+              ('pages', bibtex_value(re.sub(r'(?<=\d)-(?=\d)', '--', plain(work.get('page') or work.get('article-number'))))),
+              ('doi', bibtex_value(record['doi'])), ('url', bibtex_value(record['url']))]
+    body = ',\n'.join(f'  {key} = {{{value}}}' for key, value in fields if value not in ('', None))
+    return f'@{kind}{{{record["id"]},\n{body}\n}}'
+
+
 def crossref_record(doi: str, entry: dict, email: str) -> dict:
     uri = f"https://api.crossref.org/works/{urllib.parse.quote(doi, safe='/')}"
     if email:
@@ -101,7 +129,7 @@ def crossref_record(doi: str, entry: dict, email: str) -> dict:
             crossref_pdf = candidate
             break
 
-    return {
+    record = {
         "id": "doi-" + re.sub(r"[^a-z0-9]+", "-", doi).strip("-"),
         "title": title,
         "authors": authors,
@@ -126,6 +154,8 @@ def crossref_record(doi: str, entry: dict, email: str) -> dict:
         "oa_pdf": safe_link(entry.get("oa_pdf")),
         "crossref_pdf": crossref_pdf,
     }
+    record['bibtex'] = publication_bibtex(record, work)
+    return record
 
 
 def openalex_metadata(doi: str) -> dict:
