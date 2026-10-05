@@ -21,7 +21,7 @@
       ],
       "citations": 0,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-10-02",
+      "citation_updated": "2026-10-05",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,
@@ -35,9 +35,11 @@
       "open_access": true,
       "oa_status": "gold",
       "oa_url": "https://doi.org/10.1109/jstars.2026.3680479",
-      "oa_pdf": "",
+      "oa_pdf": "https://doi.org/10.1109/jstars.2026.3680479",
       "openalex_id": "https://openalex.org/W7148633106",
-      "oa_pdf_source": ""
+      "oa_pdf_source": "Semantic Scholar",
+      "oa_pdf_version": "publicVersion",
+      "oa_pdf_host": "doi.org"
     },
     "10.1002/env.2816": {
       "id": "doi-10-1002-env-2816",
@@ -60,7 +62,7 @@
       ],
       "citations": 4,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-10-02",
+      "citation_updated": "2026-10-05",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,
@@ -99,7 +101,7 @@
       ],
       "citations": 8,
       "citation_source": "OpenAlex",
-      "citation_updated": "2026-10-02",
+      "citation_updated": "2026-10-05",
       "venue_metrics": {
         "source": "SCImago",
         "year": 2025,
