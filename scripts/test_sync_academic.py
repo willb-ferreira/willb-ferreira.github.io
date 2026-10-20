@@ -97,13 +97,13 @@ class SyncTests(unittest.TestCase):
                               'venue_metrics': {'source':'SCImago','year':2025,'sjr':1.234,'quartile':'Q1',
                                                 'category': {'en':'Statistics','pt':'Estatística'}}}],
             'github_repos': [{'repo': 'mypackage', 'tags': ['R']}]
-        }))
+        }), encoding='utf-8')
 
     def test_allowlisted_data_and_orcid_queue(self):
         with patch.object(sync, 'ROOT', self.root), patch.object(sync, 'http_json', side_effect=fake_http), \
              patch.dict(os.environ, {'ORCID_CLIENT_ID':'test', 'ORCID_CLIENT_SECRET':'test'}, clear=False):
             self.assertEqual(sync.main(), 0)
-            raw = (self.root / 'assets/auto-content.js').read_text()
+            raw = (self.root / 'assets/auto-content.js').read_text(encoding='utf-8')
             self.assertIn('A verified title', raw)
             self.assertNotIn('<i>', raw)
             self.assertIn('mypackage', raw)
@@ -115,27 +115,27 @@ class SyncTests(unittest.TestCase):
             self.assertIn('"oa_pdf_version":"publicVersion"', raw)
             self.assertIn('"venue_metrics":{"source":"SCImago"', raw)
             self.assertNotIn('10.5678/new-paper', raw)
-            pending = json.loads((self.root / 'data/pending-dois.json').read_text())
+            pending = json.loads((self.root / 'data/pending-dois.json').read_text(encoding='utf-8'))
             self.assertEqual([p['doi'] for p in pending], ['10.5678/new-paper'])
             self.assertTrue(pending[0]['requires_approval'])
             self.assertEqual(sync.main(), 0)
-            self.assertEqual(len(json.loads((self.root/'data/sync-cache.json').read_text())['publications']), 1)
+            self.assertEqual(len(json.loads((self.root/'data/sync-cache.json').read_text(encoding='utf-8'))['publications']), 1)
 
     def test_outage_does_not_delete_last_good_data(self):
         with patch.object(sync, 'ROOT', self.root), patch.object(sync, 'http_json', side_effect=fake_http), \
              patch.dict(os.environ, {'ORCID_CLIENT_ID':'', 'ORCID_CLIENT_SECRET':''}):
             self.assertEqual(sync.main(), 0)
-            old = (self.root/'assets/auto-content.js').read_text()
+            old = (self.root/'assets/auto-content.js').read_text(encoding='utf-8')
         with patch.object(sync, 'ROOT', self.root), patch.object(sync, 'http_json', side_effect=OSError('offline')), \
              patch.dict(os.environ, {'ORCID_CLIENT_ID':'', 'ORCID_CLIENT_SECRET':''}):
             self.assertEqual(sync.main(), 1)
-            self.assertEqual((self.root/'assets/auto-content.js').read_text(), old)
+            self.assertEqual((self.root/'assets/auto-content.js').read_text(encoding='utf-8'), old)
 
     def test_invalid_doi_is_rejected(self):
         with patch.object(sync, 'ROOT', self.root):
-            config = json.loads((self.root/'data/sources.json').read_text())
+            config = json.loads((self.root/'data/sources.json').read_text(encoding='utf-8'))
             config['publications'][0]['doi'] = 'doi-without-prefix'
-            (self.root/'data/sources.json').write_text(json.dumps(config))
+            (self.root/'data/sources.json').write_text(json.dumps(config), encoding='utf-8')
             with self.assertRaisesRegex(ValueError, 'DOI inválido'):
                 sync.main()
 

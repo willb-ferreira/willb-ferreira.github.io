@@ -51,14 +51,14 @@
       readingNote:"Escolha um percurso e siga as leituras indicadas. O objetivo é orientar os primeiros estudos, não substituir uma revisão bibliográfica.",
       index:"Início",research:"Pesquisa",publications:"Publicações",supervision:"Orientação",people:"Pessoas",
       teaching:"Ensino",software:"Código e dados",about:"Sobre",contact:"Contato",
-      skip:"Pular para o conteúdo",openMenu:"Abrir menu",closeMenu:"Fechar menu",toggleTheme:"Alternar tema",toggleLanguage:"Change language to English",
+      skip:"Pular para o conteúdo",openMenu:"Abrir menu",closeMenu:"Fechar menu",toggleTheme:"Alternar tema",toggleLanguage:"EN: Change language to English",
       eyebrowHome:"Universidade Federal de Pernambuco · Departamento de Estatística",heroFocus:"Willams Batista",heroEm:"",heroEnd:"",
       seeResearch:"Explorar pesquisa",seePublications:"Ver publicações",locationNote:"Departamento de Estatística · UFPE",
       visualHead:"MAPA DE PESQUISA",visualStatus:"EM DESENVOLVIMENTO",visualTitle:"Da teoria à aplicação.",visualCaption:"Inferência · Modelagem · Computação",
       visualNote:"EIXO CENTRAL",visualNoteDetail:"Dependência espacial",visualIndex:"EST. / 01",
       focusAreas:"Áreas de interesse",researchTagline:"Pesquisa e interesses",
       researchIntro:"Áreas em que venho trabalhando e temas metodológicos que pretendo desenvolver gradualmente.",
-      allResearch:"Todas as áreas",activeProjects:"Projetos e investigações",projectDesc:"Perguntas de pesquisa que orientam o trabalho em andamento.",
+      allResearch:"Todas as áreas",activeProjects:"Projetos e investigações",projectDesc:"Perguntas de pesquisa que orientam o trabalho em andamento.",noProjects:"Ainda não há projetos em andamento listados nesta área.",
       seeAllProjects:"Ver todos os projetos",featuredProjects:"Em desenvolvimento",projectsPageLead:"Áreas de interesse, trabalho em andamento e temas que venho desenvolvendo no Departamento de Estatística da UFPE.",
       papersHome:"Produção científica",papersHomeDesc:"Artigos publicados e trabalhos apresentados em congressos.",
       papersPageLead:"Uma bibliografia pesquisável, com acesso a DOI, texto completo, código e dados quando disponíveis.",
@@ -68,7 +68,7 @@
       all:"Todos",articles:"Artigos",preprints:"Preprints",conferences:"Congressos",others:"Outros",year:"Ano",records:"registros",record:"registro",exportBib:"Exportar BibTeX",
       readMore:"Saiba mais",cite:"Copiar referência",code:"Código",data:"Dados",pdf:"PDF",doi:"DOI",website:"Página",copyDone:"Referência copiada",exportDone:"Arquivo BibTeX gerado",
       citedBy:"Citado por",openAccess:"Acesso aberto",codeAvailable:"Código disponível",dataAvailable:"Dados disponíveis",venueContext:"Contexto do periódico",
-      scholarlyNote:"Contagens de citação são indicadores bibliográficos e podem variar entre bases. O OpenAlex é usado quando disponível; o contexto do periódico usa dados anuais do SCImago revisados manualmente.",
+      scholarlyNote:"Contagens de citação são indicadores bibliográficos e podem variar entre bases. O OpenAlex é usado quando disponível; o contexto do periódico usa dados anuais do SCImago revisados manualmente. O quartil se refere ao periódico e à categoria no ano informado.",
       supervisionTitle:"Temas de orientação",supervisionLead:"Temas potenciais de iniciação científica, mestrado e doutorado, com escopos ajustáveis à formação e aos interesses do estudante.",
       advisory:"Os temas abaixo são propostas de pesquisa, não anúncios de vagas ou garantia de disponibilidade de orientação.",
       topics:"Temas para orientação",topicsDesc:"Cada tema pode ser refinado em uma pergunta específica e um plano de trabalho realista.",
@@ -131,13 +131,13 @@
       readingNoteTitle:"How to use these guides.",
       readingNote:"Choose a path and follow the suggested readings. These are entry points, not comprehensive literature reviews.",
       index:"Home",research:"Research",publications:"Publications",supervision:"Supervision",people:"People",teaching:"Teaching",software:"Code & Data",about:"About",contact:"Contact",
-      skip:"Skip to content",openMenu:"Open menu",closeMenu:"Close menu",toggleTheme:"Toggle color theme",toggleLanguage:"Mudar idioma para português",
+      skip:"Skip to content",openMenu:"Open menu",closeMenu:"Close menu",toggleTheme:"Toggle color theme",toggleLanguage:"PT: Mudar idioma para português",
       eyebrowHome:"Federal University of Pernambuco · Department of Statistics",heroFocus:"Willams Batista",heroEm:"",heroEnd:"",
       seeResearch:"Explore research",seePublications:"View publications",locationNote:"Department of Statistics · UFPE",
       visualHead:"RESEARCH MAP",visualStatus:"IN PROGRESS",visualTitle:"From theory to application.",visualCaption:"Inference · Modeling · Computing",visualNote:"CORE TOPIC",visualNoteDetail:"Spatial dependence",visualIndex:"STAT. / 01",
       focusAreas:"Areas of interest",researchTagline:"Research and interests",
       researchIntro:"Areas I currently work on and methodological directions I hope to develop gradually.",
-      allResearch:"All areas",activeProjects:"Projects and investigations",projectDesc:"Research questions that guide work in progress.",
+      allResearch:"All areas",activeProjects:"Projects and investigations",projectDesc:"Research questions that guide work in progress.",noProjects:"No work-in-progress projects are listed in this area yet.",
       seeAllProjects:"See all projects",featuredProjects:"Work in progress",projectsPageLead:"Research interests, work in progress, and directions I am developing in the Department of Statistics at UFPE.",
       papersHome:"Scientific output",papersHomeDesc:"Journal articles and conference papers.",
       papersPageLead:"A searchable bibliography, with access to DOI, full text, code, and data when available.",
@@ -147,7 +147,7 @@
       all:"All",articles:"Articles",preprints:"Preprints",conferences:"Conferences",others:"Other",year:"Year",records:"records",record:"record",exportBib:"Export BibTeX",
       readMore:"Learn more",cite:"Copy citation",code:"Code",data:"Data",pdf:"PDF",doi:"DOI",website:"Website",copyDone:"Citation copied",exportDone:"BibTeX file created",
       citedBy:"Cited by",openAccess:"Open access",codeAvailable:"Code available",dataAvailable:"Data available",venueContext:"Venue context",
-      scholarlyNote:"Citation counts are bibliographic indicators and may differ across databases. OpenAlex is used when available; venue context uses manually reviewed annual SCImago data.",
+      scholarlyNote:"Citation counts are bibliographic indicators and may differ across databases. OpenAlex is used when available; venue context uses manually reviewed annual SCImago data. Quartiles refer to the journal and subject category in the stated year.",
       supervisionTitle:"Supervision topics",supervisionLead:"Potential undergraduate, master's, and PhD topics, with scope tailored to students' backgrounds and interests.",
       advisory:"These are potential topics, not advertised vacancies or a guarantee of supervision availability.",
       topics:"Supervision topics",topicsDesc:"Each topic can be refined into a specific question and a realistic work plan.",
@@ -241,6 +241,10 @@
     const url = safe(p.url), el = url ? "a" : "article";
     const linkProps = url ? ` href="${url}" target="_blank" rel="noopener noreferrer"` : "";
     return `<${el} class="project-card"${linkProps}><div class="project-head"><span class="status">${tx("featuredProjects")}</span><span class="small muted">${e(p.year||"")}</span></div><div class="card-content"><h3>${e(t(p.title))}</h3><p>${e(t(p.description))}</p></div><div class="project-meta"><div class="card-footer">${(p.tags||[]).map(s=>tag(s)).join("")}</div>${url?`<span class="project-arrow">${icon("up")}</span>`:""}</div></${el}>`;
+  };
+  const projectResults = () => {
+    const projects=D.projects.filter(p=>selectedProjectArea==="all"||p.area===selectedProjectArea);
+    return projects.length?projects.map(projectCard).join(""):`<p class="note-box" role="status" aria-live="polite">${tx("noProjects")}</p>`;
   };
   const researchCard = (r) => `<article class="research-card"><div class="card-topline"><span class="card-number">${e(r.number)}</span><span class="card-symbol" aria-hidden="true">${e(r.symbol)}</span></div><div class="card-content"><h3>${e(t(r.title))}</h3><p>${e(t(r.summary))}</p></div><div class="card-footer">${(r.keywords||[]).map(s=>tag(s)).join("")}</div><a class="reading-link" href="reading.html#${e(r.id)}">${tx("readingLink")} ${icon("arrow",15)}</a></article>`;
   const banner = () => `<section class="section tight"><div class="shell"><div class="feature-banner"><div><span class="eyebrow">${tx("supervision")}</span><h2>${tx("opportunityTitle")}</h2><p>${tx("opportunityDesc")}</p></div><a class="inline-link" href="supervision.html">${tx("opportunityBtn")} ${icon("arrow")}</a></div></div></section>`;
@@ -617,7 +621,7 @@
       <a class="reading-back" href="#top">↑ ${tx("readingBack")}</a>
     </article>`;
   }).join("");
-  return `${pageHero(tx("research"),tx("readingTitle"),tx("readingPageLead"))}<section class="section reading-section" id="top">
+  return `${pageHero(tx("reading"),tx("readingTitle"),tx("readingPageLead"))}<section class="section reading-section" id="top">
     <div class="shell"><div class="reading-note"><strong>${tx("readingNoteTitle")}</strong> ${tx("readingNote")}</div>
     <div class="reading-layout"><nav class="reading-index" aria-label="${tx("readingIndex")}"><span class="eyebrow">${tx("readingIndex")}</span>${nav}</nav>
       <div class="reading-main"><div class="reading-mobile-picker"><label for="reading-guide-select">${tx("readingChoose")}</label><select id="reading-guide-select" aria-controls="reading-guides">${choices}</select></div>
@@ -632,11 +636,11 @@
   const readingPager=(index)=>{
     const prev=D.readingGuides[index-1],next=D.readingGuides[index+1];
     const guideTitle=id=>t(D.research.find(r=>r.id===id).title);
-    const link=(g,label,kind,arrow)=>g?`<a class="reading-page-link ${kind}" href="#${e(g.id)}" aria-label="${e(label+": "+guideTitle(g.id))}"><span class="reading-page-direction">${arrow} ${e(label)}</span><span class="reading-page-title">${e(guideTitle(g.id))}</span></a>`:
+    const link=(g,label,kind,arrow)=>g?`<a class="reading-page-link ${kind}" href="#${e(g.id)}"><span class="reading-page-direction">${arrow} ${e(label)}</span><span class="reading-page-title">${e(guideTitle(g.id))}</span></a>`:
       `<span class="reading-page-placeholder" aria-hidden="true"></span>`;
     return `${link(prev,tx("readingPrevious"),"previous","←")}${link(next,tx("readingNext"),"next","→")}`;
   };
-  const syncReadingSelection=(scrollToTarget=false)=>{
+  const syncReadingSelection=(scrollToTarget=false,focusHeading=false)=>{
     if(page!=="reading")return;
     const guides=document.getElementById("reading-guides");
     if(!guides)return;
@@ -648,8 +652,10 @@
     const nextId=ids.includes(requestedId)?requestedId:
       ids.includes(selectedReadingGuide)?selectedReadingGuide:ids[0];
     const previousFocusPanel=document.activeElement?.closest?.(".reading-area");
-    const changingFocus=previousFocusPanel&&previousFocusPanel.id!==nextId;
     const changed=selectedReadingGuide!==nextId;
+    // The pager is rebuilt below; preserve keyboard progress when its active link is removed.
+    const pagingFocus=document.activeElement?.closest?.(".reading-pagination");
+    const changingFocus=changed&&(focusHeading||previousFocusPanel||pagingFocus);
     selectedReadingGuide=nextId;
     const article=document.getElementById(nextId);
     guides.querySelectorAll(".reading-area").forEach(panel=>{
@@ -677,7 +683,7 @@
       });
     }
   };
-  const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div><div class="reading-cta"><div><span class="eyebrow">${tx("readingSmall")}</span><h3>${tx("readingTitle")}</h3><p>${tx("readingIntro")}</p></div><a class="inline-link" href="reading.html">${tx("readingButton")} ${icon("arrow",15)}</a></div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${D.projects.filter(x=>selectedProjectArea==="all"||x.area===selectedProjectArea).map(projectCard).join("")}</div></div></section>${renderResearchIdeas()}${banner()}`;
+  const renderResearch = () => `${pageHero(tx("research"),tx("researchTagline"),tx("projectsPageLead"))}<section class="section"><div class="shell">${sectionTitle(tx("focusAreas"),tx("allResearch"),tx("researchIntro"))}<div class="cards-2">${D.research.map(researchCard).join("")}</div><div class="reading-cta"><div><span class="eyebrow">${tx("readingSmall")}</span><h3>${tx("readingTitle")}</h3><p>${tx("readingIntro")}</p></div><a class="inline-link" href="reading.html">${tx("readingButton")} ${icon("arrow",15)}</a></div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("activeProjects"),tx("featuredProjects"),tx("projectDesc"))}<div class="toolbar"><div class="filters" id="project-filters">${[{id:"all",label:tx("all")},...D.research.map(x=>({id:x.id,label:t(x.title)}))].map(x=>`<button class="filter-pill ${selectedProjectArea===x.id?"active":""}" type="button" data-area="${e(x.id)}" aria-pressed="${selectedProjectArea===x.id}">${e(x.label)}</button>`).join("")}</div></div><div id="project-results" class="cards-2">${projectResults()}</div></div></section>${renderResearchIdeas()}${banner()}`;
   const renderResearchIdeas = () => {
     const ideas=D.researchIdeas||[];
     if(!ideas.length)return "";
@@ -728,7 +734,7 @@
   };
   const topicCard = x => `<article class="topic-card"><div class="level-tags">${x.levels.map(y=>tag(tx(y),"tinted")).join("")}${x.area&&D.research.find(a=>a.id===x.area)?`<a class="topic-area" href="reading.html#${e(x.area)}">${e(t(D.research.find(a=>a.id===x.area).title))} ↗</a>`:""}</div><div class="card-content"><h3>${e(t(x.title))}</h3><p>${e(t(x.description))}</p></div><div class="requirements"><b>${tx("requirements")}</b><p>${e(t(x.requirements))}</p></div></article>`;
   const topicResults = () => D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).map(topicCard).join("");
-  const renderSupervision = () => `${pageHero(tx("supervision"),tx("supervisionTitle"),tx("supervisionLead"))}<section class="section"><div class="shell"><div class="note-box"><strong>${tx("supervision")}:</strong> ${tx("advisory")} ${lang==="pt"?"Os projetos abaixo são propostas de estudo, sujeitas à avaliação de viabilidade e disponibilidade; não constituem vagas abertas.":"The directions below are proposals subject to feasibility and availability review; they are not open positions."}</div><div class="spaced-intro">${sectionTitle("",lang==="pt"?"Possíveis temas por nível":"Potential topics by level",lang==="pt"?"Selecione um nível para explorar projetos e conhecimentos recomendados.":"Choose a level to explore proposed projects and recommended background.")}</div><div class="toolbar"><div class="filters" id="level-filters">${["undergraduate","masters","phd","all"].map(level=>`<button id="level-${level}" class="filter-pill ${selectedTopicLevel===level?"active":""}" type="button" data-level="${level}" aria-pressed="${selectedTopicLevel===level}">${level==="all"?tx("all"):tx(level)} <span class="filter-count">${level==="all"?D.topics.length:D.topics.filter(x=>x.levels.includes(level)).length}</span></button>`).join("")}</div><span class="count" id="topic-count">${D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).length} ${lang==="pt"?"propostas":"proposals"}</span></div><div id="topic-results" class="cards-2">${topicResults()}</div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("howItWorks"),tx("howTitle"))}<div class="step-grid">${[1,2,3].map(n=>`<article class="step"><span class="step-number">0${n} / 03</span><h3>${tx("step"+n)}</h3><p>${tx("step"+n+"Desc")}</p></article>`).join("")}</div><div style="height:29px"></div><a class="btn primary" href="contact.html">${tx("contact")} ${icon("arrow")}</a></div></section><section class="section tight"><div class="shell">${sectionTitle("FAQ",tx("faqTitle"))}<div class="faq-list">${[1,2,3].map(n=>`<details class="faq"><summary>${tx("faq"+n)}</summary><p>${tx("faq"+n+"a")}</p></details>`).join("")}</div></div></section>`;
+  const renderSupervision = () => `${pageHero(tx("supervision"),tx("supervisionTitle"),tx("supervisionLead"))}<section class="section"><div class="shell"><div class="note-box"><strong>${tx("supervision")}:</strong> ${tx("advisory")}</div><div class="spaced-intro">${sectionTitle("",lang==="pt"?"Possíveis temas por nível":"Potential topics by level",lang==="pt"?"Selecione um nível para explorar projetos e conhecimentos recomendados.":"Choose a level to explore proposed projects and recommended background.")}</div><div class="toolbar"><div class="filters" id="level-filters">${["undergraduate","masters","phd","all"].map(level=>`<button id="level-${level}" class="filter-pill ${selectedTopicLevel===level?"active":""}" type="button" data-level="${level}" aria-pressed="${selectedTopicLevel===level}">${level==="all"?tx("all"):tx(level)} <span class="filter-count">${level==="all"?D.topics.length:D.topics.filter(x=>x.levels.includes(level)).length}</span></button>`).join("")}</div><span class="count" id="topic-count" role="status" aria-live="polite" aria-atomic="true">${D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).length} ${lang==="pt"?"propostas":"proposals"}</span></div><div id="topic-results" class="cards-2">${topicResults()}</div></div></section><section class="section tight"><div class="shell">${sectionTitle(tx("howItWorks"),tx("howTitle"))}<div class="step-grid">${[1,2,3].map(n=>`<article class="step"><span class="step-number">0${n} / 03</span><h3>${tx("step"+n)}</h3><p>${tx("step"+n+"Desc")}</p></article>`).join("")}</div><div style="height:29px"></div><a class="btn primary" href="contact.html">${tx("contact")} ${icon("arrow")}</a></div></section><section class="section tight"><div class="shell">${sectionTitle("FAQ",tx("faqTitle"))}<div class="faq-list">${[1,2,3].map(n=>`<details class="faq"><summary>${tx("faq"+n)}</summary><p>${tx("faq"+n+"a")}</p></details>`).join("")}</div></div></section>`;
   const entryDateKey = value => {
     const hit = String(value || "").match(/^(\d{4})(?:(?:[./]([12]))|(?:-(\d{2})))?/);
     return hit ? Number(hit[1]) * 100 + (hit[3] ? Number(hit[3]) : hit[2] ? (Number(hit[2])===1 ? 6 : 12) : 0) : 0;
@@ -782,7 +788,7 @@
     const collaborators=(D.collaborators || []).filter(c=>String(c?.name || "").trim());
     const collaborationSection=collaborators.length ? `<section class="academic-level"><div class="directory-heading"><h2>${lang==="pt"?"Colaboradores":"Collaborators"}</h2><span class="directory-count">${collaborators.length}</span></div><div class="people-directory">${collaborators.map(renderCollaborator).join("")}</div></section>` : "";
     const directory=sections+collaborationSection || empty("",tx("people"),tx("peopleEmpty"));
-    return `${pageHero(tx("people"),tx("peopleTitle"),tx("peopleLead"))}<section class="section"><div class="shell">${directory}<p class="directory-note">${lang==="pt"?"Organização por nível e modalidade de orientação. Períodos são mostrados apenas quando confirmados; alunos e egressos anteriores ficam no histórico.":"Grouped by academic level and supervision role. Dates appear only when confirmed; earlier students and alumni remain in the expandable archive."}</p></div></section>`;
+    return `${pageHero(tx("people"),tx("peopleTitle"),tx("peopleLead"))}<section class="section"><div class="shell">${directory}<p class="directory-note">${lang==="pt"?"Organização por nível e modalidade de orientação. Períodos são mostrados apenas quando confirmados.":"Grouped by academic level and supervision role. Dates appear only when confirmed."}</p></div></section>`;
   };
   const courseOfferings = c => {
     const list = (Array.isArray(c.offerings) ? c.offerings : []).map(x => typeof x === "string" ? x : x?.term).filter(Boolean);
@@ -835,7 +841,7 @@
     return `${pageHero(tx("contact"),tx("contactTitle"),tx("contactLead"))}<section class="section"><div class="shell"><div class="contact-grid">
       <article class="contact-card"><span class="contact-symbol">∑</span><h2>${tx("studentContact")}</h2><p>${tx("studentContactDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Interesse em pesquisa e orientação":"Research and supervision inquiry"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
       <article class="contact-card"><span class="contact-symbol">↗</span><h2>${tx("collab")}</h2><p>${tx("collabDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Conversa sobre possível colaboração":"Possible research collaboration"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
-    </div></div></section><section class="section tight"><div class="shell split-section"><div><div class="prose"><span class="eyebrow">${tx("emailLabel")}</span><h2>${email?e(D.profile.email):tx("profiles")}</h2><p>${email?tx("contactGuideDesc"):tx("emailMissing")}</p>${email?`<a class="btn primary" href="${e(email)}">${icon("mail")} ${tx("openContact")}</a>`:""}</div></div><div class="prose"><span class="eyebrow">${tx("profiles")}</span><div class="profile-links">${links||`<p class="small muted">${tx("profilesMissing")}</p>`}</div><div class="note-box"><strong>${tx("contactGuide")}</strong><br>${tx("contactGuideDesc")}</div></div></div></section>`;
+    </div></div></section><section class="section tight"><div class="shell split-section"><div><div class="prose"><span class="eyebrow">${tx("emailLabel")}</span><h2>${email?e(D.profile.email):tx("profiles")}</h2>${email?"":`<p>${tx("emailMissing")}</p>`}${email?`<a class="btn primary" href="${e(email)}">${icon("mail")} ${tx("openContact")}</a>`:""}</div></div><div class="prose"><span class="eyebrow">${tx("profiles")}</span><div class="profile-links">${links||`<p class="small muted">${tx("profilesMissing")}</p>`}</div><div class="note-box"><strong>${tx("contactGuide")}</strong><br>${tx("contactGuideDesc")}</div></div></div></section>`;
   };
   const copyText = async value => {
     try { await navigator.clipboard.writeText(value); return true; }
@@ -860,8 +866,10 @@
         const panel=document.getElementById(id)?.closest(".reading-area");
         if(!panel||panel.id===selectedReadingGuide)return;
         ev.preventDefault();
+        // Fragment navigation can clear focus before the new guide is revealed.
+        const focusHeading=Boolean(link.closest(".reading-area, .reading-pagination"));
         window.location.hash=id;
-        syncReadingSelection(true);
+        syncReadingSelection(true,focusHeading);
       });
       document.getElementById("reading-guide-select")?.addEventListener("change",ev=>{
         const id=ev.target.value;
@@ -874,7 +882,7 @@
     document.getElementById("project-filters")?.addEventListener("click",ev=>{
       const btn=ev.target.closest("[data-area]");if(!btn)return;selectedProjectArea=btn.dataset.area;
       document.querySelectorAll("[data-area]").forEach(b=>{b.classList.toggle("active",b.dataset.area===selectedProjectArea);b.setAttribute("aria-pressed",String(b.dataset.area===selectedProjectArea));});
-      document.getElementById("project-results").innerHTML=D.projects.filter(p=>selectedProjectArea==="all"||p.area===selectedProjectArea).map(projectCard).join("");
+      document.getElementById("project-results").innerHTML=projectResults();
     });
     document.getElementById("level-filters")?.addEventListener("click",ev=>{
       const btn=ev.target.closest("[data-level]");if(!btn)return;selectedTopicLevel=btn.dataset.level;

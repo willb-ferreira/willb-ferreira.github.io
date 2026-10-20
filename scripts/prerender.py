@@ -16,6 +16,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = list(PAGE_SLUGS)
 THEME_BOOTSTRAP = '''<script id="theme-bootstrap">(()=>{try{const saved=localStorage.getItem("wb-theme");const mode=saved==="light"||saved==="dark"?saved:"system";document.documentElement.dataset.theme=mode;const resolved=mode==="system"?(window.matchMedia?.("(prefers-color-scheme: dark)").matches?"dark":"light"):mode;const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=resolved==="dark"?"#161d1c":"#f7f9f7"}catch{document.documentElement.dataset.theme="system"}})();</script>'''
+READING_NOJS = '''<noscript id="reading-nojs"><style>.reading-mobile-picker,.reading-pagination{display:none}.reading-index{display:grid;position:static;max-height:none;overflow:visible}</style></noscript>'''
 content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
@@ -46,6 +47,15 @@ with sync_playwright() as p:
         tab.add_script_tag(content=auto)
         tab.add_script_tag(content=app)
         tab.locator('main h1').wait_for(timeout=5000)
+        if name == 'reading':
+            # Keep every guide readable if scripts are disabled or unavailable.
+            # The application restores the single-guide view when JavaScript runs.
+            tab.locator('.reading-area').evaluate_all(
+                '(articles) => articles.forEach(article => article.hidden = false)'
+            )
+            tab.locator('.reading-index [aria-current="location"]').evaluate_all(
+                '(links) => links.forEach(link => link.removeAttribute("aria-current"))'
+            )
         main = tab.locator('main').inner_html()
         header = tab.locator('#site-header').inner_html()
         footer = tab.locator('#site-footer').inner_html()
@@ -133,6 +143,12 @@ with sync_playwright() as p:
             html = html[:stylesheet.start()] + THEME_BOOTSTRAP + '\n  ' + html[stylesheet.start():]
         if html.index('id="theme-bootstrap"') > html.index('href="assets/site.css"'):
             raise RuntimeError(f'{name}: theme bootstrap must run before the stylesheet')
+        if name == 'reading':
+            if 'id="reading-nojs"' in html:
+                html = re.sub(r'<noscript id="reading-nojs">.*?</noscript>',
+                              lambda _: READING_NOJS, html, count=1, flags=re.S)
+            else:
+                html = html.replace('</head>', READING_NOJS + '\n</head>', 1)
         path.write_text(html, encoding='utf-8')
         print(f'PRERENDER {path.name}: {len(main)} main HTML chars')
     browser.close()

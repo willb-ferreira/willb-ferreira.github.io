@@ -7,9 +7,11 @@ from playwright.sync_api import sync_playwright
 from site_config import page_url
 
 ROOT = Path(__file__).resolve().parents[1]
+ARTIFACTS = Path(os.environ.get('RUNNER_TEMP') or ROOT / '_site') / 'audit-artifacts'
+ARTIFACTS.mkdir(parents=True, exist_ok=True)
 PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
-css = (ROOT / 'assets/site.css').read_text()
-content = (ROOT / 'assets/content.js').read_text()
+css = (ROOT / 'assets/site.css').read_text(encoding='utf-8')
+content = (ROOT / 'assets/content.js').read_text(encoding='utf-8')
 library = (ROOT / 'assets/research-library.js').read_text(encoding='utf-8')
 intro = (ROOT / 'assets/intro-library.js').read_text(encoding='utf-8')
 inference = (ROOT / 'assets/inference-library.js').read_text(encoding='utf-8')
@@ -17,8 +19,8 @@ image_library = (ROOT / 'assets/image-library.js').read_text(encoding='utf-8')
 geometry_library = (ROOT / 'assets/geometry-library.js').read_text(encoding='utf-8')
 regression_library = (ROOT / 'assets/regression-library.js').read_text(encoding='utf-8')
 causal_library = (ROOT / 'assets/causal-library.js').read_text(encoding='utf-8')
-auto = (ROOT / 'assets/auto-content.js').read_text()
-app = (ROOT / 'assets/app.js').read_text()
+auto = (ROOT / 'assets/auto-content.js').read_text(encoding='utf-8')
+app = (ROOT / 'assets/app.js').read_text(encoding='utf-8')
 errors=[]
 SITEMAP_URLS = [loc.text for loc in ET.parse(ROOT / 'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
 EXPECTED_URLS = [page_url(name) for name in PAGES]
@@ -26,7 +28,7 @@ assert len(SITEMAP_URLS) == len(EXPECTED_URLS) and set(SITEMAP_URLS) == set(EXPE
 print('SITEMAP all ten canonical URLs: PASS')
 
 def load(tab, page_name, initial_hash=None):
-    html = (ROOT / f'{page_name}.html').read_text()
+    html = (ROOT / f'{page_name}.html').read_text(encoding='utf-8')
     # Browser navigation is restricted in this environment, so use set_content.
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', html)
     html = re.sub(r'<link rel="stylesheet"[^>]*>', '', html)
@@ -66,8 +68,28 @@ with sync_playwright() as p:
     theme_tab.close()
     print('THEME system preference and manual override: PASS')
 
+    # Static snapshots must preserve access to every reading guide without JS.
+    nojs=browser.new_page(viewport={'width':1365,'height':860},java_script_enabled=False)
+    nojs_html=(ROOT/'reading.html').read_text(encoding='utf-8')
+    nojs_html=re.sub(r'<link rel="stylesheet"[^>]*>',lambda _: '<style>'+css+'</style>',nojs_html)
+    nojs.set_content(nojs_html,wait_until='load')
+    assert nojs.locator('article.reading-area:visible').count()==6
+    assert nojs.locator('article.reading-area[hidden]').count()==0
+    assert nojs.locator('.reading-index [aria-current="location"]').count()==0
+    nojs.locator('a[href="#causal-ref-reich-2021"]').first.click()
+    assert nojs.evaluate('location.hash') == '#causal-ref-reich-2021'
+    assert nojs.locator('#causal-ref-reich-2021').is_visible()
+    nojs.set_viewport_size({'width':390,'height':844})
+    assert nojs.locator('article.reading-area:visible').count()==6
+    assert nojs.locator('.reading-index').is_visible()
+    assert nojs.locator('.reading-mobile-picker').is_hidden()
+    assert nojs.locator('.reading-pagination').is_hidden()
+    assert not nojs.evaluate('document.documentElement.scrollWidth > innerWidth')
+    nojs.close()
+    print('PRERENDER all six reading guides and deep references without JavaScript: PASS')
+
     for page_name in PAGES:
-        raw_html=(ROOT / f'{page_name}.html').read_text()
+        raw_html=(ROOT / f'{page_name}.html').read_text(encoding='utf-8')
         assert 'id="theme-bootstrap"' in raw_html, page_name
         assert raw_html.index('id="theme-bootstrap"') < raw_html.index('href="assets/site.css"'), page_name
         tab=browser.new_page(viewport={'width':1365,'height':860}, device_scale_factor=1)
@@ -80,6 +102,8 @@ with sync_playwright() as p:
         assert tab.locator('.footer-col a[href="software.html"]').inner_text() == 'Code & Data', page_name
         assert tab.locator('main').inner_text().strip(),page_name
         assert tab.locator('html').get_attribute('lang')=='en', page_name
+        language_toggle=tab.locator('#language-toggle')
+        assert language_toggle.inner_text().strip() in language_toggle.get_attribute('aria-label'),page_name
         # Home always uses the domain root; the footer action matches its label.
         assert tab.locator('#site-header .brand').get_attribute('href') == '/', page_name
         assert tab.locator('#site-footer .footer-intro .brand').get_attribute('href') == '/', page_name
@@ -127,10 +151,12 @@ with sync_playwright() as p:
                 const projects=document.querySelector('#home-projects');
                 return !!pubs && !!projects && !!(pubs.compareDocumentPosition(projects) & Node.DOCUMENT_POSITION_FOLLOWING);
             }""")
-            tab.screenshot(path=str(ROOT.parent/'willams-site-desktop.png'),full_page=True)
+            tab.screenshot(path=str(ARTIFACTS/'willams-site-desktop.png'),full_page=True)
             assert tab.locator('html').get_attribute('lang')=='en'
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            language_toggle=tab.locator('#language-toggle')
+            assert language_toggle.inner_text().strip() in language_toggle.get_attribute('aria-label')
             assert tab.evaluate('document.activeElement.id') == 'language-toggle'
             assert tab.title() == tab.evaluate('window.PORTFOLIO.seo.index.title.pt')
             assert tab.locator('meta[name="description"]').get_attribute('content') == tab.evaluate('window.PORTFOLIO.seo.index.description.pt')
@@ -159,6 +185,7 @@ with sync_playwright() as p:
             assert tab.locator('#toast').inner_text() == 'Citation copied'
             print('INTERACTION language switch and dark mode: PASS')
         if page_name=='reading':
+            assert tab.locator('.breadcrumb [aria-current="page"]').inner_text() == 'Reading guides'
             assert tab.locator('article.reading-area').count()==6
             assert tab.locator('.reading-index a').count()==6
             # Full editorial graph: each of the six guide introductions has precise,
@@ -336,6 +363,18 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models').is_visible()
             assert tab.locator('.reading-pagination .previous').count()==0
             assert tab.locator('.reading-pagination .next').count()==1
+            next_guide=tab.locator('.reading-pagination .next')
+            assert next_guide.get_attribute('aria-label') is None
+            assert tab.get_by_role('link',name=re.compile(r'Next guide.*Statistical inference and asymptotic theory')).count()==1
+            # Replacing the pager after keyboard activation must not strand focus.
+            tab.locator('.reading-pagination .next').focus()
+            tab.keyboard.press('Enter')
+            tab.wait_for_function("document.activeElement.id === 'read-theory'")
+            assert tab.locator('#theory').is_visible()
+            tab.locator('.reading-pagination .previous').focus()
+            tab.keyboard.press('Enter')
+            tab.wait_for_function("document.activeElement.id === 'read-spatial-models'")
+            assert tab.locator('#spatial-models').is_visible()
             tab.locator('a[href="#intro-ref-tjostheim"]').first.click()
             assert tab.evaluate('location.hash') == '#intro-ref-tjostheim'
             assert tab.locator('#spatial-models').is_visible()
@@ -361,6 +400,7 @@ with sync_playwright() as p:
             assert tab.locator('#spatial-models').is_visible()
             tab.locator('#language-toggle').click()
             assert tab.locator('html').get_attribute('lang')=='pt-BR'
+            assert tab.locator('.breadcrumb [aria-current="page"]').inner_text() == 'Guias de leitura'
             assert tab.locator('article.reading-area:visible').count()==1
             assert tab.locator('#spatial-models').is_visible()
             assert tab.locator('#reading-guide-select').input_value() == 'spatial-models'
@@ -426,7 +466,12 @@ with sync_playwright() as p:
             assert tab.locator('#project-results article').count()==4
             tab.locator('button[data-area="sar"]').click()
             assert tab.locator('#project-results article').count()==2
-            print('INTERACTION research filter: PASS')
+            tab.locator('button[data-area="causal"]').click()
+            assert tab.locator('#project-results article').count()==0
+            assert tab.locator('#project-results [role="status"]').inner_text() == 'No work-in-progress projects are listed in this area yet.'
+            tab.locator('#language-toggle').click()
+            assert tab.locator('#project-results [role="status"]').inner_text() == 'Ainda não há projetos em andamento listados nesta área.'
+            print('INTERACTION research filter and bilingual empty state: PASS')
         if page_name=='supervision':
             assert tab.locator('#level-undergraduate').count()==1
             assert tab.locator('#level-masters').count()==1
@@ -521,7 +566,7 @@ with sync_playwright() as p:
     assert phone.locator('#main-nav').is_hidden()
     assert phone.locator('#menu-toggle').get_attribute('aria-expanded') == 'false'
     assert phone.evaluate('document.activeElement.id') == 'menu-toggle'
-    phone.screenshot(path=str(ROOT.parent/'willams-site-mobile.png'),full_page=True)
+    phone.screenshot(path=str(ARTIFACTS/'willams-site-mobile.png'),full_page=True)
     print('INTERACTION responsive mobile navigation and overflow: PASS')
     phone.close()
     mobile_reading=browser.new_page(viewport={'width':390,'height':844},device_scale_factor=1,is_mobile=True,has_touch=True)
@@ -569,7 +614,7 @@ with sync_playwright() as p:
     assert mobile_reading.locator('#geometry .reading-related a').count()==3
     assert 'Testes' in mobile_reading.locator('#geometry-track-inference').inner_text() or 'testes' in mobile_reading.locator('#geometry-track-inference').inner_text()
     assert not mobile_reading.evaluate('document.documentElement.scrollWidth > innerWidth')
-    mobile_reading.screenshot(path=str(ROOT.parent/'willams-reading-mobile.png'),full_page=True)
+    mobile_reading.screenshot(path=str(ARTIFACTS/'willams-reading-mobile.png'),full_page=True)
     mobile_reading.close()
     narrow=browser.new_page(viewport={'width':320,'height':700},device_scale_factor=1,is_mobile=True,has_touch=True)
     load(narrow,'reading')
@@ -613,7 +658,7 @@ with sync_playwright() as p:
 
     mock=browser.new_page(viewport={'width':1365,'height':860})
     mock.on('pageerror',lambda err: errors.append(str(err)))
-    html=(ROOT/'publications.html').read_text()
+    html=(ROOT/'publications.html').read_text(encoding='utf-8')
     html=re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html=re.sub(r'<link rel="stylesheet"[^>]*>','',html)
     mock.set_content(html)
