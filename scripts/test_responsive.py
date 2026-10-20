@@ -7,6 +7,7 @@ from pathlib import Path
 import os
 import re
 from playwright.sync_api import sync_playwright
+from security_policy import strip_security_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 PAGES = ['index','research','reading','publications','supervision','people','teaching','software','about','contact']
@@ -21,7 +22,7 @@ def load(browser, name, width=390, height=844):
     scripts = re.findall(r'<script[^>]*src="([^"]+)"[^>]*></script>',html)
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html = re.sub(r'<link rel="stylesheet"[^>]*>','',html)
-    page.set_content(html,wait_until='load')
+    page.set_content(strip_security_metadata(html),wait_until='load')
     page.add_style_tag(content=CSS)
     for script in scripts:
         page.add_script_tag(content=(ROOT/script).read_text(encoding='utf-8'))

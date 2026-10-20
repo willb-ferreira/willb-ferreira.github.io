@@ -11,6 +11,7 @@ import json
 from html import escape as html_escape
 from pathlib import Path
 from site_config import PAGE_SLUGS, SITE_URL, page_url
+from security_policy import apply_security_metadata, strip_security_metadata
 from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -33,7 +34,10 @@ with sync_playwright() as p:
     for name in PAGES:
         path = ROOT / f'{name}.html'
         html = path.read_text(encoding='utf-8')
-        stripped = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', html)
+        # Isolated rendering injects trusted local scripts; enforcement is checked
+        # separately against the final files over HTTP in test_security.py.
+        stripped = strip_security_metadata(html)
+        stripped = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', stripped)
         tab = browser.new_page()
         tab.set_content(stripped, wait_until='load')
         tab.add_script_tag(content=content)
@@ -149,6 +153,7 @@ with sync_playwright() as p:
                               lambda _: READING_NOJS, html, count=1, flags=re.S)
             else:
                 html = html.replace('</head>', READING_NOJS + '\n</head>', 1)
+        html = apply_security_metadata(html)
         path.write_text(html, encoding='utf-8')
         print(f'PRERENDER {path.name}: {len(main)} main HTML chars')
     browser.close()

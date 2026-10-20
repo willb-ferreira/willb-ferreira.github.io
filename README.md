@@ -65,6 +65,26 @@ python scripts/test_responsive.py
 
 Nunca publique senhas, tokens, dados pessoais de alunos ou conteúdo de repositórios privados no GitHub Pages. O site é público.
 
+## Segurança do site e privacidade do código-fonte
+
+As dez páginas recebem uma política CSP em `<meta>` e uma política de referência que funcionam no GitHub Pages. A CSP admite os scripts do próprio site e o hash exato do código inicial do tema; bloqueia JavaScript inline não autorizado, `eval`, scripts externos e requisições de rede feitas pela aplicação. Links para artigos, perfis e e-mail continuam funcionando. Estilos inline existentes permanecem permitidos para preservar o layout. Ao alterar o código inicial do tema, regenere os HTML para atualizar o hash.
+
+Depois do prerender, `python scripts/generate_security_headers.py` gera `_headers`, preparado para Cloudflare Pages. Ele adiciona proteção contra incorporação em frames, `nosniff`, controle de permissões e HSTS por um ano para o host visitado, sem `includeSubDomains` nem `preload`. **O GitHub Pages não aplica `_headers`; usar Cloudflare apenas como DNS também não ativa esses cabeçalhos.** CSP e referrer são as proteções aplicáveis por meta no site atual; os demais controles precisam estar nos cabeçalhos HTTP reais. Não se usam metas que prometam controles ignorados pelo navegador.
+
+O staging publica somente as páginas e os recursos necessários em `_site/public`; documentos internos, scripts de construção e caches ficam fora desse pacote. Enquanto o repositório for público, esses arquivos continuam acessíveis pelo GitHub. Um futuro repositório privado pode restringir o acesso ao fonte e ao histórico, mas HTML, CSS e JavaScript entregues pelo site continuam públicos — inclusive textos armazenados nos arquivos carregados e ocultos na interface. Tornar o repositório privado também não remove cópias já obtidas por terceiros.
+
+As Actions usam revisões fixas e o Playwright usa uma versão exata. Essas dependências precisam de revisão periódica e execução das suítes antes de qualquer atualização; não há atualização automática configurada.
+
+Uma eventual migração para Cloudflare Pages deve ser testada primeiro em uma prévia, preservando as dez rotas, EN/PT, temas, sincronização acadêmica e exportação de referências. Depois vêm DNS, HTTPS e validação do domínio; a visibilidade do repositório só deve mudar quando a nova publicação estiver comprovadamente funcionando. Nenhuma mudança de provedor, DNS ou visibilidade é executada pelos scripts deste projeto. A política e seus limites estão em [SECURITY.md](SECURITY.md), com referências à [configuração oficial de cabeçalhos do Cloudflare](https://developers.cloudflare.com/pages/configuration/headers/).
+
+```bash
+python scripts/prerender.py
+python scripts/generate_security_headers.py
+python scripts/test_security.py
+python scripts/stage_public.py
+python scripts/test_security.py --root _site/public
+```
+
 
 ## Reading guides / Guias de leitura
 

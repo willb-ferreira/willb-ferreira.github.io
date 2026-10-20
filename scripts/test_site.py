@@ -5,6 +5,7 @@ import re
 from xml.etree import ElementTree as ET
 from playwright.sync_api import sync_playwright
 from site_config import page_url
+from security_policy import strip_security_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACTS = Path(os.environ.get('RUNNER_TEMP') or ROOT / '_site') / 'audit-artifacts'
@@ -32,7 +33,7 @@ def load(tab, page_name, initial_hash=None):
     # Browser navigation is restricted in this environment, so use set_content.
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', html)
     html = re.sub(r'<link rel="stylesheet"[^>]*>', '', html)
-    tab.set_content(html, wait_until='load')
+    tab.set_content(strip_security_metadata(html), wait_until='load')
     tab.add_style_tag(content=css)
     tab.add_script_tag(content=content)
     tab.add_script_tag(content=library)
@@ -72,7 +73,7 @@ with sync_playwright() as p:
     nojs=browser.new_page(viewport={'width':1365,'height':860},java_script_enabled=False)
     nojs_html=(ROOT/'reading.html').read_text(encoding='utf-8')
     nojs_html=re.sub(r'<link rel="stylesheet"[^>]*>',lambda _: '<style>'+css+'</style>',nojs_html)
-    nojs.set_content(nojs_html,wait_until='load')
+    nojs.set_content(strip_security_metadata(nojs_html),wait_until='load')
     assert nojs.locator('article.reading-area:visible').count()==6
     assert nojs.locator('article.reading-area[hidden]').count()==0
     assert nojs.locator('.reading-index [aria-current="location"]').count()==0
@@ -661,7 +662,7 @@ with sync_playwright() as p:
     html=(ROOT/'publications.html').read_text(encoding='utf-8')
     html=re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html=re.sub(r'<link rel="stylesheet"[^>]*>','',html)
-    mock.set_content(html)
+    mock.set_content(strip_security_metadata(html))
     mock.add_style_tag(content=css)
     mock.add_script_tag(content=content)
     mock.add_script_tag(content=auto)

@@ -4,6 +4,7 @@ The main research library and approved publication sync are separately tested by
 from pathlib import Path
 import os, re
 from playwright.sync_api import sync_playwright
+from security_policy import strip_security_metadata
 ROOT=Path(__file__).resolve().parents[1]
 CONTENT=(ROOT/'assets/content.js').read_text(encoding='utf-8')
 AUTO=(ROOT/'assets/auto-content.js').read_text(encoding='utf-8')
@@ -17,7 +18,7 @@ def load(browser,kind,width=1365,extra=''):
     html=(ROOT/f'{kind}.html').read_text(encoding='utf-8')
     html=re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html=re.sub(r'<link rel="stylesheet"[^>]*>','',html)
-    page.set_content(html,wait_until='load')
+    page.set_content(strip_security_metadata(html),wait_until='load')
     page.add_style_tag(content=CSS)
     page.add_script_tag(content=CONTENT)
     page.add_script_tag(content=AUTO)
