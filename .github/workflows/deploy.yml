@@ -22,6 +22,10 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Read main after acquiring the shared deployment queue: academic sync
+          # may have committed newer metadata without triggering another deploy.
+          ref: main
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - uses: actions/setup-python@v5
