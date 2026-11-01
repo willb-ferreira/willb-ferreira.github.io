@@ -741,10 +741,15 @@
   const pubCard = (p,showScholarly=true) => {
     const heading=page==="publications"?"h2":"h3";
     const doiUrl=p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"";
-    const sameResource=(first,second)=>Boolean(first&&second)&&String(first).replace(/\/$/,"").toLowerCase()===String(second).replace(/\/$/,"").toLowerCase();
+    const resourceKey=value=>{
+      const clean=safe(value);if(!clean)return "";
+      const doi=clean.match(/^https?:\/\/(?:dx\.)?doi\.org\/(.+)$/i);
+      return doi?`doi:${doi[1].replace(/\/$/,"").toLowerCase()}`:clean.replace(/\/$/,"");
+    };
+    const sameResource=(first,second)=>Boolean(first&&second)&&resourceKey(first)===resourceKey(second);
     const openDoi=p.open_access&&sameResource(p.oa_url,doiUrl);
     const candidates=[[doiUrl,openDoi?`${tx("doi")} · ${tx("openAccess")}`:tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
-    const seen=new Set(),resources=candidates.filter(([u])=>{const clean=safe(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
+    const seen=new Set(),resources=candidates.filter(([u])=>{const clean=resourceKey(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
     const citationCount=Number.isFinite(Number(p.citations))?Math.max(0,Number(p.citations)):0;
     const indicators=[];
     const citationDate=/^\d{4}-\d{2}-\d{2}$/.test(p.citation_updated||"")?p.citation_updated:"";

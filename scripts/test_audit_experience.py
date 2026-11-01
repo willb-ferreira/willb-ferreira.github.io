@@ -113,6 +113,10 @@ with sync_playwright() as playwright:
     button.click()
     assert page.evaluate("window.auditCopies.at(-1).startsWith('@article{')")
     assert " and " in page.evaluate("window.auditCopies.at(-1)")
+    # Academic providers also return the equivalent dx.doi.org resolver.
+    mathematics=page.locator('.publication').filter(has_text='An Extended log-Lindley-G Family')
+    assert mathematics.locator('a[href*="doi.org/10.3390/math9233108"]').count() == 1
+    assert mathematics.locator('.publication-indicators a[href*="doi.org"]').count() == 0
     print("CITATIONS one DOI/OA link, copy-specific feedback and BibTeX copy: PASS")
 
     assert page.locator("#theme-toggle").get_attribute("data-theme-mode") == "system"
