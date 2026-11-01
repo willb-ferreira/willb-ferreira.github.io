@@ -559,7 +559,7 @@ with sync_playwright() as p:
             assert tab.locator('.profile-links a[href*="lattes.cnpq.br"]').inner_text().strip() == 'Lattes CV', page_name
             print(f'INTERACTION {page_name} Lattes localization and home URL: PASS')
         tab.close()
-    for level, expected in [('undergraduate',6),('masters',5),('phd',3)]:
+    for level, expected in [('undergraduate',6),('masters',3),('phd',3)]:
         direct=browser.new_page(viewport={'width':1365,'height':860})
         load(direct,'supervision',initial_hash=f'#level-{level}')
         assert direct.locator(f'#level-{level}').get_attribute('aria-pressed') == 'true'

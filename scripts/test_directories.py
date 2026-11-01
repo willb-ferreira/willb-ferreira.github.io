@@ -66,15 +66,15 @@ with sync_playwright() as p:
     topics=load(browser,'supervision')
     assert topics.locator('#topic-results article').count()==6
     topics.locator('[data-level="masters"]').click()
-    assert topics.locator('#topic-results article').count()==5
+    assert topics.locator('#topic-results article').count()==3
     topics.locator('[data-level="phd"]').click()
     assert topics.locator('#topic-results article').count()==3
     topics.locator('[data-level="all"]').click()
-    assert topics.locator('#topic-results article').count()==14
-    assert '14 proposals' in topics.locator('#topic-count').inner_text()
+    assert topics.locator('#topic-results article').count()==12
+    assert '12 proposals' in topics.locator('#topic-count').inner_text()
     topics.locator('#language-toggle').click()
     assert 'propostas' in topics.locator('#topic-count').inner_text()
-    print('SUPERVISION 6 undergraduate + 5 masters + 3 PhD, filters & bilingual: PASS')
+    print('SUPERVISION 6 undergraduate (research/thesis) + 3 masters + 3 PhD, filters & bilingual: PASS')
     topics.close()
 
     research=load(browser,'research')

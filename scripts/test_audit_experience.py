@@ -164,12 +164,12 @@ with sync_playwright() as playwright:
     page.goto(ORIGIN + "/supervision.html")
     page.locator("[data-level='masters']").click()
     assert urlparse(page.url).fragment == "level-masters"
-    assert page.locator("#topic-results article").count() == 5
+    assert page.locator("#topic-results article").count() == 3
     page.locator("[data-level='phd']").click()
     assert page.locator("#topic-results article").count() == 3
     page.go_back()
     assert page.locator("[data-level='masters']").get_attribute("aria-pressed") == "true"
-    assert page.locator("#topic-results article").count() == 5
+    assert page.locator("#topic-results article").count() == 3
     assert page.locator("#language-toggle").get_attribute("href").endswith("#level-masters")
     print("SUPERVISION shared level and Back navigation: PASS")
 

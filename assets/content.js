@@ -830,36 +830,36 @@ window.PORTFOLIO = {
       "masters"
     ],
     "title": {
-      "pt": "Inferência para observações de radar complexas",
-      "en": "Inference for complex radar observations"
+      "pt": "Modelagem e inferência para dados de radar",
+      "en": "Modeling and inference for radar data"
     },
     "description": {
-      "pt": "Investigar propriedades inferenciais de modelos para observações complexas e avaliar estimadores em experimentos reproduzíveis.",
-      "en": "Study inferential properties of models for complex-valued observations and evaluate estimators in reproducible experiments."
+      "pt": "Investigar modelos probabilísticos para dados SAR e PolSAR, com foco em estimação e quantificação da incerteza, combinando análise metodológica e avaliação reproduzível de procedimentos.",
+      "en": "Investigate probability models for SAR and PolSAR data, focusing on estimation and uncertainty quantification through methodological analysis and reproducible evaluation of procedures."
     },
     "requirements": {
-      "pt": "Inferência por verossimilhança, probabilidade multivariada, álgebra com números complexos e simulação.",
-      "en": "Likelihood inference, multivariate probability, complex-valued algebra, and simulation."
+      "pt": "Inferência por verossimilhança, probabilidade multivariada e simulação; fundamentos de dependência espacial e álgebra complexa conforme o recorte escolhido.",
+      "en": "Likelihood inference, multivariate probability, and simulation; foundations of spatial dependence and complex algebra as appropriate to the chosen scope."
     },
     "status": "proposal"
   },
   {
-    "id": "msc-radar-model-diagnostics",
-    "area": "geometry",
+    "id": "msc-robust-diagnostics",
+    "area": "theory",
     "levels": [
       "masters"
     ],
     "title": {
-      "pt": "Diagnóstico de modelos estatísticos para imagens SAR",
-      "en": "Model diagnostics for SAR image models"
+      "pt": "Diagnóstico e sensibilidade para dados dependentes",
+      "en": "Diagnostics and sensitivity for dependent data"
     },
     "description": {
-      "pt": "Estudar como hipóteses de modelagem e observações individuais afetam a qualidade de ajustes estatísticos a dados de radar.",
-      "en": "Study how modeling assumptions and individual observations affect statistical model fit for radar data."
+      "pt": "Avaliar a adequação de modelos para dados correlacionados, incluindo imagens de radar. Comparar procedimentos de diagnóstico e estudar sua sensibilidade a observações influentes e às hipóteses do modelo.",
+      "en": "Assess model adequacy for correlated data, including radar imagery. Compare diagnostic procedures and study their sensitivity to influential observations and model assumptions."
     },
     "requirements": {
-      "pt": "Inferência paramétrica, diagnóstico de regressão e programação; noções de modelos probabilísticos para imagens.",
-      "en": "Parametric inference, regression diagnostics, and programming; familiarity with probability models for imagery."
+      "pt": "Inferência paramétrica, diagnóstico de regressão, fundamentos de robustez e dependência; programação para estudos de simulação.",
+      "en": "Parametric inference, regression diagnostics, foundations of robustness and dependence; programming for simulation studies."
     },
     "status": "proposal"
   },
@@ -874,52 +874,12 @@ window.PORTFOLIO = {
       "en": "Regularized estimation for dependent observations"
     },
     "description": {
-      "pt": "Investigar procedimentos de regularização em modelos estatísticos estabelecidos, com atenção a estabilidade e incerteza.",
-      "en": "Investigate regularization in established statistical models, with attention to stability and uncertainty."
+      "pt": "Investigar como a regularização afeta o equilíbrio entre viés, precisão e estabilidade numérica em modelos estabelecidos para dados dependentes.",
+      "en": "Investigate how regularization affects the balance between bias, precision, and numerical stability in established models for dependent data."
     },
     "requirements": {
       "pt": "Álgebra linear, regressão, otimização e modelos para dados dependentes; programação em R ou Python.",
       "en": "Linear algebra, regression, optimization, and dependent-data models; R or Python programming."
-    },
-    "status": "proposal"
-  },
-  {
-    "id": "msc-robust-diagnostics",
-    "area": "theory",
-    "levels": [
-      "masters"
-    ],
-    "title": {
-      "pt": "Diagnóstico robusto para dados correlacionados",
-      "en": "Robust diagnostics for correlated data"
-    },
-    "description": {
-      "pt": "Comparar a sensibilidade de procedimentos de diagnóstico sob desvios controlados das hipóteses do modelo.",
-      "en": "Compare the sensitivity of diagnostic procedures under controlled deviations from model assumptions."
-    },
-    "requirements": {
-      "pt": "Inferência estatística, regressão, fundamentos de robustez e planejamento de estudos de simulação.",
-      "en": "Statistical inference, regression, foundations of robustness, and simulation-study design."
-    },
-    "status": "proposal"
-  },
-  {
-    "id": "msc-radar-distributional-inference",
-    "area": "sar",
-    "levels": [
-      "masters"
-    ],
-    "title": {
-      "pt": "Distribuições e incerteza em dados de radar",
-      "en": "Statistical distributions and uncertainty in radar data"
-    },
-    "description": {
-      "pt": "Estudar modelos probabilísticos de observações SAR e como a dependência afeta estimação e quantificação da incerteza.",
-      "en": "Study probability models for SAR observations and how dependence affects estimation and uncertainty quantification."
-    },
-    "requirements": {
-      "pt": "Distribuições de probabilidade, inferência paramétrica e fundamentos de dependência espacial; simulação computacional.",
-      "en": "Probability distributions, parametric inference, and foundations of spatial dependence; computational simulation."
     },
     "status": "proposal"
   },
@@ -934,8 +894,8 @@ window.PORTFOLIO = {
       "en": "Information geometry and statistical inference"
     },
     "description": {
-      "pt": "Explorar estruturas geométricas de famílias estatísticas e suas relações com questões gerais de inferência e avaliação de modelos.",
-      "en": "Explore geometric structures of statistical families and their links to general questions in inference and model evaluation."
+      "pt": "Investigar estruturas geométricas de famílias estatísticas e suas relações com estimação e avaliação de modelos, buscando contribuições metodológicas ou teóricas para a inferência.",
+      "en": "Investigate geometric structures of statistical families and their relationships with estimation and model evaluation, seeking methodological or theoretical contributions to inference."
     },
     "requirements": {
       "pt": "Inferência matemática e teoria assintótica; álgebra linear e fundamentos de geometria diferencial para o percurso escolhido.",
@@ -954,8 +914,8 @@ window.PORTFOLIO = {
       "en": "Statistical theory for PolSAR data"
     },
     "description": {
-      "pt": "Investigar fundamentos probabilísticos e questões inferenciais motivadas por observações de radar polarimétrico.",
-      "en": "Investigate probabilistic foundations and inferential questions motivated by polarimetric radar observations."
+      "pt": "Desenvolver fundamentos probabilísticos e resultados inferenciais para modelos de observações de radar polarimétrico, articulando propriedades teóricas e validação computacional.",
+      "en": "Develop probabilistic foundations and inferential results for models of polarimetric radar observations, connecting theoretical properties with computational validation."
     },
     "requirements": {
       "pt": "Probabilidade multivariada, inferência matemática e álgebra matricial complexa; fundamentos de observações PolSAR.",
@@ -974,8 +934,8 @@ window.PORTFOLIO = {
       "en": "Robust inference under dependence"
     },
     "description": {
-      "pt": "Estudar a validade e a sensibilidade de procedimentos inferenciais para dados dependentes e modelos sujeitos a especificação imperfeita.",
-      "en": "Study the validity and sensitivity of inference for dependent data and potentially misspecified statistical models."
+      "pt": "Desenvolver procedimentos inferenciais para dados dependentes e investigar suas condições de validade e propriedades de robustez diante de especificação imperfeita dos modelos.",
+      "en": "Develop inferential procedures for dependent data and investigate their validity conditions and robustness properties under model misspecification."
     },
     "requirements": {
       "pt": "Teoria assintótica, processos estocásticos e fundamentos de inferência robusta; experiência com simulação.",

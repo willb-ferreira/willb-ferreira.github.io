@@ -40,3 +40,9 @@ Testes automatizados de acessibilidade e emulação de tela não substituem uma 
 ## Acabamento móvel após revisão visual
 
 A revisão do site publicado identificou três refinamentos para preservar a aparência sóbria em telas pequenas: Publicações com controles mais compactos e categorias apenas quando houver registros (mantendo filtros vazios solicitados explicitamente por URL), rodapé com Navegação e Perfis lado a lado e seletor dos guias sem posição fixa em telas baixas. Os endereços compartilháveis, os alvos de toque, a navegação por teclado, a impressão e as opções de idioma/tema são preservados. Cores, famílias tipográficas e conteúdo acadêmico permanecem na direção existente.
+
+## Organização dos temas de orientação
+
+Os temas públicos foram consolidados em 12 propostas: seis de graduação (IC/TCC), três de mestrado e três de doutorado. No mestrado, modelagem de radar e quantificação da incerteza compartilham um cartão; diagnóstico e análise de sensibilidade compartilham outro, vinculado ao guia de Inferência. Regularização conserva foco próprio em viés, precisão e estabilidade. Os temas de graduação e doutorado mantêm seus eixos; a redação esclarece a progressão de exigência acadêmica. Os identificadores dos níveis e seus endereços compartilháveis permanecem estáveis.
+
+A apresentação enfatiza rigor, reprodutibilidade e potencial de publicação, sem promessa de aceite. Descrições públicas permanecem no nível de motivação, área e formação recomendada, conforme SECURITY.md. Não foram incluídas novas linhas, fórmulas inéditas, hipóteses específicas ou planos experimentais.
