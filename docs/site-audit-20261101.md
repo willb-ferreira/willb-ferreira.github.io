@@ -36,3 +36,7 @@ O retrato original em WebP é pequeno e também atende telas com maior densidade
 As oito suítes passaram: domínio/idiomas, conteúdo e interações, novos fluxos de experiência, sincronização de metadados, diretórios, responsividade, empacotamento e segurança. Foram verificados os 22 HTML sem JavaScript, a navegação entre idiomas, filtros compartilháveis e histórico, exportação/cópia de BibTeX, impressão dos seis guias e preservação das bibliografias. A responsividade cobre 17 larguras de 320 a 2560 px, português, fonte ampliada, orientação paisagem e alinhamento do cabeçalho com o seletor móvel. Não foram registrados erros JavaScript nas suítes. A prévia local também foi conferida visualmente no navegador.
 
 Testes automatizados de acessibilidade e emulação de tela não substituem uma avaliação com leitores de tela e aparelhos físicos. Não se infere desempenho de campo a partir de tamanho de arquivos.
+
+## Acabamento móvel após revisão visual
+
+A revisão do site publicado identificou três refinamentos para preservar a aparência sóbria em telas pequenas: Publicações com controles mais compactos e categorias apenas quando houver registros (mantendo filtros vazios solicitados explicitamente por URL), rodapé com Navegação e Perfis lado a lado e seletor dos guias sem posição fixa em telas baixas. Os endereços compartilháveis, os alvos de toque, a navegação por teclado, a impressão e as opções de idioma/tema são preservados. Cores, famílias tipográficas e conteúdo acadêmico permanecem na direção existente.

@@ -12,9 +12,12 @@ ERRORS = []
 GUIDE_SCRIPTS = ["research-library", "intro-library", "inference-library", "image-library", "geometry-library", "regression-library", "causal-library"]
 
 
-def fixture(kind, locale):
+def fixture(kind, locale, include_preprint=False):
     sources = ["content", "auto-content"] + (GUIDE_SCRIPTS if kind == "reading" else []) + ["app"]
     scripts = "".join(f'<script src="/assets/{name}.js"></script>' for name in sources)
+    if include_preprint:
+        mock = '<script>window.PORTFOLIO.publications.push({id:"fixture-preprint",title:"Fixture preprint for future bibliography",authors:"Test Author",year:2027,type:"preprint",venue:"Offline test fixture"});</script>'
+        scripts = scripts.replace('<script src="/assets/app.js"></script>', mock + '<script src="/assets/app.js"></script>')
     return f'''<!doctype html><html lang="{'pt-BR' if locale == 'pt' else 'en'}" data-site-lang="{locale}"><head>
       <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
       <title>Fixture</title><meta name="description" content=""><meta property="og:title" content=""><meta property="og:description" content="">
@@ -41,7 +44,7 @@ def route_request(route):
     kind = slug.removesuffix(".html") or "index"
     if kind == "404":
         kind = "not-found"
-    route.fulfill(body=fixture(kind, locale), content_type="text/html")
+    route.fulfill(body=fixture(kind, locale, parse_qs(parsed.query).get("_fixture_preprint") == ["1"]), content_type="text/html")
 
 
 with sync_playwright() as playwright:
@@ -74,6 +77,29 @@ with sync_playwright() as playwright:
     assert page.locator("#site-footer a[href='/reading.html']").count() == 1
     assert "Bibliographic data updated" in page.locator(".footer-updated").inner_text()
     print("LOCALE explicit routes, query/fragment-preserving language links, footer navigation: PASS")
+
+    assert page.locator("#publication-types [data-type]").evaluate_all("buttons=>buttons.map(button=>button.dataset.type)") == ["all", "article", "conference"]
+    page.goto(ORIGIN + "/publications.html?type=preprint")
+    assert page.locator("[data-type='preprint']").get_attribute("aria-pressed") == "true"
+    assert page.locator(".publication").count() == 0
+    assert page.locator("#pub-count").inner_text() == "0 records"
+    assert page.locator("[data-type='other']").count() == 0
+    page.locator("[data-type='all']").click()
+    assert page.locator(".publication").count() == 4
+    assert page.locator("[data-type='preprint']").count() == 0
+    assert page.evaluate("document.activeElement.dataset.type") == "all"
+    page.goto(ORIGIN + "/publications.html?_fixture_preprint=1")
+    assert page.locator("#publication-types [data-type]").evaluate_all("buttons=>buttons.map(button=>button.dataset.type)") == ["all", "article", "preprint", "conference"]
+    page.locator("[data-type='preprint']").click()
+    assert page.locator(".publication").count() == 1
+    assert "Fixture preprint for future bibliography" in page.locator(".publication").inner_text()
+    page.locator("[data-type='all']").click()
+    page.locator("#publication-search").fill("gamma")
+    assert page.locator(".publication").count() == 1
+    assert page.locator("[data-type='preprint']").count() == 1, "Types come from the full bibliography, independent of search"
+    assert page.locator("[data-type='other']").count() == 0
+    page.goto(ORIGIN + "/publications.html")
+    print("PUBLICATIONS only represented types, honest empty shared filters and automatic future types: PASS")
 
     page.locator("[data-type='conference']").click()
     assert parse_qs(urlparse(page.url).query)["type"] == ["conference"]

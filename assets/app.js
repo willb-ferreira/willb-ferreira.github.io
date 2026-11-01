@@ -772,8 +772,25 @@
       return !query || [p.title,p.authors,p.venue,...(p.tags||[])].join(" ").toLocaleLowerCase(lang === "pt"?"pt-BR":"en-US").includes(query);
     }).sort((a,b)=>Number(b.year||0)-Number(a.year||0));
   };
+  const visiblePublicationTypes = () => {
+    const represented=new Set((D.publications||[]).map(publication=>publication.type||"other"));
+    return ["all",...["article","preprint","conference","other"].filter(type=>represented.has(type)||type===selectedPublicationType)];
+  };
+  const renderPublicationTypeFilters = () => visiblePublicationTypes().map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("");
+  const syncPublicationTypeFilters = () => {
+    const container=document.getElementById("publication-types");
+    if(!container)return;
+    const expected=visiblePublicationTypes().join(","),current=[...container.querySelectorAll("[data-type]")].map(button=>button.dataset.type).join(",");
+    if(current!==expected){
+      const restoreFocus=container.contains(document.activeElement);
+      container.innerHTML=renderPublicationTypeFilters();
+      if(restoreFocus)container.querySelector(`[data-type="${selectedPublicationType}"]`)?.focus({preventScroll:true});
+    }
+    container.querySelectorAll("[data-type]").forEach(button=>{button.classList.toggle("active",button.dataset.type===selectedPublicationType);button.setAttribute("aria-pressed",String(button.dataset.type===selectedPublicationType));});
+  };
   const pubsResults = () => {
     const list=filteredPublications(), count=document.getElementById("pub-count"), dest=document.getElementById("pub-results");
+    syncPublicationTypeFilters();
     if(count) count.textContent=`${list.length} ${list.length===1?tx("record"):tx("records")}`;
     if(dest) dest.innerHTML=list.length?list.map(p=>pubCard(p,true)).join(""):empty("⌕",tx("publications"),D.publications.length?tx("noMatches"):tx("noPapers"));
   };
@@ -786,7 +803,7 @@
   };
   const renderPublications = () => {
     const years=[...new Set((D.publications||[]).map(p=>String(p.year)).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" maxlength="300" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count" role="status" aria-live="polite"></span></div><label class="citation-controls" for="citation-format">${tx("citationFormat")} <select id="citation-format" class="sort-select"><option value="reference" ${citationFormat==="reference"?"selected":""}>${tx("citationReference")}</option><option value="bibtex" ${citationFormat==="bibtex"?"selected":""}>BibTeX</option></select></label><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
+    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section publications-section"><div class="shell"><div class="toolbar publication-toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" maxlength="300" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters publication-actions"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar publication-filters-toolbar"><div class="filters" id="publication-types">${renderPublicationTypeFilters()}</div><span id="pub-count" class="count" role="status" aria-live="polite"></span></div><label class="citation-controls" for="citation-format">${tx("citationFormat")} <select id="citation-format" class="sort-select"><option value="reference" ${citationFormat==="reference"?"selected":""}>${tx("citationReference")}</option><option value="bibtex" ${citationFormat==="bibtex"?"selected":""}>BibTeX</option></select></label><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
   };
   const topicCard = x => `<article class="topic-card"><div class="level-tags">${x.levels.map(y=>tag(tx(y),"tinted")).join("")}${x.area&&D.research.find(a=>a.id===x.area)?`<a class="topic-area" href="reading.html#${e(x.area)}">${e(t(D.research.find(a=>a.id===x.area).title))} ↗</a>`:""}</div><div class="card-content"><h3>${e(t(x.title))}</h3><p>${e(t(x.description))}</p></div><div class="requirements"><b>${tx("requirements")}</b><p>${e(t(x.requirements))}</p></div></article>`;
   const topicResults = () => D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).map(topicCard).join("");

@@ -48,6 +48,46 @@ def assert_fits(page, name, width, menu_open=False):
     assert 0 < actual['shell'] <= min(1381,actual['available']), (name,width,'invalid shell',actual)
     assert actual['nav'] == ('flex' if menu_open or width > 970 else 'none'), (name,width,'wrong navigation mode',actual)
 
+def assert_mobile_footer(page, name, width):
+    footer=page.evaluate('''() => {
+        const intro=document.querySelector('.footer-intro').getBoundingClientRect();
+        const columns=[...document.querySelectorAll('.footer-col')].map(column => {
+            const bounds=column.getBoundingClientRect();
+            return {left:bounds.left,right:bounds.right,top:bounds.top,width:bounds.width,
+                links:[...column.querySelectorAll('a')].map(link => {
+                    const box=link.getBoundingClientRect();
+                    return {left:box.left,right:box.right,height:box.height};
+                })};
+        });
+        return {introBottom:intro.bottom,columns};
+    }''')
+    first,second=footer['columns']
+    assert abs(first['top']-second['top'])<=1, (name,width,'footer columns must be side by side',footer)
+    assert first['right']<second['left'], (name,width,'footer columns overlap',footer)
+    assert abs(first['width']-second['width'])<=1, (name,width,'footer columns should share the space',footer)
+    assert footer['introBottom']<=first['top'], (name,width,'footer introduction should span above both columns',footer)
+    for column in footer['columns']:
+        for link in column['links']:
+            assert link['height']>=44, (name,width,'footer touch target too short',link)
+            assert link['left']>=column['left']-1 and link['right']<=column['right']+1, (name,width,'footer link escapes its column',link)
+
+
+def assert_mobile_publication_controls(page, width):
+    controls=page.evaluate('''() => {
+        const box=selector => {
+            const bounds=document.querySelector(selector).getBoundingClientRect();
+            return {top:bounds.top,bottom:bounds.bottom,left:bounds.left,right:bounds.right,height:bounds.height};
+        };
+        return {year:box('#publication-year'),exportButton:box('#export-bibtex'),citation:box('.citation-controls'),
+            publication:box('#pub-results .publication'),available:innerWidth};
+    }''')
+    assert abs(controls['year']['top']-controls['exportButton']['top'])<=1, (width,'year and export should share a compact row',controls)
+    for key in ('year','exportButton'):
+        assert controls[key]['height']>=44, (width,'publication control touch target too short',key,controls)
+        assert controls[key]['left']>=0 and controls[key]['right']<=controls['available'], (width,'publication control escapes viewport',key,controls)
+    assert controls['publication']['top']>=controls['citation']['bottom']+8, (width,'citation selector needs space before bibliography',controls)
+
+
 with sync_playwright() as p:
     browser=p.chromium.launch(executable_path=os.environ.get('CHROMIUM_BIN') or None,headless=True,args=['--no-sandbox'])
     for name in PAGES:
@@ -62,6 +102,10 @@ with sync_playwright() as p:
                 page.set_viewport_size({'width':width,'height':844})
                 page.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
                 assert_fits(page,name+' '+language,width)
+                if name=='index':
+                    assert_mobile_footer(page,name+' '+language,width)
+                if name=='publications':
+                    assert_mobile_publication_controls(page,width)
         print(f'RESPONSIVE {name}: {len(WIDTHS)} widths, no overflow, correct menu: PASS')
         page.close()
 
@@ -94,8 +138,24 @@ with sync_playwright() as p:
     assert abs(sticky['headerTop'])<=1, ('mobile header scrolled away',sticky)
     assert abs(sticky['pickerTop']-sticky['headerBottom'])<=1, ('guide selector must sit below header',sticky)
     assert sticky['pickerBottom']<=844, ('guide selector escapes viewport',sticky)
+    # A short landscape viewport keeps the header but lets the selector scroll
+    # away so the two controls do not consume most of the reading area.
+    reading.set_viewport_size({'width':568,'height':320})
+    reading.evaluate('window.scrollTo(0, 1000)')
+    reading.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+    short=reading.evaluate('''() => {
+        const header=document.querySelector('#site-header').getBoundingClientRect();
+        const picker=document.querySelector('.reading-mobile-picker');
+        const bounds=picker.getBoundingClientRect();
+        const guide=document.querySelector('.reading-area');
+        return {headerTop:header.top,headerBottom:header.bottom,pickerBottom:bounds.bottom,
+            pickerPosition:getComputedStyle(picker).position,guideOffset:parseFloat(getComputedStyle(guide).scrollMarginTop)};
+    }''')
+    assert abs(short['headerTop'])<=1, ('landscape header scrolled away',short)
+    assert short['pickerPosition']!='sticky' and short['pickerBottom']<=short['headerBottom'], ('short viewport should release the guide selector',short)
+    assert short['headerBottom']<=short['guideOffset']<=short['headerBottom']+32, ('landscape guide anchors should clear only the header',short)
     reading.close()
-    print('RESPONSIVE guide cards, Portuguese, larger type, narrow laptop and persistent mobile guide/header: PASS')
+    print('RESPONSIVE guide cards, Portuguese, larger type, narrow laptop, portrait sticky controls and short landscape reading room: PASS')
 
     for name in ['index','reading','teaching','supervision']:
         phone=load(browser,name,width=568,height=320)

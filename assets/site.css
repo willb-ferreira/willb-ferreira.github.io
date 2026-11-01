@@ -824,7 +824,7 @@ html[data-theme="dark"]{color-scheme:dark}
 .publication .links>button.is-copied {color:var(--ink);border-bottom-color:var(--accent)}
 .citation-controls {display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;max-width:100%}
 .citation-format {max-width:100%;min-height:32px;padding:3px 8px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--ink);font:inherit;font-size:12px}
-.citation-controls label {font-size:12px;color:var(--muted)}
+.citation-controls {font-size:13px;color:var(--muted)}
 .citation-controls select {max-width:100%}
 .contact-symbol svg {width:22px;height:22px;stroke-width:1.6}
 .course-entry .course-meta {white-space:normal;min-width:0}
@@ -866,7 +866,10 @@ a.project-card:hover,a.project-card:focus-visible,
   .publication-indicators,.portrait-caption,.footer-bottom {font-size:13px!important}
   .publication .links {gap:8px 16px;align-items:center}
   .publication .links>a,.publication .links>button {padding-block:8px;justify-content:flex-start}
-  .footer-col {gap:0}
+  .footer-main {grid-template-columns:repeat(2,minmax(0,1fr));gap:24px 20px}
+  .footer-intro {grid-column:1/-1;min-width:0}
+  .footer-col {gap:0;min-width:0}
+  .footer-col>a {max-width:100%;overflow-wrap:anywhere}
   .footer-col h2 {margin-bottom:8px}
   .footer-col>a {padding-block:7px}
   .footer-bottom {align-items:center;gap:8px 18px}
@@ -876,8 +879,24 @@ a.project-card:hover,a.project-card:focus-visible,
   body[data-page="index"] .portrait-panel .portrait-image {
     height:280px;aspect-ratio:auto;object-position:center 24%;
   }
-  .citation-controls {gap:8px}
+  .publication-toolbar {display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin-bottom:14px}
+  .publication-toolbar .search-input {width:100%;min-width:0;max-width:none}
+  .publication-actions {display:grid;grid-template-columns:max-content minmax(60px,76px) minmax(0,1fr);align-items:center;gap:8px;width:100%}
+  .publication-actions>label {font-size:13px}
+  .publication-actions .sort-select {width:100%;max-width:none;min-width:0;padding-inline:9px}
+  .publication-actions #export-bibtex {min-height:44px;padding-inline:10px;gap:7px;font-size:12px;white-space:nowrap}
+  .publication-filters-toolbar {gap:8px;margin-bottom:12px}
+  .publication-filters-toolbar .filters {gap:6px}
+  .publication-filters-toolbar .filter-pill {font-size:13px;padding-inline:10px}
+  .publications-section .citation-controls {gap:8px;margin-bottom:16px;font-size:13px}
   .citation-format,.citation-controls select {font-size:13px;padding:8px;min-height:44px}
+}
+
+/* In short landscape windows keep the guide selector in normal flow. */
+@media (max-width:840px) and (max-height:480px) {
+  .reading-mobile-picker {position:static;top:auto}
+  .reading-area,.reading-anchor-alias,.reading-reference-compact,
+  .reading-shared,.reading-track {scroll-margin-top:92px}
 }
 
 /* Print all reading guides, including panels hidden by the interactive selector. */
