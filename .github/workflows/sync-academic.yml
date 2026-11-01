@@ -53,6 +53,7 @@ jobs:
       - name: Validate functionality, publication sync, directories and responsive layouts
         run: |
           python scripts/test_site.py
+          python scripts/test_audit_experience.py
           python scripts/test_sync_academic.py
           python scripts/test_directories.py
           python scripts/test_responsive.py
@@ -66,7 +67,7 @@ jobs:
           if [[ -n "$(git status --porcelain)" ]]; then
             git config user.name 'github-actions[bot]'
             git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add assets/auto-content.js data/sync-cache.json sitemap.xml robots.txt _headers *.html
+            git add -- assets/auto-content.js assets/research-summary.js data/sync-cache.json sitemap.xml robots.txt _headers ./*.html pt/*.html
             if ! git diff --cached --quiet; then
               git commit -m 'chore: sync approved academic metadata'
               git push

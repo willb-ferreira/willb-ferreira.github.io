@@ -32,7 +32,9 @@ jobs:
       - name: Validate custom domain metadata and indexing
         run: python scripts/test_domain.py
       - name: Validate site and bilingual research library
-        run: python scripts/test_site.py
+        run: |
+          python scripts/test_site.py
+          python scripts/test_audit_experience.py
       - name: Validate publication sync
         run: python scripts/test_sync_academic.py
       - name: Validate directories and research topics

@@ -44,6 +44,7 @@ jobs:
       - name: Validate functionality, publication sync, directories and responsive layouts
         run: |
           python scripts/test_site.py
+          python scripts/test_audit_experience.py
           python scripts/test_sync_academic.py
           python scripts/test_directories.py
           python scripts/test_responsive.py

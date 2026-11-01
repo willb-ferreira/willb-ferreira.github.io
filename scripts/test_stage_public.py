@@ -3,7 +3,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from site_config import PAGE_SLUGS
+from site_config import public_html_files
 from stage_public import PUBLIC_FILES, public_manifest, stage_public
 
 
@@ -12,8 +12,10 @@ class PublicStagingTests(unittest.TestCase):
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         self.root = Path(temporary.name)
-        for name in (*PUBLIC_FILES, *(slug + '.html' for slug in PAGE_SLUGS)):
-            (self.root / name).write_text('', encoding='utf-8')
+        for name in (*PUBLIC_FILES, *public_html_files()):
+            source = self.root / name
+            source.parent.mkdir(parents=True, exist_ok=True)
+            source.write_text('', encoding='utf-8')
         (self.root / 'assets').mkdir()
         (self.root / 'assets/app.js').write_text('/* runtime */', encoding='utf-8')
         (self.root / 'assets/site.css').write_text('body{background:url("portrait.webp")}', encoding='utf-8')
@@ -36,7 +38,7 @@ class PublicStagingTests(unittest.TestCase):
         manifest = stage_public(self.root, output)
         copied = {path.relative_to(output) for path in output.rglob('*') if path.is_file()}
         expected = {Path(name) for name in PUBLIC_FILES}
-        expected.update(Path(slug + '.html') for slug in PAGE_SLUGS)
+        expected.update(Path(name) for name in public_html_files())
         expected.update(Path('assets') / name for name in ('app.js', 'site.css', 'portrait.webp', 'favicon.svg'))
         self.assertEqual(copied, expected)
         self.assertEqual(manifest, expected)
@@ -44,6 +46,22 @@ class PublicStagingTests(unittest.TestCase):
     def test_copies_optional_hosting_headers(self):
         (self.root / '_headers').write_text('/*\n  X-Content-Type-Options: nosniff\n', encoding='utf-8')
         self.assertIn(Path('_headers'), stage_public(self.root))
+
+    def test_localized_and_error_pages_resolve_shared_assets(self):
+        (self.root / 'pt/contact.html').write_text(
+            '<script src="../assets/app.js"></script>', encoding='utf-8')
+        (self.root / '404.html').write_text(
+            '<link rel="stylesheet" href="/assets/site.css">', encoding='utf-8')
+        manifest = stage_public(self.root)
+        self.assertIn(Path('pt/contact.html'), manifest)
+        self.assertIn(Path('pt/404.html'), manifest)
+        self.assertIn(Path('assets/app.js'), manifest)
+        self.assertNotIn(Path('pt/assets/app.js'), manifest)
+
+    def test_rejects_missing_localized_or_error_page(self):
+        (self.root / 'pt/404.html').unlink()
+        with self.assertRaisesRegex(ValueError, 'Missing'):
+            public_manifest(self.root)
 
     def test_rejects_runtime_references_outside_assets(self):
         (self.root / 'index.html').write_text('<script src="assets/../scripts/helper.js"></script>', encoding='utf-8')

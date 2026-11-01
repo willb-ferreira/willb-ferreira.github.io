@@ -3,21 +3,33 @@
   const D = window.PORTFOLIO;
   if (!D) { document.getElementById("main").textContent = "Content could not be loaded."; return; }
   const page = document.body.dataset.page || "index";
-  const routes = ["research", "publications", "supervision", "people", "teaching", "software", "about", "contact"];
-  // Root-relative home links keep the public URL canonical; file:// previews stay navigable.
-  const homeHref = window.location.protocol === "file:" ? "index.html" : "/";
-  const href = name => name === "index" ? homeHref : `${name}.html`;
+  const routes = ["research", "publications", "supervision", "people", "teaching", "software", "about", "contact"].filter(name=>name!=="software" || D.software?.length);
+  const staticLocale = document.documentElement.dataset.siteLang;
+  const localizedPages = ["en","pt"].includes(staticLocale) && /^https?:$/.test(window.location.protocol);
+  const localePrefix = locale => locale === "pt" ? "/pt/" : "/";
+  const pagePath = (name,locale) => localePrefix(locale)+(name==="index"?"":`${name==="not-found"?"404":name}.html`);
+  const homeHref = () => window.location.protocol === "file:" ? "index.html" : localizedPages ? pagePath("index",lang) : "/";
+  const href = name => name === "index" ? homeHref() : localizedPages ? pagePath(name,lang) : `${name}.html`;
   const getPref = (key, fallback) => { try { return localStorage.getItem(key) || fallback; } catch { return fallback; } };
   const setPref = (key, value) => { try { localStorage.setItem(key, value); } catch { /* file:// privacy settings */ } };
   const systemThemeQuery = window.matchMedia?.("(prefers-color-scheme: dark)");
   const systemTheme = () => systemThemeQuery?.matches ? "dark" : "light";
-  let lang = getPref("wb-lang", "en") === "pt" ? "pt" : "en";
+  let lang = ["en","pt"].includes(staticLocale) ? staticLocale : getPref("wb-lang", "en") === "pt" ? "pt" : "en";
   const storedTheme = getPref("wb-theme", "");
   let followsSystemTheme = storedTheme !== "light" && storedTheme !== "dark";
   let theme = followsSystemTheme ? systemTheme() : storedTheme;
   let selectedPublicationType = "all";
   let publicationSearch = "";
   let publicationYear = "all";
+  let citationFormat = "reference";
+  const readPublicationLocation = () => {
+    if(page!=="publications")return;
+    const params=new URLSearchParams(window.location.search),type=params.get("type"),year=params.get("year");
+    selectedPublicationType=["all","article","preprint","conference","other"].includes(type)?type:"all";
+    publicationYear=(D.publications||[]).some(p=>String(p.year)===year)?year:"all";
+    publicationSearch=(params.get("q")||"").slice(0,300);
+  };
+  readPublicationLocation();
   const supervisionHashLevel = page === "supervision" && /^#level-(undergraduate|masters|phd|all)$/.test(window.location.hash)
     ? window.location.hash.replace("#level-","")
     : null;
@@ -28,6 +40,7 @@
   let selectedReadingGuide = null;
   let readingNavigationInitialized = false;
   let toastTimer;
+  const citationFeedback = new WeakMap();
 
   const M = {
     pt: {
@@ -47,6 +60,9 @@
       readingChoose:"Escolher área de pesquisa",
       readingPrevious:"Guia anterior",
       readingNext:"Próximo guia",
+      citationFormat:"Formato da cópia",citationReference:"Referência",copied:"Copiado",copyFailed:"Não foi possível copiar a referência.",materials:"Materiais da disciplina",officeHours:"Atendimento",
+      themeSystem:"sistema",themeLight:"claro",themeDark:"escuro",themeCurrent:"Tema atual",themeNext:"Mudar para",
+      notFound:"Página não encontrada",notFoundLead:"O endereço pode ter mudado ou sido digitado incorretamente. Você pode continuar por uma destas páginas.",
       readingNoteTitle:"Como usar estes guias.",
       readingNote:"Escolha um percurso e siga as leituras indicadas. O objetivo é orientar os primeiros estudos, não substituir uma revisão bibliográfica.",
       index:"Início",research:"Pesquisa",publications:"Publicações",supervision:"Orientação",people:"Pessoas",
@@ -103,7 +119,7 @@
       emailLabel:"E-mail acadêmico",emailMissing:"O endereço de e-mail ainda não foi configurado no protótipo.",
       profiles:"Perfis acadêmicos",profilesMissing:"Adicione seus links públicos de ORCID, Lattes, Google Scholar e GitHub no arquivo de conteúdo.",
       contactGuide:"Para uma mensagem produtiva",contactGuideDesc:"Inclua o assunto, uma breve apresentação, o objetivo do contato e, se necessário, links para currículo ou trabalho anterior.",
-      openContact:"Abrir contato",footerText:"Pesquisa em estatística, inferência e dados espaciais.",navigate:"Navegação",follow:"Perfis",updated:"Última atualização do site",made:"Departamento de Estatística · UFPE",
+      openContact:"Abrir contato",footerText:"Pesquisa em estatística, inferência e dados espaciais.",navigate:"Navegação",follow:"Perfis",updated:"Dados bibliográficos atualizados em",made:"Departamento de Estatística · UFPE",
       opportunityTitle:"Temas para orientação",opportunityDesc:"Temas de iniciação científica, mestrado e doutorado relacionados às minhas linhas de pesquisa.",opportunityBtn:"Explorar temas de pesquisa",
       exploreSite:"Explore",exploreSiteTitle:"Alguns caminhos pelo site",exploreSiteDesc:"Se você chegou por uma disciplina, uma publicação, um tema de pesquisa ou uma possível colaboração, estes atalhos ajudam a encontrar o material mais relevante.",
       exploreResearch:"Pesquisa e publicações",exploreResearchDesc:"Veja as áreas em que venho trabalhando, projetos em andamento e a produção já publicada.",exploreResearchAction:"Explorar pesquisa",explorePapersAction:"Ver publicações",
@@ -128,6 +144,9 @@
       readingChoose:"Choose a research area",
       readingPrevious:"Previous guide",
       readingNext:"Next guide",
+      citationFormat:"Copy format",citationReference:"Reference",copied:"Copied",copyFailed:"The citation could not be copied.",materials:"Course materials",officeHours:"Office hours",
+      themeSystem:"system",themeLight:"light",themeDark:"dark",themeCurrent:"Current theme",themeNext:"Switch to",
+      notFound:"Page not found",notFoundLead:"The address may have changed or been mistyped. You can continue with one of these pages.",
       readingNoteTitle:"How to use these guides.",
       readingNote:"Choose a path and follow the suggested readings. These are entry points, not comprehensive literature reviews.",
       index:"Home",research:"Research",publications:"Publications",supervision:"Supervision",people:"People",teaching:"Teaching",software:"Code & Data",about:"About",contact:"Contact",
@@ -182,7 +201,7 @@
       emailLabel:"Academic email",emailMissing:"An email address has not been configured in this prototype.",
       profiles:"Academic profiles",profilesMissing:"Add your public ORCID, Lattes, Google Scholar, and GitHub links in the content file.",
       contactGuide:"For a productive message",contactGuideDesc:"Include a subject line, a brief introduction, the purpose of your message, and links to your CV or prior work when relevant.",
-      openContact:"Open contact",footerText:"Research in statistics, inference, and spatial data.",navigate:"Navigation",follow:"Profiles",updated:"Website last updated",made:"Department of Statistics · UFPE",
+      openContact:"Open contact",footerText:"Research in statistics, inference, and spatial data.",navigate:"Navigation",follow:"Profiles",updated:"Bibliographic data updated",made:"Department of Statistics · UFPE",
       opportunityTitle:"Supervision topics",opportunityDesc:"Undergraduate, master’s, and Ph.D. topics related to my research areas.",opportunityBtn:"Explore research topics",
       exploreSite:"Explore",exploreSiteTitle:"A few ways into the site",exploreSiteDesc:"Whether you arrived through a course, a paper, a research topic, or a possible collaboration, these links point to the most relevant material.",
       exploreResearch:"Research and publications",exploreResearchDesc:"See the areas I have been working on, current work in progress, and published output.",exploreResearchAction:"Explore research",explorePapersAction:"View publications",
@@ -207,6 +226,8 @@
       close:'<path d="M6 6l12 12M18 6 6 18"/>',
       moon:'<path d="M20.9 13a9 9 0 0 1-9.9-9.9A9 9 0 1 0 20.9 13Z"/>',
       sun:'<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2m10-10h-2M4 12H2m17.1-7.1-1.4 1.4M6.3 17.7l-1.4 1.4m14.2 0-1.4-1.4M6.3 6.3 4.9 4.9"/>',
+      system:'<rect x="3" y="4" width="18" height="13" rx="2"/><path d="M8 21h8m-4-4v4"/>',
+      copy:'<rect x="8" y="8" width="12" height="13" rx="2"/><path d="M16 8V3H3v13h5"/>',
       search:'<circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/>',
       download:'<path d="M12 3v12m-5-5 5 5 5-5M4 17v4h16v-4"/>',
       mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
@@ -255,10 +276,10 @@
     if (!photo) return researchVisual();
     return `<figure class="portrait-panel ${context === "about" ? "portrait-about-panel" : ""}"><img class="portrait-image" src="${photo}" alt="${e(lang === "pt" ? "Retrato de Willams Batista" : "Portrait of Willams Batista")}" loading="${context === "home" ? "eager" : "lazy"}" decoding="async" /><figcaption class="portrait-caption">${e(D.profile.name)} · ${e(t(D.profile.affiliation))}</figcaption></figure>`;
   };
-  // Both languages share one canonical URL; update metadata on language changes.
+  // Static language routes have their own canonical metadata supplied by the build.
   const updatePageMetadata = () => {
     const info=D.seo?.[page];
-    if(!info){document.title=`${tx(page)} | ${D.profile.name}`;return;}
+    if(!info){document.title=`${page==="not-found"?tx("notFound"):tx(page)} | ${D.profile.name}`;return;}
     const title=t(info.title),description=t(info.description);
     document.title=title;
     const setMeta=(selector,value)=>document.querySelector(selector)?.setAttribute("content",value);
@@ -266,15 +287,35 @@
     setMeta('meta[property="og:title"]',title);
     setMeta('meta[property="og:description"]',description);
   };
+  const oppositeLanguageHref = () => pagePath(page,lang==="pt"?"en":"pt")+window.location.search+window.location.hash;
+  const refreshLanguageHref = () => {
+    const control=document.getElementById("language-toggle");
+    if(localizedPages && control?.tagName==="A")control.setAttribute("href",oppositeLanguageHref());
+  };
+  const localizeInternalLinks = () => {
+    if(!localizedPages)return;
+    document.querySelectorAll('a[href]').forEach(anchor=>{
+      if(anchor.id==="language-toggle")return;
+      const original=anchor.getAttribute("href");
+      const match=original?.match(/^(?:\/?(?:pt\/)?)?(index|research|reading|publications|supervision|people|teaching|software|about|contact|404)\.html([?#].*)?$/);
+      if(match)anchor.setAttribute("href",pagePath(match[1]==="404"?"not-found":match[1],lang)+(match[2]||""));
+      else if(/^assets\//.test(original||""))anchor.setAttribute("href","/"+original);
+    });
+    document.querySelectorAll('img[src^="assets/"]').forEach(image=>image.setAttribute("src","/"+image.getAttribute("src")));
+  };
   const renderHeader = () => {
     document.documentElement.lang = lang === "pt" ? "pt-BR" : "en";
     document.documentElement.dataset.theme = theme;
     updatePageMetadata();
     document.querySelector(".skip-link").textContent = tx("skip");
     const navHtml = routes.map(r=>`<a href="${href(r)}" ${r===page?'class="active" aria-current="page"':''}>${tx(r)}</a>`).join("");
-    document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="${href("index")}" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions"><button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang === "pt" ? "EN" : "PT"}</button><button class="icon-btn" id="theme-toggle" type="button" title="${tx("toggleTheme")}" aria-label="${tx("toggleTheme")}">${icon(theme === "dark"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
-    document.getElementById("language-toggle").addEventListener("click",()=>{lang=lang==="pt"?"en":"pt";setPref("wb-lang",lang);render();document.getElementById("language-toggle").focus({preventScroll:true});});
-    document.getElementById("theme-toggle").addEventListener("click",()=>{theme=theme==="light"?"dark":"light";followsSystemTheme=false;setPref("wb-theme",theme);renderHeader();renderFooter();document.getElementById("theme-toggle").focus({preventScroll:true});});
+    const mode=followsSystemTheme?"system":theme,next=mode==="system"?"light":mode==="light"?"dark":"system";
+    const themeNames={system:tx("themeSystem"),light:tx("themeLight"),dark:tx("themeDark")};
+    const themeLabel=`${tx("themeCurrent")}: ${themeNames[mode]}. ${tx("themeNext")} ${themeNames[next]}.`;
+    const languageControl=localizedPages?`<a class="icon-btn lang-btn" id="language-toggle" href="${e(oppositeLanguageHref())}" hreflang="${lang==="pt"?"en":"pt-BR"}" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang==="pt"?"EN":"PT"}</a>`:`<button class="icon-btn lang-btn" id="language-toggle" type="button" title="${tx("toggleLanguage")}" aria-label="${tx("toggleLanguage")}">${lang==="pt"?"EN":"PT"}</button>`;
+    document.getElementById("site-header").innerHTML = `<header class="site-header"><div class="shell header-inner"><a class="brand" href="${href("index")}" aria-label="${e(D.profile.name)} — ${tx("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><nav class="nav" id="main-nav" aria-label="${tx("navigate")}">${navHtml}</nav><div class="header-actions">${languageControl}<button class="icon-btn" id="theme-toggle" type="button" title="${e(themeLabel)}" aria-label="${e(themeLabel)}" data-theme-mode="${mode}">${icon(mode==="system"?"system":theme==="light"?"sun":"moon")}</button><button class="icon-btn menu-btn" id="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="${tx("openMenu")}">${icon("menu")}</button></div></div></header>`;
+    document.getElementById("language-toggle").addEventListener("click",()=>{const nextLang=lang==="pt"?"en":"pt";setPref("wb-lang",nextLang);if(localizedPages)return;lang=nextLang;render();document.getElementById("language-toggle").focus({preventScroll:true});});
+    document.getElementById("theme-toggle").addEventListener("click",()=>{followsSystemTheme=next==="system";theme=followsSystemTheme?systemTheme():next;setPref("wb-theme",followsSystemTheme?"system":theme);renderHeader();renderFooter();document.getElementById("theme-toggle").focus({preventScroll:true});});
     const btn=document.getElementById("menu-toggle"), menu=document.getElementById("main-nav");
     btn.addEventListener("click",()=>{const open=menu.classList.toggle("open");btn.setAttribute("aria-expanded",String(open));btn.setAttribute("aria-label",tx(open?"closeMenu":"openMenu"));btn.innerHTML=icon(open?"close":"menu");});
     document.querySelector(".site-header")?.classList.toggle("scrolled",window.scrollY>5);
@@ -296,9 +337,10 @@
   if(systemThemeQuery?.addEventListener)systemThemeQuery.addEventListener("change",syncSystemTheme);
   else systemThemeQuery?.addListener?.(syncSystemTheme);
   const renderFooter = () => {
-    const footerLinks=["research","publications","supervision","people","teaching","software"];
+    const footerLinks=["research","reading","publications","supervision","people","teaching","software"];
+    const metadataDate=(D.publications||[]).map(p=>p.citation_updated||"").filter(date=>/^\d{4}-\d{2}-\d{2}$/.test(date)).sort().pop();
     const social=profileLinks();
-    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="${href("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span></div><div class="footer-col"><h2>${tx("navigate")}</h2>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h2>${tx("follow")}</h2><a href="about.html">${tx("about")}</a><a href="contact.html">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="${page === "index" ? "#main" : href("index")}">↑ ${tx(page === "index" ? "backTop" : "backHome")}</a></div></div></footer>`;
+    document.getElementById("site-footer").innerHTML=`<footer class="footer"><div class="shell"><div class="footer-main"><div class="footer-intro"><a class="brand" href="${href("index")}"><span class="brand-mark" aria-hidden="true">W.</span><span>${e(D.profile.name)}</span></a><p>${tx("footerText")}</p><span class="tag dot-tag">${e(t(D.profile.location))}</span>${metadataDate?`<p class="footer-updated">${tx("updated")} <time datetime="${metadataDate}">${metadataDate}</time></p>`:""}</div><div class="footer-col"><h2>${tx("navigate")}</h2>${footerLinks.map(r=>`<a href="${href(r)}">${tx(r)}</a>`).join("")}</div><div class="footer-col"><h2>${tx("follow")}</h2><a href="${href("about")}">${tx("about")}</a><a href="${href("contact")}">${tx("contact")}</a>${Object.entries(D.profile.social).filter(([,u])=>safe(u)).map(([k,u])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(({orcid:"ORCID",scholar:"Google Scholar",github:"GitHub",lattes:"Lattes",linkedin:"LinkedIn"})[k]||k)}</a>`).join("")}</div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} ${e(D.profile.name)}. ${tx("made")}.</span><a href="${page === "index" ? "#main" : href("index")}">↑ ${tx(page === "index" ? "backTop" : "backHome")}</a></div></div></footer>`;
   };
   const renderExploreRoutes = () => `<section class="section explore-section" id="explore"><div class="shell">${sectionTitle(tx("exploreSite"),tx("exploreSiteTitle"),tx("exploreSiteDesc"))}<div class="explore-grid">
     <article class="explore-route"><h3>${tx("exploreResearch")}</h3><p>${tx("exploreResearchDesc")}</p><div class="explore-links"><a class="inline-link" href="research.html">${tx("exploreResearchAction")} ${icon("arrow",15)}</a><a class="inline-link secondary-link" href="publications.html">${tx("explorePapersAction")} ${icon("arrow",15)}</a></div></article>
@@ -699,13 +741,15 @@
   const pubCard = (p,showScholarly=true) => {
     const heading=page==="publications"?"h2":"h3";
     const doiUrl=p.doi?`https://doi.org/${String(p.doi).replace(/^https?:\/\/doi\.org\//,"")}`:"";
-    const candidates=[[doiUrl,tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
+    const sameResource=(first,second)=>Boolean(first&&second)&&String(first).replace(/\/$/,"").toLowerCase()===String(second).replace(/\/$/,"").toLowerCase();
+    const openDoi=p.open_access&&sameResource(p.oa_url,doiUrl);
+    const candidates=[[doiUrl,openDoi?`${tx("doi")} · ${tx("openAccess")}`:tx("doi")],[p.pdf||p.oa_pdf,tx("pdf")],[p.code,tx("code")],[p.data,tx("data")],[p.url,tx("website")]];
     const seen=new Set(),resources=candidates.filter(([u])=>{const clean=safe(u);if(!clean||seen.has(clean))return false;seen.add(clean);return true;});
     const citationCount=Number.isFinite(Number(p.citations))?Math.max(0,Number(p.citations)):0;
     const indicators=[];
     const citationDate=/^\d{4}-\d{2}-\d{2}$/.test(p.citation_updated||"")?p.citation_updated:"";
     if(citationCount>0)indicators.push(`<span class="publication-indicator" title="${e(p.citation_source||"")}">${tx("citedBy")} ${e(String(citationCount))}${p.citation_source?` · ${e(p.citation_source)}`:""}${citationDate?` · ${lang==="pt"?"Atualizado em":"Updated"} <time datetime="${e(citationDate)}">${e(citationDate)}</time>`:""}</span>`);
-    if(p.open_access){
+    if(p.open_access&&!openDoi){
       const oa=safe(p.oa_url);
       indicators.push(oa?`<a class="publication-indicator" href="${oa}" target="_blank" rel="noopener noreferrer">${tx("openAccess")} ↗</a>`:`<span class="publication-indicator">${tx("openAccess")}</span>`);
     }
@@ -713,7 +757,7 @@
     if(safe(p.data))indicators.push(`<span class="publication-indicator">${tx("dataAvailable")}</span>`);
     const vm=p.venue_metrics||{};
     const venueContext=vm.source&&vm.year?`<p class="venue-context"><span class="venue-context-label">${tx("venueContext")}</span><span>${e(vm.source)} ${e(String(vm.year))}${vm.quartile?` · ${e(vm.quartile)}`:""}${vm.category?` · ${e(t(vm.category))}`:""}${Number.isFinite(Number(vm.sjr))?` · SJR ${e(String(vm.sjr))}`:""}</span></p>`:"";
-    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><${heading}>${e(p.title)}</${heading}><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${tx("cite")} ↗</button></div></div></article>`;
+    return `<article class="publication"><div class="publication-year">${e(p.year||"")}</div><div class="publication-content"><div class="card-footer">${tag(labelType(p.type),"tinted")}${(p.tags||[]).slice(0,3).map(s=>tag(s)).join("")}</div><${heading}>${e(p.title)}</${heading}><p class="authors">${e(p.authors||"")}</p><p class="venue">${e(p.venue||"")}</p>${showScholarly&&indicators.length?`<div class="publication-indicators">${indicators.join("")}</div>`:""}${showScholarly?venueContext:""}<div class="links">${resources.map(([u,l])=>`<a href="${safe(u)}" target="_blank" rel="noopener noreferrer">${e(l)} ↗</a>`).join("")}<button type="button" data-cite="${e(p.id)}">${icon("copy",14)} ${tx("cite")}</button></div></div></article>`;
   };
   const filteredPublications = () => {
     const query=publicationSearch.toLocaleLowerCase(lang === "pt"?"pt-BR":"en-US");
@@ -728,9 +772,16 @@
     if(count) count.textContent=`${list.length} ${list.length===1?tx("record"):tx("records")}`;
     if(dest) dest.innerHTML=list.length?list.map(p=>pubCard(p,true)).join(""):empty("⌕",tx("publications"),D.publications.length?tx("noMatches"):tx("noPapers"));
   };
+  const updatePublicationUrl = (method="pushState") => {
+    if(page!=="publications" || !/^https?:$/.test(window.location.protocol))return;
+    const url=new URL(window.location.href);
+    [["type",selectedPublicationType==="all"?"":selectedPublicationType],["year",publicationYear==="all"?"":publicationYear],["q",publicationSearch]].forEach(([key,value])=>value?url.searchParams.set(key,value):url.searchParams.delete(key));
+    if(url.href!==window.location.href)window.history[method](null,"",url.pathname+url.search+url.hash);
+    refreshLanguageHref();
+  };
   const renderPublications = () => {
     const years=[...new Set((D.publications||[]).map(p=>String(p.year)).filter(Boolean))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count" role="status" aria-live="polite"></span></div><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
+    return `${pageHero(tx("publications"),tx("papersHome"),tx("papersPageLead"))}<section class="section"><div class="shell"><div class="toolbar"><label class="search-input">${icon("search")}<input id="publication-search" type="search" autocomplete="off" maxlength="300" value="${e(publicationSearch)}" placeholder="${tx("searchPlaceholder")}" aria-label="${tx("searchPlaceholder")}" /></label><div class="filters"><label class="small muted" for="publication-year">${tx("year")}</label><select id="publication-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${e(y)}" ${publicationYear===y?"selected":""}>${e(y)}</option>`).join("")}</select><button class="btn outline" id="export-bibtex" type="button" ${!D.publications.length?"disabled":""}>${icon("download")} ${tx("exportBib")}</button></div></div><div class="toolbar"><div class="filters" id="publication-types">${["all","article","preprint","conference","other"].map(type=>`<button class="filter-pill ${type===selectedPublicationType?"active":""}" data-type="${type}" type="button" aria-pressed="${type===selectedPublicationType}">${type==="all"?tx("all"):labelType(type)}</button>`).join("")}</div><span id="pub-count" class="count" role="status" aria-live="polite"></span></div><label class="citation-controls" for="citation-format">${tx("citationFormat")} <select id="citation-format" class="sort-select"><option value="reference" ${citationFormat==="reference"?"selected":""}>${tx("citationReference")}</option><option value="bibtex" ${citationFormat==="bibtex"?"selected":""}>BibTeX</option></select></label><div class="publication-list" id="pub-results"></div><p class="scholarly-note">${tx("scholarlyNote")}</p></div></section>${banner()}`;
   };
   const topicCard = x => `<article class="topic-card"><div class="level-tags">${x.levels.map(y=>tag(tx(y),"tinted")).join("")}${x.area&&D.research.find(a=>a.id===x.area)?`<a class="topic-area" href="reading.html#${e(x.area)}">${e(t(D.research.find(a=>a.id===x.area).title))} ↗</a>`:""}</div><div class="card-content"><h3>${e(t(x.title))}</h3><p>${e(t(x.description))}</p></div><div class="requirements"><b>${tx("requirements")}</b><p>${e(t(x.requirements))}</p></div></article>`;
   const topicResults = () => D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).map(topicCard).join("");
@@ -812,37 +863,56 @@
       const record=map.get(key);
       record.offerings.push(...courseOfferings(course));
       if(!record.materials && course.materials)record.materials=course.materials;
+      if(!record.officeHours && course.officeHours)record.officeHours=course.officeHours;
     });
     return [...map.values()].map(c=>({...c,offerings:courseOfferings({...c,term:""}),latest:courseOfferings({...c,term:""})[0]||""})).sort((a,b)=>entryDateKey(b.latest)-entryDateKey(a.latest)||t(a.title).localeCompare(t(b.title),lang==="pt"?"pt-BR":"en"));
   };
-  const courseRow = c => `<article class="course-entry"><div><h3>${e(t(c.title))}</h3>${c.offerings.length>1?`<details class="course-history"><summary>${lang==="pt"?"Histórico de ofertas":"Teaching history"} · ${c.offerings.length}</summary><ul>${c.offerings.map(term=>`<li>${e(term)}</li>`).join("")}</ul></details>`:""}</div><div class="course-meta"><span>${e(c.institution||"")}${c.latest?" · "+e(c.latest):""}</span></div></article>`;
+  const courseRow = c => {
+    const entries=typeof c.materials==="string"?[{url:c.materials,label:tx("materials")}]:Array.isArray(c.materials)?c.materials:[];
+    const resources=entries.map(item=>link(item?.url,t(item?.label)||tx("materials"))).join("");
+    const description=t(c.description||""),officeHours=t(c.officeHours||"");
+    return `<article class="course-entry"><div><h3>${e(t(c.title))}</h3>${description?`<p class="course-description">${e(description)}</p>`:""}${resources?`<div class="course-materials">${resources}</div>`:""}${officeHours?`<p class="course-office-hours"><strong>${tx("officeHours")}:</strong> ${e(officeHours)}</p>`:""}${c.offerings.length>1?`<details class="course-history"><summary>${lang==="pt"?"Histórico de ofertas":"Teaching history"} · ${c.offerings.length}</summary><ul>${c.offerings.map(term=>`<li>${e(term)}</li>`).join("")}</ul></details>`:""}</div><div class="course-meta"><span>${e(c.institution||"")}${c.latest?" · "+e(c.latest):""}</span></div></article>`;
+  };
   const renderCourseGroup = (level,items,expanded) => {
     if(!items.length)return "";
     const heading=level==="postgraduate"?(lang==="pt"?"Pós-graduação":"Graduate"):(lang==="pt"?"Graduação":"Undergraduate");
     const shown=expanded?items:items.slice(0,6),older=expanded?[]:items.slice(6);
     return `<section class="academic-level course-level" data-level="${level}" aria-labelledby="courses-${level}"><div class="directory-heading"><h2 id="courses-${level}">${heading}</h2><span class="directory-count">${items.length}</span></div><div class="course-list">${shown.map(courseRow).join("")}</div>${older.length?`<details class="directory-archive"><summary>${lang==="pt"?"Disciplinas anteriores":"Earlier courses"} (${older.length})</summary><div class="course-list">${older.map(courseRow).join("")}</div></details>`:""}</section>`;
   };
-  const renderCourseResults = () => {
+  const filteredCourses = () => {
     const query=courseSearch.trim().toLocaleLowerCase(lang==="pt"?"pt-BR":"en-US");
-    const items=uniqueCourses().filter(c=>(selectedCourseYear==="all" || c.offerings.some(term=>term.startsWith(selectedCourseYear))) && (!query || [t(c.title),t(c.description||""),...c.offerings].join(" ").toLocaleLowerCase(lang==="pt"?"pt-BR":"en-US").includes(query)));
-    const expanded=Boolean(query || selectedCourseYear!=="all");
+    return uniqueCourses().filter(c=>(selectedCourseYear==="all" || c.offerings.some(term=>term.startsWith(selectedCourseYear))) && (!query || [t(c.title),t(c.description||""),...c.offerings].join(" ").toLocaleLowerCase(lang==="pt"?"pt-BR":"en-US").includes(query)));
+  };
+  const courseCountText = () => {
+    const count=filteredCourses().length;
+    return lang==="pt"?`${count} ${count===1?"disciplina encontrada":"disciplinas encontradas"}`:`${count} ${count===1?"course found":"courses found"}`;
+  };
+  const renderCourseResults = () => {
+    const items=filteredCourses(),expanded=Boolean(courseSearch.trim() || selectedCourseYear!=="all");
     return items.length?["undergraduate","postgraduate"].map(level=>renderCourseGroup(level,items.filter(c=>courseLevel(c)===level),expanded)).join(""):empty("",tx("courses"),lang==="pt"?"Nenhuma disciplina corresponde à busca.":"No matching courses.");
+  };
+  const updateCourseResults = () => {
+    const out=document.getElementById("course-results"),status=document.getElementById("course-count");
+    if(out)out.innerHTML=renderCourseResults();
+    if(status)status.textContent=courseCountText();
+    localizeInternalLinks();
   };
   const renderTeaching = () => {
     const unique=uniqueCourses();
     const years=[...new Set(unique.flatMap(c=>c.offerings.map(term=>term.slice(0,4))).filter(s=>/^\d{4}$/.test(s)))].sort((a,b)=>Number(b)-Number(a));
-    return `${pageHero(tx("teaching"),tx("teachingTitle"),tx("teachingLead"))}<section class="section"><div class="shell">${unique.length?`<div class="toolbar course-toolbar"><label class="search-input">${icon("search")}<input id="course-search" type="search" autocomplete="off" value="${e(courseSearch)}" placeholder="${lang==="pt"?"Buscar disciplinas":"Search courses"}" aria-label="${lang==="pt"?"Buscar disciplinas":"Search courses"}"/></label><label class="course-year-filter">${lang==="pt"?"Ano":"Year"} <select id="course-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${y}" ${selectedCourseYear===y?"selected":""}>${y}</option>`).join("")}</select></label></div><div id="course-results">${renderCourseResults()}</div>`:empty("",tx("courses"),tx("coursesEmpty"))}</div></section>`;
+    return `${pageHero(tx("teaching"),tx("teachingTitle"),tx("teachingLead"))}<section class="section"><div class="shell">${unique.length?`<div class="toolbar course-toolbar"><label class="search-input">${icon("search")}<input id="course-search" type="search" autocomplete="off" value="${e(courseSearch)}" placeholder="${lang==="pt"?"Buscar disciplinas":"Search courses"}" aria-label="${lang==="pt"?"Buscar disciplinas":"Search courses"}"/></label>${years.length>1?`<label class="course-year-filter">${lang==="pt"?"Ano":"Year"} <select id="course-year" class="sort-select"><option value="all">${tx("all")}</option>${years.map(y=>`<option value="${y}" ${selectedCourseYear===y?"selected":""}>${y}</option>`).join("")}</select></label>`:""}</div><p id="course-count" class="count" role="status" aria-live="polite" aria-atomic="true">${courseCountText()}</p><div id="course-results">${renderCourseResults()}</div>`:empty("",tx("courses"),tx("coursesEmpty"))}</div></section>`;
   };
   const renderSoftware = () => `${pageHero(tx("software"),tx("softwareTitle"),tx("softwareLead"))}<section class="section"><div class="shell">${D.software.length?`<div class="cards-2">${D.software.map(s=>`<article class="project-card"><h3>${e(s.name)}</h3><p>${e(t(s.description))}</p>${link(s.url,tx("code"))}</article>`).join("")}</div>`:`<div class="note-box">${e(lang === "pt" ? "Ainda não disponibilizei repositórios de pesquisa nesta página. Os links serão incluídos quando os materiais estiverem prontos para divulgação." : "No research repositories are listed here yet. Links will be added when materials are ready for public release.")}</div>`}${safe(D.profile.social.github)?`<div style="height:22px"></div>${link(D.profile.social.github,"GitHub")}`:""}</div></section>`;
   const renderAbout = () => `${pageHero(tx("about"),tx("aboutTitle"),tx("aboutLead"))}<section class="section"><div class="shell split-section"><div class="prose"><span class="eyebrow">${tx("approach")}</span><h2>${e(t(D.profile.role))}</h2><p>${tx("aboutP1")}</p><p>${tx("aboutP2")}</p><div class="profile-links">${profileLinks()||`<a href="contact.html">${tx("contact")} ${icon("arrow")}</a>`}</div></div><div>${safe(D.profile.portrait)?portraitPanel("about"):`<div class="signal-panel" style="min-height:350px"><div class="signal-grid"></div><div class="panel-top"><span>${tx("visualHead")}</span><span class="panel-tag">WB</span></div><div style="position:absolute;inset:64px 20px 72px;display:grid;place-items:center;font-size:clamp(90px,14vw,150px);font-weight:800;letter-spacing:-.14em;color:#c4f6dc" aria-hidden="true">WB.</div><div class="panel-bottom"><div><strong>${e(D.profile.name)}</strong><span>${e(t(D.profile.location))}</span></div></div></div>`}</div></div></section><section class="section tight"><div class="shell">${sectionTitle("",tx("academicPath"))}<div class="timeline">${D.experience.map(x=>`<div class="timeline-item"><span class="timeline-year">${e(t(x.year))}</span><h3>${e(t(x.title))}</h3><p>${e(t(x.institution))}</p></div>`).join("")}</div><div style="height:30px"></div><p class="small muted">${tx("aboutDisclaimer")}</p></div></section>${banner()}`;
   const emailHref = (subject="") => D.profile.email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(D.profile.email) ? `mailto:${D.profile.email}${subject?`?subject=${encodeURIComponent(subject)}`:""}` : "";
   const renderContact = () => {
-    const email=emailHref(), links=profileLinks();
-    return `${pageHero(tx("contact"),tx("contactTitle"),tx("contactLead"))}<section class="section"><div class="shell"><div class="contact-grid">
-      <article class="contact-card"><span class="contact-symbol">∑</span><h2>${tx("studentContact")}</h2><p>${tx("studentContactDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Interesse em pesquisa e orientação":"Research and supervision inquiry"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
-      <article class="contact-card"><span class="contact-symbol">↗</span><h2>${tx("collab")}</h2><p>${tx("collabDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Conversa sobre possível colaboração":"Possible research collaboration"))}">${tx("emailLabel")} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
+    const email=emailHref(), links=profileLinks(),availability=t(D.profile.availability||"");
+    return `${pageHero(tx("contact"),tx("contactTitle"),tx("contactLead"))}<section class="section"><div class="shell">${availability?`<p class="note-box contact-availability">${e(availability)}</p>`:""}<div class="contact-grid">
+      <article class="contact-card"><span class="contact-symbol">${icon("book",28)}</span><h2>${tx("studentContact")}</h2><p>${tx("studentContactDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Interesse em pesquisa e orientação":"Research and supervision inquiry"))}">${lang==="pt"?"Escrever sobre orientação":"Ask about supervision"} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
+      <article class="contact-card"><span class="contact-symbol">${icon("globe",28)}</span><h2>${tx("collab")}</h2><p>${tx("collabDesc")}</p>${email?`<a class="inline-link" href="${e(emailHref(lang==="pt"?"Conversa sobre possível colaboração":"Possible research collaboration"))}">${lang==="pt"?"Propor colaboração":"Discuss collaboration"} ${icon("arrow")}</a>`:`<p class="small">${tx("emailMissing")}</p>`}</article>
     </div></div></section><section class="section tight"><div class="shell split-section"><div><div class="prose"><span class="eyebrow">${tx("emailLabel")}</span><h2>${email?e(D.profile.email):tx("profiles")}</h2>${email?"":`<p>${tx("emailMissing")}</p>`}${email?`<a class="btn primary" href="${e(email)}">${icon("mail")} ${tx("openContact")}</a>`:""}</div></div><div class="prose"><span class="eyebrow">${tx("profiles")}</span><div class="profile-links">${links||`<p class="small muted">${tx("profilesMissing")}</p>`}</div><div class="note-box"><strong>${tx("contactGuide")}</strong><br>${tx("contactGuideDesc")}</div></div></div></section>`;
   };
+  const renderNotFound = () => `${pageHero("404",tx("notFound"),tx("notFoundLead"))}<section class="section"><div class="shell"><div class="explore-links">${["index","publications","contact"].map(name=>`<a class="inline-link" href="${href(name)}">${tx(name)} ${icon("arrow")}</a>`).join("")}</div></div></section>`;
   const copyText = async value => {
     try { await navigator.clipboard.writeText(value); return true; }
     catch { const input=document.createElement("textarea");input.value=value;input.style.position="fixed";input.style.opacity="0";document.body.append(input);input.select();const ok=document.execCommand("copy");input.remove();return ok; }
@@ -855,6 +925,30 @@
     const venueKey=kind==="article"?"journal":kind==="inproceedings"?"booktitle":"howpublished";
     const authors=String(p.authors||"").split(/\s*;\s*/).map(bibtexValue).join(" and ");
     return `@${kind}{${(p.id||"paper").replace(/[^a-zA-Z0-9_-]/g,"")},\n  title = {{${bibtexValue(p.title)}}},\n  author = {${authors}},\n  year = {${bibtexValue(p.year)}},\n  ${venueKey} = {${bibtexValue(p.venue)}}${p.doi?`,\n  doi = {${bibtexValue(p.doi)}}`:""}\n}`;
+  };
+  const updateTopicResults = () => {
+    document.querySelectorAll("[data-level]").forEach(button=>{button.classList.toggle("active",button.dataset.level===selectedTopicLevel);button.setAttribute("aria-pressed",String(button.dataset.level===selectedTopicLevel));});
+    const results=document.getElementById("topic-results"),counter=document.getElementById("topic-count");
+    if(results)results.innerHTML=topicResults();
+    if(counter)counter.textContent=`${D.topics.filter(topic=>selectedTopicLevel==="all"||topic.levels.includes(selectedTopicLevel)).length} ${lang==="pt"?"propostas":"proposals"}`;
+    localizeInternalLinks();
+  };
+  const syncTopicLocation = () => {
+    const match=window.location.hash.match(/^#level-(undergraduate|masters|phd|all)$/);
+    const next=match?match[1]:"undergraduate";
+    if(next!==selectedTopicLevel){selectedTopicLevel=next;updateTopicResults();}
+  };
+  const addReadingTimes = () => {
+    if(page!=="reading")return;
+    document.querySelectorAll("article.reading-area").forEach(panel=>{
+      const heading=panel.querySelector("h2");
+      if(!heading || panel.querySelector(".reading-time"))return;
+      const words=(panel.textContent||"").trim().split(/\s+/).filter(Boolean).length;
+      const minutes=Math.max(1,Math.ceil(words/200));
+      const label=document.createElement("p");label.className="reading-time small muted";
+      label.textContent=lang==="pt"?`Cerca de ${minutes} min de leitura`:`Approx. ${minutes} min read`;
+      heading.insertAdjacentElement("afterend",label);
+    });
   };
   const attach = () => {
     if(page==="reading"){
@@ -886,18 +980,21 @@
     });
     document.getElementById("level-filters")?.addEventListener("click",ev=>{
       const btn=ev.target.closest("[data-level]");if(!btn)return;selectedTopicLevel=btn.dataset.level;
-      document.querySelectorAll("[data-level]").forEach(b=>{b.classList.toggle("active",b.dataset.level===selectedTopicLevel);b.setAttribute("aria-pressed",String(b.dataset.level===selectedTopicLevel));});
-      document.getElementById("topic-results").innerHTML=topicResults();
-      const counter=document.getElementById("topic-count");if(counter)counter.textContent=`${D.topics.filter(x=>selectedTopicLevel==="all"||x.levels.includes(selectedTopicLevel)).length} ${lang==="pt"?"propostas":"proposals"}`;
+      updateTopicResults();
+      if(window.location.hash!=="#level-"+selectedTopicLevel){
+        try{const url=new URL(window.location.href);url.hash="level-"+selectedTopicLevel;window.history.pushState(null,"",url.href);}catch{/* Offline fixtures cannot update history. */}
+      }
+      refreshLanguageHref();
     });
-    document.getElementById("course-search")?.addEventListener("input",ev=>{courseSearch=ev.target.value;const out=document.getElementById("course-results");if(out)out.innerHTML=renderCourseResults();});
-    document.getElementById("course-year")?.addEventListener("change",ev=>{selectedCourseYear=ev.target.value;const out=document.getElementById("course-results");if(out)out.innerHTML=renderCourseResults();});
+    document.getElementById("course-search")?.addEventListener("input",ev=>{courseSearch=ev.target.value;updateCourseResults();});
+    document.getElementById("course-year")?.addEventListener("change",ev=>{selectedCourseYear=ev.target.value;updateCourseResults();});
     document.getElementById("publication-types")?.addEventListener("click",ev=>{
       const btn=ev.target.closest("[data-type]");if(!btn)return;selectedPublicationType=btn.dataset.type;
-      document.querySelectorAll("[data-type]").forEach(b=>{b.classList.toggle("active",b.dataset.type===selectedPublicationType);b.setAttribute("aria-pressed",String(b.dataset.type===selectedPublicationType));});pubsResults();
+      document.querySelectorAll("[data-type]").forEach(b=>{b.classList.toggle("active",b.dataset.type===selectedPublicationType);b.setAttribute("aria-pressed",String(b.dataset.type===selectedPublicationType));});pubsResults();updatePublicationUrl();
     });
-    document.getElementById("publication-search")?.addEventListener("input",ev=>{publicationSearch=ev.target.value;pubsResults();});
-    document.getElementById("publication-year")?.addEventListener("change",ev=>{publicationYear=ev.target.value;pubsResults();});
+    document.getElementById("publication-search")?.addEventListener("input",ev=>{publicationSearch=ev.target.value.slice(0,300);pubsResults();updatePublicationUrl("replaceState");});
+    document.getElementById("publication-year")?.addEventListener("change",ev=>{publicationYear=ev.target.value;pubsResults();updatePublicationUrl();});
+    document.getElementById("citation-format")?.addEventListener("change",ev=>{citationFormat=ev.target.value==="bibtex"?"bibtex":"reference";});
     document.getElementById("export-bibtex")?.addEventListener("click",()=>{
       const text=D.publications.map(toBibtex).join("\n\n")+"\n";
       const url=URL.createObjectURL(new Blob([text],{type:"text/plain;charset=utf-8"}));
@@ -924,21 +1021,31 @@
   };
   const render = () => {
     renderHeader();renderFooter();
-    const pages={index:renderHome,research:renderResearch,reading:renderReading,publications:renderPublications,supervision:renderSupervision,people:renderPeople,teaching:renderTeaching,software:renderSoftware,about:renderAbout,contact:renderContact};
+    const pages={index:renderHome,research:renderResearch,reading:renderReading,publications:renderPublications,supervision:renderSupervision,people:renderPeople,teaching:renderTeaching,software:renderSoftware,about:renderAbout,contact:renderContact,"not-found":renderNotFound};
     document.getElementById("main").innerHTML=(pages[page]||renderHome)();
-    attach();addStructuredData();
+    attach();addReadingTimes();localizeInternalLinks();addStructuredData();
   };
   // If an older link explicitly requested /index.html, clean the browser URL without
   // another request. The canonical tag already identifies / as the index URL.
-  if(page === "index" && window.location.hostname === "willamsferreira.com" && window.location.pathname === "/index.html"){
-    window.history.replaceState(window.history.state,"","/"+window.location.search+window.location.hash);
+  if(page === "index" && window.location.hostname === "willamsferreira.com" && /^\/(?:pt\/)?index\.html$/.test(window.location.pathname)){
+    window.history.replaceState(window.history.state,"",(window.location.pathname.startsWith("/pt/")?"/pt/":"/")+window.location.search+window.location.hash);
   }
-  if(page==="reading")window.addEventListener("hashchange",()=>syncReadingSelection(true));
+  window.addEventListener("hashchange",()=>{if(page==="reading")syncReadingSelection(true);if(page==="supervision")syncTopicLocation();refreshLanguageHref();});
+  window.addEventListener("popstate",()=>{if(page==="publications"){readPublicationLocation();render();}if(page==="supervision")syncTopicLocation();refreshLanguageHref();});
   render();
   // The main element survives rerenders; one listener also covers homepage citations.
   document.getElementById("main").addEventListener("click",async ev=>{
     const btn=ev.target.closest("[data-cite]");if(!btn)return;
     const pub=D.publications.find(x=>x.id===btn.dataset.cite);
-    if(pub && await copyText(citeText(pub)))showToast(tx("copyDone"));
+    if(!pub)return;
+    if(!await copyText(citationFormat==="bibtex"?toBibtex(pub):citeText(pub))){showToast(tx("copyFailed"));return;}
+    showToast(tx("copyDone"));
+    if(!btn.isConnected)return;
+    const existing=citationFeedback.get(btn);
+    if(existing)clearTimeout(existing.timer);
+    const previous=existing?.html||btn.innerHTML,previousLabel=existing?existing.label:btn.getAttribute("aria-label");
+    btn.innerHTML=`${icon("check",14)} ${tx("copied")}`;btn.classList.add("is-copied");btn.setAttribute("aria-label",tx("copyDone"));
+    const timer=setTimeout(()=>{citationFeedback.delete(btn);if(!btn.isConnected)return;btn.innerHTML=previous;btn.classList.remove("is-copied");if(previousLabel)btn.setAttribute("aria-label",previousLabel);else btn.removeAttribute("aria-label");},1800);
+    citationFeedback.set(btn,{html:previous,label:previousLabel,timer});
   });
 })();

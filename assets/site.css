@@ -812,3 +812,118 @@ html[data-theme="dark"]{color-scheme:dark}
   }
   html[data-theme="system"] .btn.primary{color:#101b2f}
 }
+
+/* Comfortable controls and a quieter mobile reading canvas. Keep prose links inline. */
+#site-header {position:sticky;top:0;z-index:50}
+#site-header>.site-header {position:relative;top:auto}
+.nav a,.inline-link,.reading-link,.reading-back,.footer-col>a,.footer-bottom>a,
+.breadcrumb>a,.publication .links>a,.publication .links>button {
+  min-height:24px;display:inline-flex;align-items:center;
+}
+.publication .links>button {line-height:1.5}
+.publication .links>button.is-copied {color:var(--ink);border-bottom-color:var(--accent)}
+.citation-controls {display:flex;align-items:center;flex-wrap:wrap;gap:8px 12px;max-width:100%}
+.citation-format {max-width:100%;min-height:32px;padding:3px 8px;border:1px solid var(--line);border-radius:2px;background:var(--surface);color:var(--ink);font:inherit;font-size:12px}
+.citation-controls label {font-size:12px;color:var(--muted)}
+.citation-controls select {max-width:100%}
+.contact-symbol svg {width:22px;height:22px;stroke-width:1.6}
+.course-entry .course-meta {white-space:normal;min-width:0}
+.course-materials {display:flex;flex-wrap:wrap;gap:8px 16px}
+.course-materials a {display:inline-flex;align-items:center;min-height:24px;color:var(--accent);text-decoration:underline;text-underline-offset:4px}
+.course-office-hours {font-size:13px;line-height:1.6}
+.footer-updated {font-size:12px;font-variant-numeric:tabular-nums}
+.empty-icon:empty {display:none}
+a.project-card:hover,a.project-card:focus-visible,
+.research-card:focus-within,.topic-card:focus-within,.contact-card:focus-within {
+  border-top-color:var(--accent);
+}
+
+@media (hover:hover) {
+  .contact-card:has(a:hover),.topic-card:has(a:hover),.research-card:has(a:hover) {border-top-color:var(--accent)}
+}
+@media (max-width:840px) {
+  .reading-mobile-picker {
+    position:sticky;top:76px;z-index:25;padding-block:10px 12px;
+    background:var(--bg);border-bottom:1px solid var(--line);
+  }
+  .reading-mobile-picker label {font-size:13px}
+  .reading-area,.reading-anchor-alias,.reading-reference-compact,
+  .reading-shared,.reading-track {scroll-margin-top:180px}
+}
+@media (max-width:700px) {
+  .page-hero {padding-block:35px 34px}
+  .page-hero .page-head {gap:12px}
+  .page-hero h1 {font-size:clamp(34px,9.3vw,40px);line-height:1.16}
+  .breadcrumb {font-size:13px;gap:8px;margin-bottom:0;flex-wrap:wrap}
+  .nav a,.inline-link,.reading-link,.reading-back,.footer-col>a,.footer-bottom>a,
+  .breadcrumb>a,.publication .links>a,.publication .links>button,
+  .publication-indicators>a,.profile-links>a,.sort-select,.citation-format,
+  .course-materials a {min-height:44px}
+  .inline-link,.reading-link,.reading-back,.footer-col>a,.footer-bottom>a,
+  .publication .links>a,.publication .links>button,.publication-indicators>a,
+  .profile-links>a {font-size:13px}
+  .publication .authors,.publication .venue,.venue-context,.scholarly-note,
+  .publication-indicators,.portrait-caption,.footer-bottom {font-size:13px!important}
+  .publication .links {gap:8px 16px;align-items:center}
+  .publication .links>a,.publication .links>button {padding-block:8px;justify-content:flex-start}
+  .footer-col {gap:0}
+  .footer-col h2 {margin-bottom:8px}
+  .footer-col>a {padding-block:7px}
+  .footer-bottom {align-items:center;gap:8px 18px}
+  .footer-bottom>a {padding-block:7px}
+  .hero-cta {gap:5px 22px;margin-top:8px}
+  body[data-page="index"] .portrait-panel {max-width:405px}
+  body[data-page="index"] .portrait-panel .portrait-image {
+    height:280px;aspect-ratio:auto;object-position:center 24%;
+  }
+  .citation-controls {gap:8px}
+  .citation-format,.citation-controls select {font-size:13px;padding:8px;min-height:44px}
+}
+
+/* Print all reading guides, including panels hidden by the interactive selector. */
+@media print {
+  @page {margin:17mm}
+  html,html[data-theme],body {
+    --bg:#fff;--surface:#fff;--surface-alt:#fff;--ink:#111;
+    --muted:#333;--line:#bbb;--accent:#111;--accent-soft:#fff;
+    --forest:#111;color-scheme:light;background:#fff!important;color:#111!important;
+  }
+  html {scrollbar-gutter:auto}
+  body {font-size:10.5pt;line-height:1.5;transition:none}
+  #site-header,.site-header,.footer,.hero-cta,.toolbar,.btn,.toast,.skip-link,.breadcrumb,
+  .reading-index,.reading-mobile-picker,.reading-pagination,.reading-back,
+  .reading-cta,.publication-indicators,.feature-banner,
+  .reading-status,.citation-controls,.portrait-panel {display:none!important}
+  .shell {width:100%;max-width:none}
+  .section,.section.tight,.page-hero {padding-block:12pt}
+  .page-hero {border-bottom:1px solid #bbb}
+  .page-hero h1 {font-size:26pt}
+  .page-hero .lead {font-size:11pt;max-width:none}
+  .reading-layout,.reading-main,.reading-guides {display:block;max-height:none;overflow:visible}
+  .reading-guides>.reading-area,.reading-guides>.reading-area[hidden] {
+    display:block!important;padding:18pt 0!important;border-top:1px solid #bbb;
+    break-before:page;break-inside:auto;
+  }
+  .reading-guides>.reading-area:first-child {break-before:auto}
+  .reading-area p,.reading-track p,.reading-reference p,.publication .authors,
+  .publication .venue {font-size:10.5pt!important;line-height:1.5;max-width:none}
+  .reading-track-grid,.cards-2,.cards-3,.cards-4 {display:block}
+  .reading-track {padding:10pt 0;border:0;border-top:1px solid #ddd;margin-top:10pt}
+  .reading-reference,.reading-reference-compact {padding:10pt 0;break-inside:auto}
+  .publication {grid-template-columns:40pt minmax(0,1fr);gap:12pt;padding:14pt 0;break-inside:avoid}
+  .publication :is(h2,h3) {font-size:15pt}
+  .publication .links {display:flex;flex-wrap:wrap;gap:8pt 12pt}
+  .publication .links a {min-height:0;padding:0;border:0;font-size:9pt}
+  .publication .links button {display:none!important}
+  .research-card,.project-card,.topic-card,.contact-card {box-shadow:none;break-inside:avoid}
+  h1,h2,h3,h4 {break-after:avoid;color:#111}
+  p,li {orphans:3;widows:3}
+  a[href^="https://"]:not(.publication-indicator)::after,
+  a[href^="http://"]:not(.publication-indicator)::after {
+    content:" (" attr(href) ")";font-family:"Segoe UI",Arial,sans-serif;
+    font-size:8pt;font-weight:400;overflow-wrap:anywhere;word-break:break-word;color:#444;
+  }
+  .reading-reference h4 a {text-decoration:none}
+  .reading-track-links,.reading-related {overflow-wrap:anywhere}
+  .reveal {opacity:1!important;transform:none!important;animation:none!important}
+}

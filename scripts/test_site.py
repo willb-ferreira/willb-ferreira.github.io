@@ -24,13 +24,14 @@ auto = (ROOT / 'assets/auto-content.js').read_text(encoding='utf-8')
 app = (ROOT / 'assets/app.js').read_text(encoding='utf-8')
 errors=[]
 SITEMAP_URLS = [loc.text for loc in ET.parse(ROOT / 'sitemap.xml').findall('.//{http://www.sitemaps.org/schemas/sitemap/0.9}loc')]
-EXPECTED_URLS = [page_url(name) for name in PAGES]
+EXPECTED_URLS = [page_url(name, locale) for locale in ("en", "pt") for name in PAGES]
 assert len(SITEMAP_URLS) == len(EXPECTED_URLS) and set(SITEMAP_URLS) == set(EXPECTED_URLS), ('Sitemap must list each canonical URL exactly once', SITEMAP_URLS)
 print('SITEMAP all ten canonical URLs: PASS')
 
 def load(tab, page_name, initial_hash=None):
     html = (ROOT / f'{page_name}.html').read_text(encoding='utf-8')
-    # Browser navigation is restricted in this environment, so use set_content.
+    # Isolated fixtures exercise in-place controls; HTTP tests cover real locale URLs.
+    html = re.sub(r' data-site-lang="[^"]*"', '', html)
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>', '', html)
     html = re.sub(r'<link rel="stylesheet"[^>]*>', '', html)
     tab.set_content(strip_security_metadata(html), wait_until='load')
@@ -62,12 +63,19 @@ with sync_playwright() as p:
     theme_tab.emulate_media(color_scheme='light')
     theme_tab.wait_for_function("document.documentElement.dataset.theme === 'light'")
     theme_tab.locator('#theme-toggle').click()
+    assert theme_tab.locator('#theme-toggle').get_attribute('data-theme-mode') == 'light'
+    theme_tab.locator('#theme-toggle').click()
     assert theme_tab.locator('html').get_attribute('data-theme') == 'dark'
     theme_tab.emulate_media(color_scheme='dark')
     theme_tab.emulate_media(color_scheme='light')
     assert theme_tab.locator('html').get_attribute('data-theme') == 'dark'
+    theme_tab.locator('#theme-toggle').click()
+    assert theme_tab.locator('#theme-toggle').get_attribute('data-theme-mode') == 'system'
+    assert theme_tab.locator('html').get_attribute('data-theme') == 'light'
+    theme_tab.emulate_media(color_scheme='dark')
+    theme_tab.wait_for_function("document.documentElement.dataset.theme === 'dark'")
     theme_tab.close()
-    print('THEME system preference and manual override: PASS')
+    print('THEME system, explicit light/dark and return to automatic: PASS')
 
     # Static snapshots must preserve access to every reading guide without JS.
     nojs=browser.new_page(viewport={'width':1365,'height':860},java_script_enabled=False)
@@ -98,8 +106,8 @@ with sync_playwright() as p:
         load(tab,page_name)
         heading=tab.locator('h1').first.inner_text().replace('\n',' ')
         link_count=tab.locator('.nav a').count()
-        assert link_count==8, (page_name,link_count)
-        assert tab.locator('.nav a[href="software.html"]').inner_text() == 'Code & Data', page_name
+        assert link_count==7, (page_name,link_count)
+        assert tab.locator('.nav a[href="software.html"]').count() == 0, page_name
         assert tab.locator('.footer-col a[href="software.html"]').inner_text() == 'Code & Data', page_name
         assert tab.locator('main').inner_text().strip(),page_name
         assert tab.locator('html').get_attribute('lang')=='en', page_name
@@ -166,6 +174,8 @@ with sync_playwright() as p:
             assert tab.locator('.explore-route').nth(0).locator('h3').inner_text() == 'Pesquisa e publicações'
             assert tab.locator('.explore-route').nth(1).locator('h3').inner_text() == 'Leituras e orientação'
             assert tab.locator('.explore-route').nth(2).locator('h3').inner_text() == 'Conversas acadêmicas'
+            tab.locator('#theme-toggle').click()
+            assert tab.locator('#theme-toggle').get_attribute('data-theme-mode') == 'light'
             tab.locator('#theme-toggle').click()
             assert tab.locator('html').get_attribute('data-theme') == 'dark'
             assert tab.evaluate('document.activeElement.id') == 'theme-toggle'

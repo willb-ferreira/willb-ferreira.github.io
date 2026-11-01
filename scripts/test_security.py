@@ -20,7 +20,7 @@ from security_policy import (
     REFERRER_POLICY, apply_security_metadata, build_content_security_policy,
     inline_script_hashes, strip_security_metadata,
 )
-from site_config import PAGE_SLUGS
+from site_config import PAGE_SLUGS, public_html_files
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -57,8 +57,8 @@ def check_generator():
 
 
 def check_generated_files(root):
-    for name in PAGE_SLUGS:
-        html = (root / f'{name}.html').read_text(encoding='utf-8')
+    for name in public_html_files():
+        html = (root / name).read_text(encoding='utf-8')
         parser = MetadataParser()
         parser.feed(html)
         policies = [meta.get('content') for meta in parser.metas
@@ -74,7 +74,7 @@ def check_generated_files(root):
         for directive in ['default-src', 'connect-src', 'object-src', 'base-uri', 'form-action', 'frame-src', 'worker-src']:
             assert directives[directive] == "'none'", (name, directive)
         assert 'frame-ancestors' not in directives and 'upgrade-insecure-requests' not in directives, name
-    print(f'SECURITY all {len(PAGE_SLUGS)} generated pages have current CSP and referrer metadata: PASS', flush=True)
+    print(f'SECURITY all {len(public_html_files())} generated pages have current CSP and referrer metadata: PASS', flush=True)
 
 
 PROBE_SOURCE = r'''
@@ -136,7 +136,7 @@ def check_browser(root):
     try:
         with sync_playwright() as p:
             browser = p.chromium.launch(executable_path=os.environ.get('CHROMIUM_BIN') or None, headless=True, args=['--no-sandbox'])
-            context = browser.new_context(color_scheme='dark', accept_downloads=True)
+            context = browser.new_context(color_scheme='dark', accept_downloads=True, locale='en-US')
             context.add_init_script('''window.securityViolations=[];
               document.addEventListener('securitypolicyviolation',event=>{
                 securityViolations.push({directive:event.effectiveDirective,blocked:event.blockedURI});
@@ -150,20 +150,58 @@ def check_browser(root):
                 assert response.status == 200, name
                 assert page.evaluate('Boolean(window.PORTFOLIO)'), (name, 'Own scripts must execute')
                 assert page.locator('main h1').count() == 1, name
-                assert page.locator('html').get_attribute('data-theme') == 'dark', name
+                assert page.locator('#theme-toggle').get_attribute('data-theme-mode') == 'system', name
                 page.locator('#language-toggle').click()
+                page.wait_for_url('**/pt/' + ('' if name == 'index' else name + '.html'))
                 assert page.locator('html').get_attribute('lang') == 'pt-BR', name
                 page.locator('#language-toggle').click()
+                page.wait_for_url(base_url + ('' if name == 'index' else name + '.html'))
                 assert page.locator('html').get_attribute('lang') == 'en', name
                 page.locator('#theme-toggle').click()
                 assert page.locator('html').get_attribute('data-theme') == 'light', name
                 page.locator('#theme-toggle').click()
+                assert page.locator('html').get_attribute('data-theme') == 'dark', name
+                page.locator('#theme-toggle').click()
+                assert page.locator('#theme-toggle').get_attribute('data-theme-mode') == 'system', name
                 if name == 'publications':
                     with page.expect_download() as download_info:
                         page.locator('#export-bibtex').click()
                     assert download_info.value.suggested_filename.endswith('.bib')
                 assert page.evaluate('securityViolations') == [], (name, page.evaluate('securityViolations'))
             print('SECURITY real HTTP: all ten pages, EN/PT, themes, JSON-LD and BibTeX work under CSP: PASS', flush=True)
+
+            # First-entry language detection is limited to the home page; choosing
+            # English explicitly must persist and avoid a Portuguese redirect loop.
+            portuguese = browser.new_context(locale='pt-BR')
+            first_visit = portuguese.new_page()
+            first_visit.goto(base_url + '?from=check#main', wait_until='networkidle')
+            first_visit.wait_for_url(base_url + 'pt/?from=check#main')
+            assert first_visit.locator('html').get_attribute('lang') == 'pt-BR'
+            first_visit.locator('#language-toggle').click()
+            first_visit.wait_for_url(base_url + '?from=check#main')
+            assert first_visit.locator('html').get_attribute('lang') == 'en'
+            first_visit.reload(wait_until='networkidle')
+            assert '/pt/' not in first_visit.url
+            portuguese.close()
+            nojs = browser.new_context(java_script_enabled=False, locale='en-US')
+            static_page = nojs.new_page()
+            for filename in public_html_files():
+                static_page.goto(base_url + filename, wait_until='load')
+                expected_lang = 'pt-BR' if filename.startswith('pt/') else 'en'
+                assert static_page.locator('html').get_attribute('lang') == expected_lang, filename
+                assert static_page.locator('main h1').count() == 1, filename
+                assert static_page.locator('main').inner_text().strip(), filename
+                if filename.endswith('reading.html'):
+                    assert static_page.locator('article.reading-area:visible').count() == 6, filename
+            nojs.close()
+            page.goto(base_url + 'reading.html', wait_until='networkidle')
+            assert page.locator('article.reading-area:visible').count() == 1
+            page.emulate_media(media='print')
+            assert page.locator('article.reading-area:visible').count() == 6
+            assert page.locator('.site-header').is_hidden()
+            page.emulate_media(media='screen')
+            assert page.locator('article.reading-area:visible').count() == 1
+            print('LANGUAGE first visit, explicit choice, 22 no-JS pages and full-guide printing: PASS', flush=True)
 
             page.goto(base_url, wait_until='networkidle')
             original_base = page.evaluate('document.baseURI')

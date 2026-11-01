@@ -22,10 +22,13 @@ def load(browser, name, width=390, height=844):
     scripts = re.findall(r'<script[^>]*src="([^"]+)"[^>]*></script>',html)
     html = re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html = re.sub(r'<link rel="stylesheet"[^>]*>','',html)
+    # Keep this isolated suite focused on in-place bilingual reflow; real
+    # data-site-lang documents navigate to their equivalent locale URL.
+    html = re.sub(r'\sdata-site-lang="[^"]*"','',html)
     page.set_content(strip_security_metadata(html),wait_until='load')
     page.add_style_tag(content=CSS)
     for script in scripts:
-        page.add_script_tag(content=(ROOT/script).read_text(encoding='utf-8'))
+        page.add_script_tag(content=(ROOT/script.lstrip('/')).read_text(encoding='utf-8'))
     page.locator('main h1').first.wait_for(timeout=7000)
     return page
 
@@ -77,8 +80,22 @@ with sync_playwright() as p:
     assert_fits(reading,'reading with larger base type',390)
     reading.set_viewport_size({'width':683,'height':844})  # typical half-width / zoomed laptop viewport
     assert_fits(reading,'reading in narrow desktop window',683)
+    # The persistent mobile guide selector belongs below the persistent header,
+    # without a vacant strip or the header disappearing during a long guide.
+    reading.set_viewport_size({'width':390,'height':844})
+    reading.evaluate('window.scrollTo(0, 1000)')
+    reading.evaluate('() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)))')
+    sticky=reading.evaluate('''() => {
+        const header=document.querySelector('#site-header').getBoundingClientRect();
+        const picker=document.querySelector('.reading-mobile-picker').getBoundingClientRect();
+        return {scrollY,headerTop:header.top,headerBottom:header.bottom,pickerTop:picker.top,pickerBottom:picker.bottom};
+    }''')
+    assert sticky['scrollY']>=900, ('guide did not scroll',sticky)
+    assert abs(sticky['headerTop'])<=1, ('mobile header scrolled away',sticky)
+    assert abs(sticky['pickerTop']-sticky['headerBottom'])<=1, ('guide selector must sit below header',sticky)
+    assert sticky['pickerBottom']<=844, ('guide selector escapes viewport',sticky)
     reading.close()
-    print('RESPONSIVE guide cards, Portuguese, larger type and narrow laptop: PASS')
+    print('RESPONSIVE guide cards, Portuguese, larger type, narrow laptop and persistent mobile guide/header: PASS')
 
     for name in ['index','reading','teaching','supervision']:
         phone=load(browser,name,width=568,height=320)

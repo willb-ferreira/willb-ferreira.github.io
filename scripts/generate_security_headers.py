@@ -9,7 +9,7 @@ import argparse
 from pathlib import Path
 
 from security_policy import REFERRER_POLICY, build_content_security_policy
-from site_config import PAGE_SLUGS
+from site_config import public_html_files
 
 ROOT = Path(__file__).resolve().parents[1]
 MAX_HEADER_LINE_LENGTH = 2000
@@ -18,8 +18,8 @@ MAX_HEADER_LINE_LENGTH = 2000
 def generate_headers(root: Path = ROOT) -> str:
     """Return one deterministic Cloudflare rule for the complete public site."""
     html = '\n'.join(
-        (root / f'{slug}.html').read_text(encoding='utf-8')
-        for slug in PAGE_SLUGS
+        (root / filename).read_text(encoding='utf-8')
+        for filename in public_html_files()
     )
     policy = build_content_security_policy(
         html, include_frame_ancestors=True, upgrade_insecure_requests=True,
@@ -42,7 +42,7 @@ def generate_headers(root: Path = ROOT) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--root', type=Path, default=ROOT, help='Directory containing the final ten HTML pages.')
+    parser.add_argument('--root', type=Path, default=ROOT, help='Directory containing the final localized HTML pages.')
     parser.add_argument('--output', type=Path, help='Output file; defaults to <root>/_headers.')
     arguments = parser.parse_args()
     root = arguments.root.resolve()
@@ -52,7 +52,7 @@ def main() -> None:
         output.write_text(headers, encoding='utf-8', newline='\n')
     except (OSError, ValueError) as error:
         parser.error(str(error))
-    print(f'Generated HTTP security headers for {len(PAGE_SLUGS)} pages in {output}')
+    print(f'Generated HTTP security headers for {len(public_html_files())} pages in {output}')
 
 
 if __name__ == '__main__':

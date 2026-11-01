@@ -9,7 +9,7 @@ import re
 import shutil
 from urllib.parse import unquote, urlsplit
 
-from site_config import PAGE_SLUGS, SITE_URL
+from site_config import SITE_URL, public_html_files
 
 ROOT = Path(__file__).resolve().parents[1]
 PUBLIC_FILES = ('.nojekyll', 'sitemap.xml', 'robots.txt')
@@ -66,16 +66,17 @@ def require_public_file(root: Path, relative: Path) -> Path:
 
 
 def public_manifest(root: Path) -> set[Path]:
-    files = {Path(name + '.html') for name in PAGE_SLUGS}
+    pages = tuple(Path(name) for name in public_html_files())
+    files = set(pages)
     files.update(Path(name) for name in PUBLIC_FILES)
     if (root / '_headers').exists():
         files.add(Path('_headers'))
     pending: set[Path] = set()
-    for slug in PAGE_SLUGS:
+    for page in pages:
         parser = RuntimeReferences()
-        parser.feed(require_public_file(root, Path(slug + '.html')).read_text(encoding='utf-8'))
+        parser.feed(require_public_file(root, page).read_text(encoding='utf-8'))
         pending.update(asset for reference in parser.references
-                       if (asset := local_asset(reference)) is not None)
+                       if (asset := local_asset(reference, PurePosixPath(page.parent.as_posix()))) is not None)
     while pending:
         asset = pending.pop()
         if asset in files:

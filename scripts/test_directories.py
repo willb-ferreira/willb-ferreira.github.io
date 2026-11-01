@@ -6,9 +6,6 @@ import os, re
 from playwright.sync_api import sync_playwright
 from security_policy import strip_security_metadata
 ROOT=Path(__file__).resolve().parents[1]
-CONTENT=(ROOT/'assets/content.js').read_text(encoding='utf-8')
-AUTO=(ROOT/'assets/auto-content.js').read_text(encoding='utf-8')
-APP=(ROOT/'assets/app.js').read_text(encoding='utf-8')
 CSS=(ROOT/'assets/site.css').read_text(encoding='utf-8')
 ERRORS=[]
 
@@ -16,14 +13,18 @@ def load(browser,kind,width=1365,extra=''):
     page=browser.new_page(viewport={'width':width,'height':880},device_scale_factor=1)
     page.on('pageerror',lambda exc:ERRORS.append((kind,str(exc))))
     html=(ROOT/f'{kind}.html').read_text(encoding='utf-8')
+    scripts=re.findall(r'<script[^>]*src="([^"]+)"[^>]*></script>',html)
     html=re.sub(r'<script[^>]*src="[^"]+"[^>]*></script>','',html)
     html=re.sub(r'<link rel="stylesheet"[^>]*>','',html)
+    # Isolated fixtures exercise in-place EN/PT controls. Real HTTP locale URLs
+    # and their cross-language navigation are covered by the integration suite.
+    html=re.sub(r'\sdata-site-lang="[^"]*"','',html)
     page.set_content(strip_security_metadata(html),wait_until='load')
     page.add_style_tag(content=CSS)
-    page.add_script_tag(content=CONTENT)
-    page.add_script_tag(content=AUTO)
-    if extra:page.add_script_tag(content=extra)
-    page.add_script_tag(content=APP)
+    for source in scripts:
+        if source.endswith('/app.js') and extra:
+            page.add_script_tag(content=extra)
+        page.add_script_tag(content=(ROOT/source.lstrip('/')).read_text(encoding='utf-8'))
     page.locator('main h1').wait_for(timeout=6000)
     assert not page.evaluate('document.documentElement.scrollWidth > window.innerWidth'),kind
     return page
@@ -92,7 +93,10 @@ with sync_playwright() as p:
     courses=load(browser,'teaching')
     assert courses.locator('.course-entry').count()==4
     assert courses.locator('.course-entry h3').all_inner_texts().count('Probability II for Actuarial Science')==1
-    assert courses.locator('#course-year option').count()==2
+    assert courses.locator('#course-year').count()==0, 'A single available year needs no filter'
+    assert courses.locator('#course-count').get_attribute('role')=='status'
+    assert courses.locator('#course-count').get_attribute('aria-live')=='polite'
+    assert '4' in courses.locator('#course-count').inner_text()
     actual_offerings = {row.locator('h3').inner_text(): row.locator('.course-meta').inner_text().strip() for row in courses.locator('.course-entry').all()}
     assert actual_offerings['Probability II'].endswith('2026.1'), actual_offerings
     assert actual_offerings['Statistical Inference for Actuarial Sciences'].endswith('2026.1'), actual_offerings
@@ -101,19 +105,25 @@ with sync_playwright() as p:
     assert courses.locator('.course-entry').first.locator('h3').inner_text() in ['Multivariate Analysis I','Probability II for Actuarial Science']
     courses.locator('#course-search').fill('Actuarial')
     assert courses.locator('.course-entry').count()==2
+    assert '2' in courses.locator('#course-count').inner_text()
+    courses.locator('#course-search').fill('zzzz')
+    assert courses.locator('.course-entry').count()==0
+    assert '0' in courses.locator('#course-count').inner_text()
+    assert 'No matching courses.' in courses.locator('#course-results').inner_text()
     courses.locator('#course-search').fill('')
-    courses.locator('#course-year').select_option('2026')
     assert courses.locator('.course-entry').count()==4
     assert courses.locator('.course-level[data-level="undergraduate"]').count()==1
     assert courses.locator('.course-level[data-level="postgraduate"]').count()==0
-    assert courses.locator('.course-entry p').count()==0
+    assert courses.locator('.course-description').count()==4
+    assert 'Probability for undergraduate Statistics students.' in courses.locator('.course-description').all_inner_texts()
     assert courses.locator('.course-entry .course-meta').first.inner_text().startswith('UFPE · 2026.')
-    print('TEACHING four concise undergraduate records, year filter and search: PASS')
+    print('TEACHING four undergraduate records, useful descriptions, no redundant year control, live search count and empty state: PASS')
     courses.close()
 
     mock='''window.PORTFOLIO.courses.push({id:"new-offering",title:{en:"Probability II",pt:"Probabilidade 2"},institution:"UFPE",offerings:["2027.2","2026.1"],description:{en:"Later teaching",pt:"Oferta posterior"}});
       for(let i=0;i<8;i++)window.PORTFOLIO.courses.push({id:"demo-"+i,title:{en:"Demo " + i,pt:"Exemplo " + i},institution:"UFPE",offerings:["2020.1"]});'''
     course_history=load(browser,'teaching',extra=mock)
+    assert set(course_history.locator('#course-year option').evaluate_all('(items)=>items.map(item=>item.value)'))=={'all','2027','2026','2020'}
     assert course_history.locator('.course-entry').count()==12  # six recent + six in collapsed archive
     assert course_history.locator('.directory-archive').count()==1
     assert course_history.locator('.course-entry h3').all_inner_texts().count('Probability II')==1
@@ -128,7 +138,7 @@ with sync_playwright() as p:
     print('TEACHING repeated offerings deduplicated, ordered, archived, filtered: PASS')
     course_history.close()
 
-    graduate_mock='''window.PORTFOLIO.courses.push({id:"graduate-probability",title:{en:"Probability II",pt:"Probabilidade 2"},institution:"UFPE",level:"postgraduate",offerings:["2027.2"],description:{en:"Graduate description must not show",pt:"Legenda que não deve aparecer"}});
+    graduate_mock='''window.PORTFOLIO.courses.push({id:"graduate-probability",title:{en:"Probability II",pt:"Probabilidade 2"},institution:"UFPE",level:"postgraduate",offerings:["2027.2"],description:{en:"Graduate probability course",pt:"Disciplina de probabilidade da pós-graduação"},materials:[{url:"https://example.org/notes",label:{en:"Course notes",pt:"Notas de aula"}}],officeHours:{en:"By appointment",pt:"Mediante agendamento"}});
       window.PORTFOLIO.courses.push({id:"graduate-methods",title:{en:"Statistical Methods I",pt:"Métodos Estatísticos 1"},institution:"UFPE",level:"Postgraduate",offerings:["2027.1"]});'''
     graduate=load(browser,'teaching',extra=graduate_mock)
     assert graduate.locator('.course-level').count()==2
@@ -136,15 +146,20 @@ with sync_playwright() as p:
     assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry').count()==2
     assert graduate.locator('.course-level[data-level="undergraduate"] .course-entry h3').all_inner_texts().count('Probability II')==1
     assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry h3').all_inner_texts().count('Probability II')==1
-    assert graduate.locator('.course-entry p').count()==0
-    assert 'Graduate description must not show' not in graduate.locator('main').inner_text()
+    assert 'Graduate probability course' in graduate.locator('main').inner_text()
+    assert graduate.locator('.course-materials a').get_attribute('href')=='https://example.org/notes'
+    assert graduate.locator('.course-materials a').inner_text().startswith('Course notes')
+    assert 'By appointment' in graduate.locator('.course-office-hours').inner_text()
     graduate.locator('#course-year').select_option('2027')
     assert graduate.locator('.course-level[data-level="undergraduate"]').count()==0
     assert graduate.locator('.course-level[data-level="postgraduate"] .course-entry').count()==2
     graduate.locator('#language-toggle').click()
     assert graduate.locator('.course-level[data-level="postgraduate"] h2').inner_text()=='Pós-graduação'
     assert graduate.locator('.course-level[data-level="undergraduate"]').count()==0
-    print('TEACHING graduate and undergraduate sections, bilingual, distinct levels, concise rows and filtering: PASS')
+    assert 'Disciplina de probabilidade da pós-graduação' in graduate.locator('main').inner_text()
+    assert graduate.locator('.course-materials a').inner_text().startswith('Notas de aula')
+    assert 'Mediante agendamento' in graduate.locator('.course-office-hours').inner_text()
+    print('TEACHING graduate/undergraduate sections, descriptions, provided materials and office hours, bilingual and filtering: PASS')
     graduate.close()
 
     wide=load(browser,'teaching',width=1920)

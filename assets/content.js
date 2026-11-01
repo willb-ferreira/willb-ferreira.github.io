@@ -718,8 +718,8 @@ window.PORTFOLIO = {
       "en": "Build a documented workflow to retrieve, prepare and quality-check public SAR data, with reproducible results."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Programação básica em R ou Python, organização de dados e noções introdutórias de sensoriamento remoto.",
+      "en": "Basic R or Python, data organization, and introductory remote-sensing concepts."
     },
     "status": "proposal"
   },
@@ -738,8 +738,8 @@ window.PORTFOLIO = {
       "en": "Study temporal variation in radar observations for agricultural applications and learn to validate interpretations against reference data."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Estatística descritiva, probabilidade introdutória e programação em R ou Python; interesse em séries temporais.",
+      "en": "Descriptive statistics, introductory probability, and R or Python; an interest in time series."
     },
     "status": "proposal"
   },
@@ -758,8 +758,8 @@ window.PORTFOLIO = {
       "en": "Compare established image-analysis procedures to identify field boundaries and evaluate their results using georeferenced data."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Álgebra linear básica, programação com matrizes e interesse em análise de imagens e dados geográficos.",
+      "en": "Basic linear algebra, programming with matrices, and an interest in image analysis and geographic data."
     },
     "status": "proposal"
   },
@@ -778,8 +778,8 @@ window.PORTFOLIO = {
       "en": "Use simulation to explore probability models for complex-valued observations and learn how to evaluate estimators."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Probabilidade introdutória, números complexos e programação para simulação em R ou Python.",
+      "en": "Introductory probability, complex numbers, and simulation programming in R or Python."
     },
     "status": "proposal"
   },
@@ -798,8 +798,8 @@ window.PORTFOLIO = {
       "en": "Visualize likelihood profiles and study estimation algorithms in established models for dependent observations."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Cálculo diferencial, inferência estatística introdutória e programação; interesse em otimização numérica.",
+      "en": "Differential calculus, introductory statistical inference, and programming; an interest in numerical optimization."
     },
     "status": "proposal"
   },
@@ -818,8 +818,8 @@ window.PORTFOLIO = {
       "en": "Compare established diagnostics under controlled contamination scenarios and discuss detection errors and stability."
     },
     "requirements": {
-      "pt": "Probabilidade introdutória, programação em R ou Python e interesse em simulação.",
-      "en": "Introductory probability, R or Python, and an interest in simulation."
+      "pt": "Regressão introdutória, distribuições amostrais e programação para comparar métodos por simulação.",
+      "en": "Introductory regression, sampling distributions, and programming to compare methods through simulation."
     },
     "status": "proposal"
   },
@@ -838,8 +838,8 @@ window.PORTFOLIO = {
       "en": "Study inferential properties of models for complex-valued observations and evaluate estimators in reproducible experiments."
     },
     "requirements": {
-      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
-      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+      "pt": "Inferência por verossimilhança, probabilidade multivariada, álgebra com números complexos e simulação.",
+      "en": "Likelihood inference, multivariate probability, complex-valued algebra, and simulation."
     },
     "status": "proposal"
   },
@@ -858,8 +858,8 @@ window.PORTFOLIO = {
       "en": "Study how modeling assumptions and individual observations affect statistical model fit for radar data."
     },
     "requirements": {
-      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
-      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+      "pt": "Inferência paramétrica, diagnóstico de regressão e programação; noções de modelos probabilísticos para imagens.",
+      "en": "Parametric inference, regression diagnostics, and programming; familiarity with probability models for imagery."
     },
     "status": "proposal"
   },
@@ -878,8 +878,8 @@ window.PORTFOLIO = {
       "en": "Investigate regularization in established statistical models, with attention to stability and uncertainty."
     },
     "requirements": {
-      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
-      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+      "pt": "Álgebra linear, regressão, otimização e modelos para dados dependentes; programação em R ou Python.",
+      "en": "Linear algebra, regression, optimization, and dependent-data models; R or Python programming."
     },
     "status": "proposal"
   },
@@ -898,8 +898,8 @@ window.PORTFOLIO = {
       "en": "Compare the sensitivity of diagnostic procedures under controlled deviations from model assumptions."
     },
     "requirements": {
-      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
-      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+      "pt": "Inferência estatística, regressão, fundamentos de robustez e planejamento de estudos de simulação.",
+      "en": "Statistical inference, regression, foundations of robustness, and simulation-study design."
     },
     "status": "proposal"
   },
@@ -918,8 +918,8 @@ window.PORTFOLIO = {
       "en": "Study probability models for SAR observations and how dependence affects estimation and uncertainty quantification."
     },
     "requirements": {
-      "pt": "Inferência estatística, probabilidade e programação; conhecimentos adicionais serão definidos no projeto.",
-      "en": "Statistical inference, probability, and programming; further prerequisites depend on the project."
+      "pt": "Distribuições de probabilidade, inferência paramétrica e fundamentos de dependência espacial; simulação computacional.",
+      "en": "Probability distributions, parametric inference, and foundations of spatial dependence; computational simulation."
     },
     "status": "proposal"
   },
@@ -938,8 +938,8 @@ window.PORTFOLIO = {
       "en": "Explore geometric structures of statistical families and their links to general questions in inference and model evaluation."
     },
     "requirements": {
-      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
-      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+      "pt": "Inferência matemática e teoria assintótica; álgebra linear e fundamentos de geometria diferencial para o percurso escolhido.",
+      "en": "Mathematical inference and asymptotic theory; linear algebra and foundations of differential geometry for the chosen pathway."
     },
     "status": "proposal"
   },
@@ -958,8 +958,8 @@ window.PORTFOLIO = {
       "en": "Investigate probabilistic foundations and inferential questions motivated by polarimetric radar observations."
     },
     "requirements": {
-      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
-      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+      "pt": "Probabilidade multivariada, inferência matemática e álgebra matricial complexa; fundamentos de observações PolSAR.",
+      "en": "Multivariate probability, mathematical inference, and complex matrix algebra; foundations of PolSAR observations."
     },
     "status": "proposal"
   },
@@ -978,8 +978,8 @@ window.PORTFOLIO = {
       "en": "Study the validity and sensitivity of inference for dependent data and potentially misspecified statistical models."
     },
     "requirements": {
-      "pt": "Formação sólida em probabilidade e inferência matemática; o escopo será delimitado em conjunto.",
-      "en": "A strong background in probability and mathematical inference; the project scope will be defined jointly."
+      "pt": "Teoria assintótica, processos estocásticos e fundamentos de inferência robusta; experiência com simulação.",
+      "en": "Asymptotic theory, stochastic processes, and foundations of robust inference; experience with simulation."
     },
     "status": "proposal"
   }
